@@ -58,11 +58,6 @@ export class VideosDataService {
   }
 
   public getVideoById(id: number): VideoApiResponseModel | undefined {
-    return this.paginatedVideos().map((video) => {
-      if (video.id === id) {
-        return video;
-      }
-      return undefined;
-    })[0];
+    return this.paginatedVideos().find((video) => video.id === id);
   }
 }

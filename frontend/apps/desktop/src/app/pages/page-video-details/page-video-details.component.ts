@@ -7,6 +7,7 @@ import {
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { UiRedirectComponent } from '../../ui-redirect/ui-redirect.component';
@@ -31,6 +32,8 @@ import {
 })
 export class PageVideoDetailsComponent {
   public video: VideoApiResponseModel | undefined = undefined;
+  public isYoutubeUrl: boolean = false;
+  public embeddedUrl: SafeResourceUrl = '';
 
   public showTournamentDetails: boolean = false;
   public showTeamOneDetails: boolean = false;
@@ -38,10 +41,26 @@ export class PageVideoDetailsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private videosDataService: VideosDataService
+    private videosDataService: VideosDataService,
+    private sanitizer: DomSanitizer
   ) {
     const videoId = Number(this.route.snapshot.paramMap.get('id'));
     this.video = this.videosDataService.getVideoById(videoId);
-    console.log(this.video);
+    this.isYoutubeUrl = this.getIsYoutubeUrl(this.video?.videoLink ?? '');
+    if (this.isYoutubeUrl) {
+      this.embeddedUrl = this.getEmbeddedUrl(this.video?.videoLink ?? '');
+    }
+  }
+
+  public getIsYoutubeUrl(url: string): boolean {
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+    return youtubeRegex.test(url);
+  }
+
+  public getEmbeddedUrl(url: string): SafeResourceUrl {
+    const urlParts = url.split('/');
+    const videoId = urlParts[urlParts.length - 1];
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
   }
 }
