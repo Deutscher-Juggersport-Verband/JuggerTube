@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Dict, List
 
-from flask import g
+from flask import g, current_app
 
 from DataDomain.Database.Enum import GameSystemTypesEnum, VideoCategoriesEnum
 from DataDomain.Database.Model import Channels, Videos
@@ -16,6 +16,22 @@ from DataDomain.Model import Response
 
 class CreateMultipleVideosHandler:
     """Handler for creating multiple videos"""
+
+    @staticmethod
+    def _map_category_to_enum(category_str: str) -> VideoCategoriesEnum:
+        """Maps API category string to VideoCategoriesEnum value"""
+        category_mapping = {
+            'reports': VideoCategoriesEnum.REPORTS,
+            'highlights': VideoCategoriesEnum.HIGHLIGHTS,
+            'match': VideoCategoriesEnum.MATCH,
+            'song': VideoCategoriesEnum.SONG,
+            'podcast': VideoCategoriesEnum.PODCAST,
+            'awards': VideoCategoriesEnum.AWARDS,
+            'training': VideoCategoriesEnum.TRAINING,
+            'sparbuilding': VideoCategoriesEnum.SPARBUILDING,
+            'other': VideoCategoriesEnum.OTHER
+        }
+        return category_mapping.get(category_str.lower(), VideoCategoriesEnum.OTHER)
 
     @staticmethod
     def handle() -> Response:
@@ -36,6 +52,10 @@ class CreateMultipleVideosHandler:
             video_name = video_data.get('name')
 
             if VideoRepository.getVideoByName(video_name):
+                failed_videos.append({
+                    'name': video_name,
+                    'reason': 'Video with this name already exists'
+                })
                 continue
 
             video = Videos()
@@ -50,26 +70,17 @@ class CreateMultipleVideosHandler:
 
             channel_id = ChannelRepository.getChannelIdByName(channelName=channel_name)
 
-            # If channel doesn't exist, create it
             if not channel_id:
-                try:
-                    # Generate YouTube channel link - handle spaces and special characters
-                    safe_channel_name = channel_name.replace(' ', '').replace('@', '')
-                    channel = Channels(
-                        name=channel_name,
-                        channel_link=f'https://www.youtube.com/@{safe_channel_name}'
-                    )
-                    channel_id = ChannelRepository.create(channel)
-                except Exception as e:
-                    failed_videos.append({
-                        'name': video_name,
-                        'reason': f'Failed to create channel: {str(e)}'
-                    })
-                    continue
+                failed_videos.append({
+                    'name': video_name,
+                    'reason': f'Channel does not exist: {channel_name}'
+                })
+                continue
 
             # Set required fields
             video.name = video_data.get('name')
-            video.category = video_data.get('category')
+            category_str = video_data.get('category')
+            video.category = CreateMultipleVideosHandler._map_category_to_enum(category_str)
             video.video_link = video_data.get('videoLink')
             video.channel_id = channel_id
             video.topic = ''
@@ -79,27 +90,49 @@ class CreateMultipleVideosHandler:
             if video.category == VideoCategoriesEnum.MATCH:
                 video.game_system = GameSystemTypesEnum.SETS
 
+                # Validate tournament for match videos
                 tournament_name = video_data.get('tournamentName')
-                if tournament_name:
-                    tournament_id = TournamentRepository.getTournamentByName(tournament_name)
-                    if not tournament_id:
-                        failed_videos.append({
-                            'name': video.name,
-                            'reason': f'Tournament not found: {tournament_name}'
-                        })
-                        continue
-                    video.tournament_id = tournament_id
+                if not tournament_name:
+                    failed_videos.append({
+                        'name': video.name,
+                        'reason': 'Tournament name is required for match videos'
+                    })
+                    continue
 
+                tournament_id = TournamentRepository.getTournamentByName(tournament_name)
+                if tournament_id is None:
+                    failed_videos.append({
+                        'name': video.name,
+                        'reason': f'Tournament not found: {tournament_name}'
+                    })
+                    continue
+                video.tournament_id = tournament_id
+
+                # Validate teams for match videos
                 team_one_name = video_data.get('teamOneName')
                 team_two_name = video_data.get('teamTwoName')
+
+                if not team_one_name or not team_two_name:
+                    failed_videos.append({
+                        'name': video.name,
+                        'reason': 'Both team names are required for match videos'
+                    })
+                    continue
 
                 team_one_id = TeamRepository.getTeamIdByName(team_one_name)
                 team_two_id = TeamRepository.getTeamIdByName(team_two_name)
 
-                if not team_one_id or not team_two_id:
+                if team_one_id is None:
                     failed_videos.append({
                         'name': video.name,
-                        'reason': f'Teams not found: {team_one_name} or {team_two_name}'
+                        'reason': f'Team not found: {team_one_name}'
+                    })
+                    continue
+
+                if team_two_id is None:
+                    failed_videos.append({
+                        'name': video.name,
+                        'reason': f'Team not found: {team_two_name}'
                     })
                     continue
 
@@ -110,7 +143,7 @@ class CreateMultipleVideosHandler:
                 tournament_name = video_data.get('tournamentName')
                 if tournament_name:
                     tournament_id = TournamentRepository.getTournamentByName(tournament_name)
-                    if not tournament_id:
+                    if tournament_id is None:
                         failed_videos.append({
                             'name': video.name,
                             'reason': f'Tournament not found: {tournament_name}'
@@ -124,17 +157,6 @@ class CreateMultipleVideosHandler:
             # Set optional fields
             video.comment = video_data.get('comment', '')
             video.upload_date = datetime.fromisoformat(video_data.get('uploadDate'))
-
-            if (video.game_system
-                        and not video.tournament_id
-                        and not video.team_one_id
-                        and not video.team_two_id
-                    ):
-                failed_videos.append({
-                    'name': video.name,
-                    'reason': 'Missing required data'
-                })
-                continue
 
             try:
                 video_id = VideoRepository.create(video)

@@ -3,6 +3,7 @@ from typing import List
 from DataDomain.Database import db
 from DataDomain.Database.Model import Tournaments
 from Infrastructure.Logger import logger
+from sqlalchemy import func
 
 
 class TournamentRepository:
@@ -45,7 +46,7 @@ class TournamentRepository:
             Tournaments.id
         ).filter(
             Tournaments.is_deleted != True,
-            Tournaments.name == tournamentName
+            func.lower(Tournaments.name) == func.lower(tournamentName)
         ).scalar())
 
         return tournament

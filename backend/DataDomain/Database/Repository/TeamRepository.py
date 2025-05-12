@@ -3,6 +3,7 @@ from typing import List
 from DataDomain.Database import db
 from DataDomain.Database.Model import Teams
 from Infrastructure.Logger import logger
+from sqlalchemy import func
 
 
 class TeamRepository:
@@ -56,7 +57,8 @@ class TeamRepository:
             Teams.id,
             Teams.name
         ).filter(
-            Teams.name == teamName
+            Teams.is_deleted != True,
+            func.lower(Teams.name) == func.lower(teamName)
         ).group_by(
             Teams.id
         ).first()
