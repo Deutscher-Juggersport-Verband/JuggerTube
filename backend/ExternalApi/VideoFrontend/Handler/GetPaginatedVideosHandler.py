@@ -24,32 +24,7 @@ class GetPaginatedVideosHandler:
             )
 
         # make response
-        response = {'start': start, 'limit': limit, 'count': count}
-        # make URLs
-        # make previous url
-        if start == 0:
-            response['previous'] = ''
-        else:
-            start_copy = max(0, start - limit)
-            limit_copy = start
-            response['previous'] = url + '?start=%d&limit=%d' % (start_copy, limit_copy)
-        # make next url
-        if start + limit > count:
-            response['next'] = ''
-        else:
-            start_copy = start + limit
-            response['next'] = url + '?start=%d&limit=%d' % (start_copy, limit)
-        # make first url
-        response['first'] = url + '?start=1&limit=%d' % limit
-        # make last url
-        if count < limit:
-            response['last'] = ''
-        elif count % limit == 0:
-            response['last'] = url + '?start=%d&limit=%d' % (count - limit, limit)
-        else:
-            response['last'] = url + '?start=%d&limit=%d' % (count - count % limit, limit)
-        # finally extract result according to bounds
-        response['results'] = videos[start:(start + limit)]
+        response = {'start': start, 'limit': limit, 'count': count, 'results': videos[start:(start + limit)]}
 
         return Response(
             response=response,

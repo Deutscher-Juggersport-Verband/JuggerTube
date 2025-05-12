@@ -31,8 +31,6 @@ export const loadPaginatedVideosActionSuccess = createAction(
   props<{
     videos: VideoApiResponseModel[];
     count: number;
-    previous: string | null;
-    next: string | null;
   }>()
 );
 
@@ -56,8 +54,6 @@ export const loadNextVideosSuccess = createAction(
   props<{
     videos: VideoApiResponseModel[];
     count: number;
-    previous: string | null;
-    next: string | null;
   }>()
 );
 

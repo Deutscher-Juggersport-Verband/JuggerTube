@@ -26,7 +26,12 @@ function convertDatesInVideo(video: VideoApiResponseModel): VideoApiResponseMode
   return {
     ...video,
     uploadDate: convertStringToDate(video.uploadDate as unknown as string),
-    dateOfRecording: convertStringToDate(video.dateOfRecording as unknown as string)
+    dateOfRecording: convertStringToDate(video.dateOfRecording as unknown as string),
+    tournament: video.tournament ? {
+      ...video.tournament,
+      startDate: convertStringToDate(video.tournament.startDate as unknown as string),
+      endDate: convertStringToDate(video.tournament.endDate as unknown as string)
+    } : video.tournament
   };
 }
 
@@ -45,8 +50,6 @@ export class LoadPaginatedVideosEffects {
             return loadPaginatedVideosActionSuccess({
               videos: convertedVideos,
               count: data.count,
-              previous: data.previous,
-              next: data.next,
             });
           }),
           catchError((response: HttpErrorResponse) => {
