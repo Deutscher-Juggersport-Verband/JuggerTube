@@ -18,6 +18,13 @@ const unknownError = { form: 'Unknown error' };
 
 function convertStringToDate(dateStr: string): Date {
   if (!dateStr) return new Date();
+  
+  // Handle ISO format (2010-07-10T00:00:00)
+  if (dateStr.includes('T')) {
+    return new Date(dateStr);
+  }
+  
+  // Handle DD-MM-YYYY format
   const [day, month, year] = dateStr.split('-').map(num => parseInt(num, 10));
   return new Date(year, month - 1, day);
 }

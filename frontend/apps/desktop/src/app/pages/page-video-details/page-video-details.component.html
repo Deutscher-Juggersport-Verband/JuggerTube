@@ -62,8 +62,8 @@
           class="details"
         >
           <p>{{ video.tournament.city }}</p>
-          <p>Startdatum: {{ video.tournament.startDate }}</p>
-          <p>Enddatum: {{ video.tournament.endDate }}</p>
+          <p>Startdatum: {{ video.tournament.startDate | date : 'dd.MM.YYYY' }}</p>
+          <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.YYYY' }}</p>
           <a href="{{ video.tournament.jtrLink }}">Auf jtr besuchen</a>
         </div>
       </div>
