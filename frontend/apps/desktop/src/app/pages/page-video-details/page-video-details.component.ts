@@ -50,7 +50,6 @@ export class PageVideoDetailsComponent {
     if (this.isYoutubeUrl) {
       this.embeddedUrl = this.getEmbeddedUrl(this.video?.videoLink ?? '');
     }
-    console.log('date format', this.video?.tournament.startDate)
   }
 
   public getIsYoutubeUrl(url: string): boolean {
