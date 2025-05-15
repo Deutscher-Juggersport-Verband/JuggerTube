@@ -18,6 +18,13 @@ const unknownError = { form: 'Unknown error' };
 
 function convertStringToDate(dateStr: string): Date {
   if (!dateStr) return new Date();
+
+  // Handle ISO format (2010-07-10T00:00:00)
+  if (dateStr.includes('T')) {
+    return new Date(dateStr);
+  }
+
+  // Handle DD-MM-YYYY format
   const [day, month, year] = dateStr.split('-').map(num => parseInt(num, 10));
   return new Date(year, month - 1, day);
 }
@@ -26,7 +33,12 @@ function convertDatesInVideo(video: VideoApiResponseModel): VideoApiResponseMode
   return {
     ...video,
     uploadDate: convertStringToDate(video.uploadDate as unknown as string),
-    dateOfRecording: convertStringToDate(video.dateOfRecording as unknown as string)
+    dateOfRecording: convertStringToDate(video.dateOfRecording as unknown as string),
+    tournament: video.tournament ? {
+      ...video.tournament,
+      startDate: convertStringToDate(video.tournament.startDate as unknown as string),
+      endDate: convertStringToDate(video.tournament.endDate as unknown as string)
+    } : video.tournament
   };
 }
 
@@ -45,8 +57,6 @@ export class LoadPaginatedVideosEffects {
             return loadPaginatedVideosActionSuccess({
               videos: convertedVideos,
               count: data.count,
-              previous: data.previous,
-              next: data.next,
             });
           }),
           catchError((response: HttpErrorResponse) => {

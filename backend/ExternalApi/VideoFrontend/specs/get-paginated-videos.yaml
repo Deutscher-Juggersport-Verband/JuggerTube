@@ -42,14 +42,6 @@ paths:
                     type: integer
                     description: Total number of available videos
                     example: 100
-                  previous:
-                    type: string
-                    description: URL for the previous page of results, empty if on first page
-                    example: "/api/video-frontend/get-paginated-videos?start=1&limit=10"
-                  next:
-                    type: string
-                    description: URL for the next page of results, empty if on last page
-                    example: "/api/video-frontend/get-paginated-videos?start=11&limit=10"
                   results:
                     type: array
                     items:

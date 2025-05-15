@@ -56,4 +56,8 @@ export class VideosDataService {
       .unsubscribe();
     return isRangeCached(start, limit, loadedRanges);
   }
+
+  public getVideoById(id: number): VideoApiResponseModel | undefined {
+    return this.paginatedVideos().find((video) => video.id === id);
+  }
 }

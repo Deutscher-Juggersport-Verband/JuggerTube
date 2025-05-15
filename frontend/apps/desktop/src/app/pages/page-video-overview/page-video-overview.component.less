@@ -15,7 +15,7 @@
   justify-content: space-between;
   margin: 4px 0 24px;
   padding: 0 6px;
-  color: #002727;
+  color: @color-green;
   font-size: 14px;
 
   .sorting {
@@ -53,4 +53,17 @@
   video-tile {
     display: block;
   }
+}
+
+::ng-deep mat-select {
+  width: 100%;
+  padding: 0 6px;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item {
+  background-color: @color-bg-light !important;
+}
+
+::ng-deep div.mat-mdc-select-panel {
+  background-color: @color-bg-light !important;
 }

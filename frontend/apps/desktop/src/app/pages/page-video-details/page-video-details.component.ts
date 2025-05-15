@@ -7,14 +7,14 @@ import {
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { UiRedirectComponent } from '../../ui-redirect/ui-redirect.component';
 import { UiTagComponent } from '../../ui-tag/ui-tag.component';
+import { VideosDataService } from '@frontend/video';
 import {
-  GameSystemTypesEnum,
-  VideoCategoriesEnum,
-  WeaponTypesEnum,
+  VideoApiResponseModel
 } from '@frontend/video-data';
 
 @Component({
@@ -31,41 +31,36 @@ import {
   ],
 })
 export class PageVideoDetailsComponent {
-  public video = {
-    id: 1,
-    name: 'Testvideo 2',
-    category: VideoCategoriesEnum.HIGHLIGHTS,
-    videoLink: 'https://www.youtube.com/embed/f27SC622NvE?si=tkrwZRDEUWp8bLy0',
-    comment: 'richtig wichtiger comment',
-    gameSystem: GameSystemTypesEnum.NRW,
-    weaponType: WeaponTypesEnum.LONGSWORD,
-    topic: 'Have fun',
-    guests: 'Leander',
-    uploadDate: '10-03-2028',
-    dateOfRecording: '10-03-2028',
-    channelName: 'ae²ae³',
-    channelLink: 'https://www.youtube.com/@ae²ae³',
-    tournament: {
-      id: 1,
-      name: 'Best tournament',
-      city: 'Berlin',
-      startDate: '10-03-2028',
-      endDate: '10-03-2028',
-      jtrLink: 'https://youtu.be/f27SC622NvE',
-    },
-    teamOne: {
-      id: 1,
-      name: 'Rigor Mortis',
-      city: 'Berlin',
-    },
-    teamTwo: {
-      id: 2,
-      name: 'Jugger Basilisken',
-      city: 'Hamburg',
-    },
-  };
+  public video: VideoApiResponseModel | undefined = undefined;
+  public isYoutubeUrl: boolean = false;
+  public embeddedUrl: SafeResourceUrl = '';
 
   public showTournamentDetails: boolean = false;
   public showTeamOneDetails: boolean = false;
   public showTeamTwoDetails: boolean = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private videosDataService: VideosDataService,
+    private sanitizer: DomSanitizer
+  ) {
+    const videoId = Number(this.route.snapshot.paramMap.get('id'));
+    this.video = this.videosDataService.getVideoById(videoId);
+    this.isYoutubeUrl = this.getIsYoutubeUrl(this.video?.videoLink ?? '');
+    if (this.isYoutubeUrl) {
+      this.embeddedUrl = this.getEmbeddedUrl(this.video?.videoLink ?? '');
+    }
+  }
+
+  public getIsYoutubeUrl(url: string): boolean {
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+    return youtubeRegex.test(url);
+  }
+
+  public getEmbeddedUrl(url: string): SafeResourceUrl {
+    const urlParts = url.split('/');
+    const videoId = urlParts[urlParts.length - 1];
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
+  }
 }

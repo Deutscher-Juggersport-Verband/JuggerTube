@@ -12,3 +12,9 @@ export const paginatedVideosDataSelector = createSelector<
 >(videosStateFeatureSelector, (state: VideosState) => {
   return getVideosFromDict(state.allVideos, state.currentView.displayedVideos);
 });
+
+export const selectVideoById = (videoId: number) =>
+  createSelector<VideosStateAware, [VideosState], VideoApiResponseModel | undefined>(
+    videosStateFeatureSelector,
+    (state: VideosState) => state.allVideos[videoId]
+  );
