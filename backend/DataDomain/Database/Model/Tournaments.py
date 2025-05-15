@@ -10,6 +10,9 @@ from DataDomain.Database.Model import BaseModel
 
 class Tournaments(BaseModel):
     __tablename__ = 'tournaments'
+    __table_args__ = (
+        db.UniqueConstraint('name', 'start_date', name='uix_tournament_name_date'),
+    )
 
     id: int = db.Column(
         db.Integer,
@@ -20,7 +23,6 @@ class Tournaments(BaseModel):
     name: str = db.Column(
         db.String(100),
         nullable=False,
-        unique = True,
     )
 
     city: str = db.Column(

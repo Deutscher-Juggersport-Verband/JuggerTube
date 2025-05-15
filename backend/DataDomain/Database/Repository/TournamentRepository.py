@@ -52,6 +52,20 @@ class TournamentRepository:
         return tournament
 
     @staticmethod
+    def checkIfTournamentAlreadyExists(name: str, start_date) -> bool:
+        tournament = (db.session.query(
+            Tournaments.id,
+            Tournaments.start_date
+        ).filter(
+            Tournaments.is_deleted != True,
+            func.lower(Tournaments.name) == func.lower(name),
+            Tournaments.start_date == start_date
+        ).first())
+
+        return tournament is not None
+
+
+    @staticmethod
     def create(tournament: Tournaments) -> int:
         try:
             db.session.add(tournament)
