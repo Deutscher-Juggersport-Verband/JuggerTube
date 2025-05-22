@@ -17,6 +17,12 @@
     "paths": {
       "@frontend/api": ["libs/infrastructure/api/src/index.ts"],
       "@frontend/cache": ["libs/infrastructure/cache/src/index.ts"],
+      "@frontend/team": ["libs/business-domain/team/src/index.ts"],
+      "@frontend/team-data": ["libs/data-domain/team-data/src/index.ts"],
+      "@frontend/tournament": ["libs/business-domain/tournament/src/index.ts"],
+      "@frontend/tournament-data": [
+        "libs/data-domain/tournament-data/src/index.ts"
+      ],
       "@frontend/video": ["libs/business-domain/video/src/index.ts"],
       "@frontend/video-data": ["libs/data-domain/video-data/src/index.ts"]
     }
