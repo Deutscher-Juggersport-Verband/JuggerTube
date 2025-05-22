@@ -16,6 +16,7 @@ class TeamRepository:
             Teams.id,
             Teams.name,
             Teams.city,
+            Teams.country
         ).filter(
             Teams.is_deleted != True
         ).order_by(
@@ -28,6 +29,7 @@ class TeamRepository:
                 'id': team.id,
                 'name': team.name,
                 'city': team.city,
+                'country': team.country
             }
             result.append(team_dict)
 
