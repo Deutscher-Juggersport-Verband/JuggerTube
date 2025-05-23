@@ -9,6 +9,13 @@
   </option>
   }
 </select>
+} @case (UiInputTypeEnum.TOGGLE) {
+<input
+  id="{{ labelText }}"
+  type="checkbox"
+  [formControl]="formControlElement"
+  (change)="onToggleChange($event)"
+/>
 } @default {
 <input
   id="{{ labelText }}"

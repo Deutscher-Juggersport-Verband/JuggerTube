@@ -60,7 +60,7 @@
         [displayField]="'name'"
         [valueField]="'id'"
         [placeholder]="'Turnier suchen...'"
-        (newOption)="onNewTournament($event)"
+        (newOption)="onNewTournament()"
       />
       @if (showNewTournamentFields) {
         <div class="new-tournament-fields">
@@ -96,35 +96,67 @@
         </div>
       }
     } @case (AdditionalFieldsEnum.TEAMS) {
-        <ui-label-row [labelText]="'Team 1: '" />
-        <div class="team-fields">
-          <ui-autocomplete-input
-            class="team-input"
-            [formControlElement]="form.controls.teamOneId"
-            [options]="teams() || []"
-            [displayField]="'name'"
-            [valueField]="'id'"
-            [placeholder]="'Team 1 suchen...'"
-            (newOption)="onNewTeam($event)"
-          />
-          @if (form.controls.teamOneId.errors?.['sameTeam']) {
-            <div class="error-message">Dieses Team wurde bereits als Team 2 ausgewählt</div>
-          }
+      <ui-label-row [labelText]="'Team 1:'" />
+      <ui-autocomplete-input
+        [formControlElement]="form.controls.teamOneId"
+        [options]="teams() || []"
+        [displayField]="'name'"
+        [valueField]="'id'"
+        [placeholder]="'Team 1 suchen...'"
+        (newOption)="onNewTeam($event, 'one')"
+      />
 
-          <ui-label-row [labelText]="'Team 2: '" class="team-two-label" />
-          <ui-autocomplete-input
-            class="team-input"
-            [formControlElement]="form.controls.teamTwoId"
-            [options]="teams() || []"
-            [displayField]="'name'"
-            [valueField]="'id'"
-            [placeholder]="'Team 2 suchen...'"
-            (newOption)="onNewTeam($event)"
+      @if (showNewTeamOneFields) {
+        <div class="new-team-fields">
+          <p class="info">Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu hinterlegen, gib uns bitte folgende Daten:</p>
+
+          <ui-label-row [labelText]="'Stadt:'" class="city-label" />
+          <ui-input
+            [type]="UiInputTypeEnum.TEXT"
+            [formControlElement]="form.controls.teamOneCity"
+            class="city-input"
           />
-          @if (form.controls.teamTwoId.errors?.['sameTeam']) {
-            <div class="error-message">Dieses Team wurde bereits als Team 1 ausgewählt</div>
-          }
+
+          <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
+          <ui-input
+            [type]="UiInputTypeEnum.TOGGLE"
+            [formControlElement]="form.controls.teamOneMix"
+            (onChange)="onMixTeamToggle($event, 'one')"
+            class="mixteam-input"
+          />
         </div>
+      }
+
+      <ui-label-row [labelText]="'Team 2:'" />
+      <ui-autocomplete-input
+        [formControlElement]="form.controls.teamTwoId"
+        [options]="teams() || []"
+        [displayField]="'name'"
+        [valueField]="'id'"
+        [placeholder]="'Team 2 suchen...'"
+        (newOption)="onNewTeam($event, 'two')"
+      />
+
+      @if (showNewTeamTwoFields) {
+        <div class="new-team-fields">
+          <p class="info">Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu hinterlegen, gib uns bitte folgende Daten:</p>
+
+          <ui-label-row [labelText]="'Stadt:'" class="city-label" />
+          <ui-input
+            [type]="UiInputTypeEnum.TEXT"
+            [formControlElement]="form.controls.teamOneCity"
+            class="city-input"
+          />
+
+          <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
+          <ui-input
+            [type]="UiInputTypeEnum.TOGGLE"
+            [formControlElement]="form.controls.teamOneMix"
+            (onChange)="onMixTeamToggle($event, 'one')"
+            class="mixteam-input"
+          />
+        </div>
+      }
     } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
       <ui-label-row [labelText]="'Pompfenart:'" />
       <ui-input

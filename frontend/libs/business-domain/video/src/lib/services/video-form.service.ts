@@ -27,6 +27,10 @@ export type VideoFormModel = {
   tournamentId: FormControl<number>;
   teamOneId: FormControl<number>;
   teamTwoId: FormControl<number>;
+  teamOneCity: FormControl<string>;
+  teamTwoCity: FormControl<string>;
+  teamOneMix: FormControl<boolean>;
+  teamTwoMix: FormControl<boolean>;
   comment: FormControl<string>;
   tournamentCity: FormControl<string>;
   tournamentStartDate: FormControl<string>;
@@ -89,6 +93,20 @@ export class VideoFormService {
       teamTwoId: new FormControl({ value: 0, disabled: false }, {
         nonNullable: true,
         validators: [Validators.required, differentTeamsValidator],
+      }),
+      teamOneCity: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      teamTwoCity: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      teamOneMix: new FormControl({ value: false, disabled: false }, {
+        nonNullable: true,
+      }),
+      teamTwoMix: new FormControl({ value: false, disabled: false }, {
+        nonNullable: true,
       }),
       comment: new FormControl({ value: '', disabled: false }, {
         nonNullable: true,

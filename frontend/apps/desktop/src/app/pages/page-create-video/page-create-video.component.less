@@ -22,7 +22,7 @@
     grid-column: 2 / -1;
     display: grid;
     gap: 24px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: auto 1fr auto 1fr;
     grid-template-areas:
       'info info info info'
       'city-label city-input city-input city-input'
@@ -63,6 +63,36 @@
 
     .address-input {
       grid-area: address-input;
+    }
+  }
+
+  .new-team-fields {
+    grid-column: 2 / -1;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas:
+    'info info info info'
+      'city-label city-input mixteam-label mixteam-input';
+
+    .info {
+      grid-area: info;
+    }
+
+    .city-label {
+      grid-area: city-label;
+    }
+
+    .city-input {
+      grid-area: city-input;
+    }
+
+    .mixteam-label {
+      grid-area: mixteam-label;
+    }
+
+    .mixteam-input {
+      grid-area: mixteam-input;
     }
   }
 

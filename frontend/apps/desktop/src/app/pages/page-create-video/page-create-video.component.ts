@@ -15,7 +15,6 @@ import {
 } from '../../ui-button/ui-button.component';
 import {
   UiInputComponent,
-  UiInputDirectionEnum,
   UiInputTypeEnum,
 } from '../../ui-input/ui-input.component';
 import { UiLabelRowComponent } from '../../ui-label-row/ui-label-row.component';
@@ -54,10 +53,13 @@ export class PageCreateVideoComponent implements OnInit {
   protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
   protected showNewTournamentFields = false;
+  protected showNewTeamOneFields = false;
+  protected showNewTeamTwoFields = false;
+  protected isTeamOneMix = false;
+  protected isTeamTwoMix = false;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
-  protected readonly UiInputDirectionEnum = UiInputDirectionEnum;
   protected readonly Object = Object;
   protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
@@ -153,26 +155,48 @@ export class PageCreateVideoComponent implements OnInit {
     });
   }
 
-  public onNewTournament(name: string): void {
+  public onNewTournament(): void {
     this.showNewTournamentFields = true;
-    console.log('Neues Turnier:', name);
   }
 
-  public onNewTeam(name: string): void {
-    // Prüfe, ob das Team bereits in einem der beiden Felder existiert
+  public onNewTeam(name: string, teamNumber: 'one' | 'two'): void {
     const existingTeam = this.teams()?.find(team => team.name.toLowerCase() === name.toLowerCase());
     if (existingTeam) {
       const teamOneId = this.form.controls.teamOneId.value;
       const teamTwoId = this.form.controls.teamTwoId.value;
 
       if (teamOneId === existingTeam.id || teamTwoId === existingTeam.id) {
-        console.warn('Dieses Team wurde bereits ausgewählt');
         return;
       }
     }
 
-    // Hier können wir später die Logik für neue Teams implementieren
-    console.log('Neues Team:', name);
+    if (teamNumber === 'one') {
+      this.showNewTeamOneFields = true;
+    } else {
+      this.showNewTeamTwoFields = true;
+    }
+  }
+
+  public onMixTeamToggle(isMix: boolean, teamNumber: 'one' | 'two'): void {
+    if (teamNumber === 'one') {
+      this.isTeamOneMix = isMix;
+      if (isMix) {
+        this.form.controls.teamOneCity.setValue('Mixteam');
+        this.form.controls.teamOneCity.disable();
+      } else {
+        this.form.controls.teamOneCity.setValue('');
+        this.form.controls.teamOneCity.enable();
+      }
+    } else {
+      this.isTeamTwoMix = isMix;
+      if (isMix) {
+        this.form.controls.teamTwoCity.setValue('Mixteam');
+        this.form.controls.teamTwoCity.disable();
+      } else {
+        this.form.controls.teamTwoCity.setValue('');
+        this.form.controls.teamTwoCity.enable();
+      }
+    }
   }
 
   protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
