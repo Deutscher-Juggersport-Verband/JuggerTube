@@ -32,11 +32,6 @@ paths:
                       description: The city where the team is based
                       example: "Berlin"
                       nullable: false
-                    country:
-                      type: string
-                      description: The country where the team is based
-                      example: "Germany"
-                      nullable: false
 
         '500':
           description: Internal server error
