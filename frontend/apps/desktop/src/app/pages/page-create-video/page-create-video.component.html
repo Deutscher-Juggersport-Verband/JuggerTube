@@ -1,6 +1,6 @@
 <h1>neues Video hinzufügen</h1>
 
-<form [formGroup]="form" class="video-form">
+<form [formGroup]="form" class="video-form" (ngSubmit)="onSubmit()">
   <div class="form-grid">
     <ui-label-row [labelText]="'Videoname:'" />
     <ui-input
@@ -181,8 +181,8 @@
   </div>
 
   <ui-button
-    (click)="onSubmit()"
     [text]="'hinzufügen'"
     [color]="UiButtonColorEnum.PRIMARY"
+    (click)="onSubmit()"
   />
 </form>

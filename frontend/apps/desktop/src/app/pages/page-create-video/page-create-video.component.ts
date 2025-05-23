@@ -5,6 +5,7 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -23,14 +24,16 @@ import {TeamApiResponseModel} from '@frontend/team-data';
 import {TournamentsDataService} from '@frontend/tournament';
 import {TournamentApiResponseModel} from '@frontend/tournament-data';
 import {
-  AdditionalFieldsEnum, VideoFormModel,
-  VideoFormService
-} from '@frontend/video';
+  AdditionalFieldsEnum,   differentTeamsValidator,
+  ToastService,
+VideoFormModel,
+  VideoFormService,
+  VideosDataService} from '@frontend/video';
 import {
+  CreateVideoRequest,
   GameSystemTypesEnum,
   VideoCategoriesEnum,
-  WeaponTypesEnum,
-} from '@frontend/video-data';
+  WeaponTypesEnum} from '@frontend/video-data';
 
 @Component({
   imports: [
@@ -70,6 +73,8 @@ export class PageCreateVideoComponent implements OnInit {
     private tournamentService: TournamentsDataService,
     private teamService: TeamsDataService,
     private readonly videoFormService: VideoFormService,
+    private readonly videosDataService: VideosDataService,
+    private readonly toastService: ToastService
   ) {
     this.teams = this.teamService.getTeams();
     this.tournaments = this.tournamentService.getTournaments();
@@ -81,6 +86,7 @@ export class PageCreateVideoComponent implements OnInit {
       (value: VideoCategoriesEnum | null) => {
         if (!value) {
           this.additionalFields = [];
+          this.updateFormValidation();
           return;
         }
 
@@ -129,21 +135,95 @@ export class PageCreateVideoComponent implements OnInit {
           default:
             this.additionalFields = [];
         }
+        this.updateFormValidation();
       }
     );
+  }
+
+  private updateFormValidation(): void {
+    // Reset all additional fields
+    this.form.controls.topic.clearValidators();
+    this.form.controls.guests.clearValidators();
+    this.form.controls.weaponType.clearValidators();
+    this.form.controls.gameSystem.clearValidators();
+    this.form.controls.tournamentId.clearValidators();
+    this.form.controls.teamOneId.clearValidators();
+    this.form.controls.teamTwoId.clearValidators();
+    this.form.controls.teamOneCity.clearValidators();
+    this.form.controls.teamTwoCity.clearValidators();
+    this.form.controls.tournamentCity.clearValidators();
+    this.form.controls.tournamentStartDate.clearValidators();
+    this.form.controls.tournamentEndDate.clearValidators();
+    this.form.controls.tournamentAddress.clearValidators();
+
+    // Add validators based on visible fields
+    this.additionalFields.forEach(field => {
+      switch (field) {
+        case AdditionalFieldsEnum.TOPIC:
+          this.form.controls.topic.addValidators(Validators.required);
+          break;
+        case AdditionalFieldsEnum.GUESTS:
+          this.form.controls.guests.addValidators(Validators.required);
+          break;
+        case AdditionalFieldsEnum.WEAPON_TYPE:
+          this.form.controls.weaponType.addValidators(Validators.required);
+          break;
+        case AdditionalFieldsEnum.GAME_SYSTEM:
+          this.form.controls.gameSystem.addValidators(Validators.required);
+          break;
+        case AdditionalFieldsEnum.TOURNAMENT:
+          this.form.controls.tournamentId.addValidators(Validators.required);
+          if (this.showNewTournamentFields) {
+            this.form.controls.tournamentCity.addValidators(Validators.required);
+            this.form.controls.tournamentStartDate.addValidators(Validators.required);
+            this.form.controls.tournamentEndDate.addValidators(Validators.required);
+            this.form.controls.tournamentAddress.addValidators(Validators.required);
+          }
+          break;
+        case AdditionalFieldsEnum.TEAMS:
+          this.form.controls.teamOneId.addValidators([Validators.required, differentTeamsValidator]);
+          this.form.controls.teamTwoId.addValidators([Validators.required, differentTeamsValidator]);
+          if (this.showNewTeamOneFields) {
+            this.form.controls.teamOneCity.addValidators(Validators.required);
+          }
+          if (this.showNewTeamTwoFields) {
+            this.form.controls.teamTwoCity.addValidators(Validators.required);
+          }
+          break;
+      }
+    });
+
+    // Update validation state
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      if (control) {
+        control.updateValueAndValidity();
+      }
+    });
   }
 
   public onSubmit(): void {
     if (!this.form.valid) {
       this.markAllFieldsAsTouched();
+      this.toastService.showError('Bitte fülle alle erforderlichen Felder aus.');
       return;
     }
 
-    //this.videoService.create(this.form.value);
+    const formValue = this.form.getRawValue();
+    if (!formValue.category) {
+      this.toastService.showError('Bitte wähle eine Kategorie aus.');
+      return;
+    }
 
+    const videoData: CreateVideoRequest = {
+      ...formValue,
+      category: formValue.category as VideoCategoriesEnum,
+      weaponType: formValue.weaponType as WeaponTypesEnum | undefined,
+      gameSystem: formValue.gameSystem as GameSystemTypesEnum | undefined
+    };
+
+    this.videosDataService.create(videoData);
     this.form.reset();
-
-    this.router.navigate(['/']);
   }
 
   private markAllFieldsAsTouched(): void {

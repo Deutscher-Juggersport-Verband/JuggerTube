@@ -1,14 +1,20 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
+import { UiToastContainerComponent } from './components/ui-toast-container/ui-toast-container.component';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
-import {InfoBarComponent} from './info-bar/info-bar.component';
+import { InfoBarComponent } from './info-bar/info-bar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterModule, HeaderBarComponent, InfoBarComponent],
   standalone: true,
+  imports: [
+    RouterOutlet,
+    HeaderBarComponent,
+    InfoBarComponent,
+    UiToastContainerComponent
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.less',
+  styleUrls: ['./app.component.less']
 })
 export class AppComponent {}

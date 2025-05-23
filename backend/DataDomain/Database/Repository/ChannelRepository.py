@@ -2,6 +2,7 @@ from typing import List
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels
+from DataDomain.Database.Session import Session
 from Infrastructure.Logger import logger
 
 
@@ -58,21 +59,10 @@ class ChannelRepository:
 
     @staticmethod
     def getChannelIdByLink(channelLink: str) -> int | None:
-        """Get Channel by id"""
-
-        channel = db.session.query(
-            Channels.id,
-            Channels.channel_link
-        ).filter(
-            Channels.channel_link == channelLink
-        ).group_by(
-            Channels.id
-        ).first()
-
-        if not channel:
-            return None
-
-        return channel.id
+        """Get channel ID by link"""
+        with Session() as session:
+            channel = session.query(Channels).filter(Channels.link == channelLink).first()
+            return channel.id if channel else None
 
     @staticmethod
     def getChannelIdByName(channelName: str) -> int | None:
@@ -94,17 +84,15 @@ class ChannelRepository:
         return channel.id
 
     @staticmethod
+    def getAll() -> list[Channels]:
+        """Get all channels"""
+        with Session() as session:
+            return session.query(Channels).all()
+
+    @staticmethod
     def create(channel: Channels) -> int:
         """Create a new channel"""
-        try:
-            db.session.add(channel)
-            db.session.commit()
-
-            logger.info(f'ChannelRepository | Create | created channel {channel.id}')
-
+        with Session() as session:
+            session.add(channel)
+            session.commit()
             return channel.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'ChannelRepository | Create | {e}')
-            raise e

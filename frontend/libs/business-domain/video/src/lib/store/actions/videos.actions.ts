@@ -4,8 +4,9 @@ import { createAction, props } from '@ngrx/store';
 
 import { LoadedRange } from '../models/videos-state.model';
 import { VideoApiResponseModel } from '@frontend/video-data';
+import { CreateVideoRequest } from '@frontend/video-data';
 
-enum VideosActionNamesEnum {
+export enum VideosActionNamesEnum {
   LoadPaginatedVideos = '[Videos] Load Paginated Videos',
   LoadPaginatedVideosSuccess = '[Videos] Load Paginated Videos Success',
   LoadPaginatedVideosError = '[Videos] Load Paginated Videos Error',
@@ -15,7 +16,10 @@ enum VideosActionNamesEnum {
   MergeVideoRanges = '[Videos] Merge Video Ranges',
   UpdateCurrentView = '[Videos] Update Current View',
   CacheVideos = '[Videos] Cache Videos',
-  RequestVideoRange = '[Videos] Request Video Range'
+  RequestVideoRange = '[Videos] Request Video Range',
+  CreateVideo = '[Videos] Create Video',
+  CreateVideoSuccess = '[Videos] Create Video Success',
+  CreateVideoFailure = '[Videos] Create Video Failure'
 }
 
 export const loadPaginatedVideosAction = createAction(
@@ -94,4 +98,19 @@ export const requestVideoRange = createAction(
     start: number;
     limit: number;
   }>()
+);
+
+export const createVideo = createAction(
+  VideosActionNamesEnum.CreateVideo,
+  props<{ videoData: CreateVideoRequest }>()
+);
+
+export const createVideoSuccess = createAction(
+  VideosActionNamesEnum.CreateVideoSuccess,
+  props<{ response: { id: number; message: string } }>()
+);
+
+export const createVideoFailure = createAction(
+  VideosActionNamesEnum.CreateVideoFailure,
+  props<{ error: string }>()
 );

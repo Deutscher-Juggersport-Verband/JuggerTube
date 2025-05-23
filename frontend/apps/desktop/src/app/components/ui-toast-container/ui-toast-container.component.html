@@ -1,0 +1,5 @@
+<div class="toast-container">
+  @for (toast of toasts$ | async; track toast.id) {
+    <ui-toast [toast]="toast" />
+  }
+</div>
