@@ -38,7 +38,7 @@
     </main>
 
     <aside>
-      @if (video.tournament?.name) {
+      @if (video.tournament.name) {
       <div
         (click)="showTournamentDetails = !showTournamentDetails"
         class="toggle-details"
@@ -69,7 +69,7 @@
       </div>
       }
 
-      @if (video.teamOne?.name) {
+      @if (video.teamOne.name) {
       <div
         (click)="showTeamOneDetails = !showTeamOneDetails"
         class="toggle-details"
@@ -97,11 +97,11 @@
       </div>
       }
 
-      @if (video.teamOne?.name && video.teamTwo?.name) {
+      @if (video.teamOne.name && video.teamTwo.name) {
         <span>vs.</span>
       }
 
-      @if (video.teamTwo?.name) {
+      @if (video.teamTwo.name) {
       <div
         (click)="showTeamTwoDetails = !showTeamTwoDetails"
         class="toggle-details"

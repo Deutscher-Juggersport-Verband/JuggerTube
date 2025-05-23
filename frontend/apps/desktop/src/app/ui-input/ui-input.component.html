@@ -13,7 +13,6 @@
 <select
   id="{{ labelText }}"
   [formControl]="formControlElement"
-  [disabled]="disabled"
 >
   @for (option of dropdownOptions; track option) {
   <option [value]="option">
@@ -26,7 +25,6 @@
   id="{{ labelText }}"
   [type]="type"
   [placeholder]="placeholder"
-  [disabled]="disabled"
   [formControl]="formControlElement"
 />
 } }

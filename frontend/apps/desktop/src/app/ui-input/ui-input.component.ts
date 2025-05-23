@@ -30,7 +30,6 @@ export class UiInputComponent {
   @Input() public labelText!: string;
   @Input() public type: UiInputTypeEnum = UiInputTypeEnum.TEXT;
   @Input() public placeholder: string = '';
-  @Input() public disabled: boolean = false;
   @Input() public direction: UiInputDirectionEnum = UiInputDirectionEnum.COLUMN;
   @Input() public formControlElement!: FormControl;
   @Input() public infoButtonHeadline?: string;
