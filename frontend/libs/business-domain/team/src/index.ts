@@ -1,1 +1,1 @@
-export * from './lib/team/team.component';
+export * from './lib/team/services/teams.data-service';
