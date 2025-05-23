@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+
 import { UiInfoButtonComponent } from '../ui-info-button/ui-info-button.component';
 
 @Component({

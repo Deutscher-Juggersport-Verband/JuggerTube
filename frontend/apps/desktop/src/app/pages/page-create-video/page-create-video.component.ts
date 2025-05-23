@@ -18,6 +18,7 @@ import {
   UiInputDirectionEnum,
   UiInputTypeEnum,
 } from '../../ui-input/ui-input.component';
+import { UiLabelRowComponent } from '../../ui-label-row/ui-label-row.component';
 import {TeamsDataService} from '@frontend/team';
 import {TeamApiResponseModel} from '@frontend/team-data';
 import {TournamentsDataService} from '@frontend/tournament';
@@ -39,6 +40,7 @@ import {
     UiButtonComponent,
     UiInputComponent,
     UiAutocompleteInputComponent,
+    UiLabelRowComponent,
     ReactiveFormsModule,
   ],
   standalone: true,
@@ -51,6 +53,7 @@ export class PageCreateVideoComponent implements OnInit {
 
   protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
+  protected showNewTournamentFields = false;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
@@ -151,7 +154,7 @@ export class PageCreateVideoComponent implements OnInit {
   }
 
   public onNewTournament(name: string): void {
-    // Hier können wir später die Logik für neue Turniere implementieren
+    this.showNewTournamentFields = true;
     console.log('Neues Turnier:', name);
   }
 

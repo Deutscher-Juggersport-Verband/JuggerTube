@@ -28,6 +28,10 @@ export type VideoFormModel = {
   teamOneId: FormControl<number>;
   teamTwoId: FormControl<number>;
   comment: FormControl<string>;
+  tournamentCity: FormControl<string>;
+  tournamentStartDate: FormControl<string>;
+  tournamentEndDate: FormControl<string>;
+  tournamentAddress: FormControl<string>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -87,6 +91,22 @@ export class VideoFormService {
         validators: [Validators.required, differentTeamsValidator],
       }),
       comment: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      tournamentCity: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      tournamentStartDate: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      tournamentEndDate: new FormControl({ value: '', disabled: false }, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      tournamentAddress: new FormControl({ value: '', disabled: false }, {
         nonNullable: true,
         validators: [Validators.required],
       }),

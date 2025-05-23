@@ -4,7 +4,6 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { UiLabelRowComponent } from '../ui-label-row/ui-label-row.component';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
 
@@ -14,7 +13,7 @@ type ValueFieldType = keyof Pick<OptionType, 'id'>;
 
 @Component({
   selector: 'ui-autocomplete-input',
-  imports: [CommonModule, ReactiveFormsModule, UiLabelRowComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   standalone: true,
   templateUrl: './ui-autocomplete-input.component.html',
   styleUrl: './ui-autocomplete-input.component.less',
@@ -28,7 +27,7 @@ export class UiAutocompleteInputComponent {
   @Input() public placeholder: string = 'Suchen...';
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
-  @Output() public onNewOption = new EventEmitter<string>();
+  @Output() public newOption = new EventEmitter<string>();
 
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
@@ -74,7 +73,7 @@ export class UiAutocompleteInputComponent {
   public onAddNewOption(): void {
     const newValue = this.searchControl.value;
     if (newValue) {
-      this.onNewOption.emit(newValue);
+      this.newOption.emit(newValue);
     }
   }
 }

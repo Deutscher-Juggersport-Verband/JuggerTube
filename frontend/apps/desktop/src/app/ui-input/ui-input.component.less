@@ -1,30 +1,18 @@
 @import 'colors-desktop';
 
 :host {
-  display: flex;
-
-  &.column {
-    flex-direction: column;
-  }
-
-  &.row {
-    flex-direction: row;
-
-    input,
-    select {
-      margin-top: 0;
-    }
-  }
+  display: block;
+  width: 100%;
 
   input,
   select {
     background-color: @color-bg-white;
     border-radius: 8px;
     border: 1px solid @color-green;
-    margin-top: 8px;
     height: 35px;
     font-size: 16px;
     padding: 4px 8px;
+    width: 100%;
 
     &.invalid {
       border: 2px solid @color-red;
