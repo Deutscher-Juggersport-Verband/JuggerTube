@@ -32,6 +32,7 @@ export class UiAutocompleteInputComponent {
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
   public searchControl = new FormControl('');
+  public hasExactMatch = false;
 
   constructor() {
     this.searchControl.valueChanges
@@ -44,13 +45,33 @@ export class UiAutocompleteInputComponent {
   private filterOptions(searchTerm: string | null): void {
     if (!searchTerm) {
       this.filteredOptions = this.options;
+      this.hasExactMatch = false;
       return;
     }
 
     const searchTermLower = searchTerm.toLowerCase();
-    this.filteredOptions = this.options.filter((option) =>
-      option[this.displayField].toLowerCase().includes(searchTermLower)
+    const exactMatchCaseInsensitive = this.options.find(
+      (option) => option[this.displayField].toLowerCase() === searchTermLower
     );
+    const exactMatchCaseSensitive = this.options.find(
+      (option) => option[this.displayField] === searchTerm
+    );
+
+    if (exactMatchCaseInsensitive) {
+      this.filteredOptions = [exactMatchCaseInsensitive];
+      this.hasExactMatch = true;
+    } else {
+      this.filteredOptions = this.options.filter((option) =>
+        option[this.displayField].toLowerCase().includes(searchTermLower)
+      );
+      this.hasExactMatch = false;
+    }
+
+    // Wenn es einen case-sensitiven Match gibt, aber keinen case-insensitiven,
+    // dann haben wir einen exakten Match mit unterschiedlicher Groß-/Kleinschreibung
+    if (exactMatchCaseSensitive && !exactMatchCaseInsensitive) {
+      this.hasExactMatch = true;
+    }
   }
 
   public onOptionSelect(option: OptionType): void {

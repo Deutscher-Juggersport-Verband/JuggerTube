@@ -121,7 +121,7 @@
           <ui-input
             [type]="UiInputTypeEnum.TOGGLE"
             [formControlElement]="form.controls.teamOneMix"
-            (onChange)="onMixTeamToggle($event, 'one')"
+            (valueChange)="onMixTeamToggle($event, 'one')"
             class="mixteam-input"
           />
         </div>
@@ -152,7 +152,7 @@
           <ui-input
             [type]="UiInputTypeEnum.TOGGLE"
             [formControlElement]="form.controls.teamOneMix"
-            (onChange)="onMixTeamToggle($event, 'one')"
+            (valueChange)="onMixTeamToggle($event, 'one')"
             class="mixteam-input"
           />
         </div>

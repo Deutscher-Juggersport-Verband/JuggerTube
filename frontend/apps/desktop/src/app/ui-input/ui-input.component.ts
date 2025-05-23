@@ -2,15 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { UiLabelRowComponent } from '../ui-label-row/ui-label-row.component';
-
 export enum UiInputTypeEnum {
   TEXT = 'text',
   NUMBER = 'number',
   DATE = 'date',
   EMAIL = 'email',
   PASSWORD = 'password',
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   DROPDOWN = 'dropdown',
   TOGGLE = 'toggle',
 }
@@ -22,7 +19,7 @@ export enum UiInputDirectionEnum {
 
 @Component({
   selector: 'ui-input',
-  imports: [CommonModule, ReactiveFormsModule, UiLabelRowComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   standalone: true,
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.less',
@@ -38,7 +35,7 @@ export class UiInputComponent {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() public dropdownOptions?: any[];
   @Input() public flexibleLabel: boolean = false;
-  @Output() public onChange = new EventEmitter<boolean>();
+  @Output() public valueChange = new EventEmitter<boolean>();
 
   @HostBinding('class')
   private get hostClass(): UiInputDirectionEnum {
@@ -49,6 +46,6 @@ export class UiInputComponent {
 
   public onToggleChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.onChange.emit(target.checked);
+    this.valueChange.emit(target.checked);
   }
 }

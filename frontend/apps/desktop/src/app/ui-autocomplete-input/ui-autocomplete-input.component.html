@@ -18,14 +18,14 @@
             {{ option[displayField] }}
           </div>
         }
-      } @else {
+      }
+      @if (!hasExactMatch) {
         <div class="option no-results">
-          Keine Ergebnisse gefunden
           <button
             class="add-new"
             (mousedown)="onAddNewOption()"
           >
-            Neu hinzufügen
+            "{{ searchControl.value }}" neu hinzufügen
           </button>
         </div>
       }
