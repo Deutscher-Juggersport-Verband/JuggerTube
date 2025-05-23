@@ -4,9 +4,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import {UiInfoButtonComponent} from '../ui-info-button/ui-info-button.component';
-import {TeamApiResponseModel} from '@frontend/team-data';
-import {TournamentApiResponseModel} from '@frontend/tournament-data';
+import { UiLabelRowComponent } from '../ui-label-row/ui-label-row.component';
+import { TeamApiResponseModel } from '@frontend/team-data';
+import { TournamentApiResponseModel } from '@frontend/tournament-data';
 
 type OptionType = TournamentApiResponseModel | TeamApiResponseModel;
 type DisplayFieldType = keyof Pick<OptionType, 'name'>;
@@ -14,7 +14,7 @@ type ValueFieldType = keyof Pick<OptionType, 'id'>;
 
 @Component({
   selector: 'ui-autocomplete-input',
-  imports: [CommonModule, ReactiveFormsModule, UiInfoButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, UiLabelRowComponent],
   standalone: true,
   templateUrl: './ui-autocomplete-input.component.html',
   styleUrl: './ui-autocomplete-input.component.less',

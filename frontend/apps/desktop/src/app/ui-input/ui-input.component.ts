@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostBinding, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { UiInfoButtonComponent } from '../ui-info-button/ui-info-button.component';
+import { UiLabelRowComponent } from '../ui-label-row/ui-label-row.component';
 
 export enum UiInputTypeEnum {
   TEXT = 'text',
@@ -21,7 +21,7 @@ export enum UiInputDirectionEnum {
 
 @Component({
   selector: 'ui-input',
-  imports: [CommonModule, ReactiveFormsModule, UiInfoButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, UiLabelRowComponent],
   standalone: true,
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.less',
@@ -36,6 +36,7 @@ export class UiInputComponent {
   @Input() public infoButtonContent?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() public dropdownOptions?: any[];
+  @Input() public flexibleLabel: boolean = false;
 
   @HostBinding('class')
   private get hostClass(): UiInputDirectionEnum {
