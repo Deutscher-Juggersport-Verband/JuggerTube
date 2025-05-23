@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import requests
 from urllib3.exceptions import InsecureRequestWarning
@@ -7,6 +9,7 @@ from enums import TARGET_SHEETS, VideoCategoriesEnum
 from data_processor import DataProcessor
 from helpers import send_data_to_backend
 
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -95,7 +98,7 @@ def clean_value(value):
 def send_data_to_backend(endpoint, data, entity_name):
     try:
         response = requests.post(
-            f'https://localhost:8080{endpoint}',
+            f'https://{base_host}{endpoint}',
             json=data,
             verify=False  # Since it's localhost, we can skip SSL verification
         )

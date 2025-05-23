@@ -38,7 +38,7 @@
     </main>
 
     <aside>
-      @if (video.tournament?.name) {
+      @if (video.tournament) {
       <div
         (click)="showTournamentDetails = !showTournamentDetails"
         class="toggle-details"
@@ -47,7 +47,7 @@
           <span>{{ video.tournament.name }}</span>
 
           <svg
-            [ngClass]="{ rotated: showTournamentDetails }"
+            [class.rotated]="showTournamentDetails"
             width="18"
             height="18"
             fill="currentColor"
@@ -69,7 +69,7 @@
       </div>
       }
 
-      @if (video.teamOne?.name) {
+      @if (video.teamOne) {
       <div
         (click)="showTeamOneDetails = !showTeamOneDetails"
         class="toggle-details"
@@ -78,7 +78,7 @@
           <span>{{ video.teamOne.name }}</span>
 
           <svg
-            [ngClass]="{ rotated: showTeamOneDetails }"
+            [class.rotated]="showTeamOneDetails"
             width="18"
             height="18"
             fill="currentColor"
@@ -97,11 +97,11 @@
       </div>
       }
 
-      @if (video.teamOne?.name && video.teamTwo?.name) {
+      @if (video.teamOne && video.teamTwo) {
         <span>vs.</span>
       }
 
-      @if (video.teamTwo?.name) {
+      @if (video.teamTwo) {
       <div
         (click)="showTeamTwoDetails = !showTeamTwoDetails"
         class="toggle-details"
@@ -110,7 +110,7 @@
           <span>{{ video.teamTwo.name }}</span>
 
           <svg
-            [ngClass]="{ rotated: showTeamTwoDetails }"
+            [class.rotated]="showTeamTwoDetails"
             width="18"
             height="18"
             fill="currentColor"

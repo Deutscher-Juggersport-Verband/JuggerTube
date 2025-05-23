@@ -33,9 +33,9 @@ export interface VideoApiResponseModel {
   topic: string;
   guests: string;
   channel: Channel;
-  tournament: Tournament;
-  teamOne: Team;
-  teamTwo: Team;
+  tournament?: Tournament;
+  teamOne?: Team;
+  teamTwo?: Team;
 }
 
 export interface PaginatedVideosApiResponseModel {

@@ -1,3 +1,5 @@
+import os
+
 from googleapiclient.discovery import build
 from cache_manager import load_cache, save_cache
 from video_processor import process_video_data
@@ -85,8 +87,10 @@ def log_video_error(video_name, tournament_name, team_one_name, team_two_name, e
     error_log.append(error_entry)
     save_error_log(error_log)
 
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
+
 # Change URL depending on the environment
-create_videos_url = 'https://localhost:8080/api/video-frontend/create-multiple-videos'
+create_videos_url = f'https://{base_host}/api/video-frontend/create-multiple-videos'
 
 def fetch_youtube_videos(youtube, channel_id, videos_cache):
     """Fetch videos from YouTube channel and process them"""

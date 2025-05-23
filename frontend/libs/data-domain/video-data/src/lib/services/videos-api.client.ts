@@ -12,7 +12,7 @@ import {
   providedIn: 'root',
 })
 export class VideosApiClient {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   public get(): Observable<VideoApiResponseModel[]> {
     return this.httpClient.get<VideoApiResponseModel[]>(

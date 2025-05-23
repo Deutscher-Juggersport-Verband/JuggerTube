@@ -1,2 +1,3 @@
 from .CreateMultipleVideosInputFilter import CreateMultipleVideosInputFilter
 from .CreateVideoInputFilter import CreateVideoInputFilter
+from .GetPaginatedVideosInputFilter import GetPaginatedVideosInputFilter

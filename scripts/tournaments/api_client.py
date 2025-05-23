@@ -1,12 +1,16 @@
+import os
+
 import requests
 
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
+
 class ApiClient:
-    def __init__(self, base_url="https://localhost:8080"):
-        self.base_url = base_url
+    def __init__(self):
+        self.base_url = f'https://{base_host}'
         self.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Host': 'localhost:8080'
+            'Host': base_host
         }
 
     def send_tournaments(self, tournaments_data):

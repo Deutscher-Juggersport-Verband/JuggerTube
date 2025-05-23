@@ -1,9 +1,13 @@
+import os
+
 import pandas as pd
 import math
 import requests
 import warnings
 from urllib3.exceptions import NotOpenSSLWarning
 from typing import Any, Dict, Optional
+
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
 # Suppress the specific urllib3 warning about LibreSSL
 warnings.filterwarnings('ignore', category=NotOpenSSLWarning)
@@ -18,7 +22,7 @@ def send_data_to_backend(endpoint: str, data: Dict, entity_name: str) -> bool:
     """Send data to the backend API."""
     try:
         response = requests.post(
-            f'https://localhost:8080{endpoint}',
+            f'https://{base_host}{endpoint}',
             json=data,
             verify=False
         )

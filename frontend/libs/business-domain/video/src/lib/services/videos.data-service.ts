@@ -10,8 +10,7 @@ import {paginatedVideosDataSelector} from '../store/selectors/paginated-videos-d
 import {totalCountVideosDataSelector} from '../store/selectors/total-count-videos-data.selector';
 import { videosRequestStateSelector } from '../store/selectors/videos-request-state.selector';
 import { videosStateFeatureSelector } from '../store/selectors/videos-state-feature.selector';
-import { isRangeCached } from '../utils/range-utils';
-import { getDisplayedVideoIndices } from '../utils/range-utils';
+import { getDisplayedVideoIndices,isRangeCached } from '../utils/range-utils';
 import { RequestStateEnum } from '@frontend/api';
 import { SingletonGetter } from '@frontend/cache';
 import { VideoApiResponseModel } from '@frontend/video-data';

@@ -5,16 +5,13 @@ from DataDomain.Model import Response
 from ExternalApi.VideoFrontend.Handler import (
     CreateMultipleVideosHandler,
     CreateVideoHandler,
-    GetVideoOverviewHandler,
+    GetVideoOverviewHandler,GetPaginatedVideosHandler
 )
-from ExternalApi.VideoFrontend.InputFilter.CreateMultipleVideosInputFilter import (
+from ExternalApi.VideoFrontend.InputFilter import (
     CreateMultipleVideosInputFilter,
-)
-from ExternalApi.VideoFrontend.InputFilter.CreateVideoInputFilter import (
     CreateVideoInputFilter,
+    GetPaginatedVideosInputFilter
 )
-
-from ExternalApi.VideoFrontend.Handler.GetPaginatedVideosHandler import GetPaginatedVideosHandler
 
 video_frontend = Blueprint('video-frontend', __name__)
 
@@ -28,6 +25,7 @@ def getVideoOverview() -> Response:
 
 @video_frontend.route('/get-paginated-videos',
                       methods=['GET'], endpoint='get-paginated-videos')
+@GetPaginatedVideosInputFilter.validate()
 @cache.cached(key_prefix='paginated-videos')
 def getPaginatedVideos() -> Response:
     return GetPaginatedVideosHandler.handle()
