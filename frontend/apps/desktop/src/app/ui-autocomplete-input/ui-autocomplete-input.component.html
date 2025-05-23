@@ -1,0 +1,45 @@
+<div class="label-row">
+  <label for="{{ labelText }}">{{ labelText }}</label>
+
+  @if (infoButtonHeadline) {
+    <ui-info-button>
+      <p class="i-headline">{{ infoButtonHeadline }}</p>
+      <p>{{ infoButtonContent }}</p>
+    </ui-info-button>
+  }
+</div>
+
+<div class="input-container">
+  <input
+    type="text"
+    [formControl]="searchControl"
+    [placeholder]="placeholder"
+    (focus)="onInputFocus()"
+    (blur)="onInputBlur()"
+  />
+
+  @if (showDropdown) {
+    <div class="dropdown">
+      @if (filteredOptions.length > 0) {
+        @for (option of filteredOptions; track option[valueField]) {
+          <div
+            class="option"
+            (mousedown)="onOptionSelect(option)"
+          >
+            {{ option[displayField] }}
+          </div>
+        }
+      } @else {
+        <div class="option no-results">
+          Keine Ergebnisse gefunden
+          <button
+            class="add-new"
+            (mousedown)="onAddNewOption()"
+          >
+            Neu hinzufügen
+          </button>
+        </div>
+      }
+    </div>
+}
+</div>
