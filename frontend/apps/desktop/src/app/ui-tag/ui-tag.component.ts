@@ -6,6 +6,7 @@ import { Component, HostBinding, Input } from '@angular/core';
   imports: [CommonModule],
   templateUrl: './ui-tag.component.html',
   styleUrl: './ui-tag.component.less',
+  standalone: true,
 })
 export class UiTagComponent {
   @Input() public category!: string;

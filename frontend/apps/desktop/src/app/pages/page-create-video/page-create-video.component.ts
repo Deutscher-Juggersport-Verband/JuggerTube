@@ -5,12 +5,10 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { UiAutocompleteInputComponent } from '../../ui-autocomplete-input/ui-autocomplete-input.component';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
@@ -20,113 +18,19 @@ import {
   UiInputDirectionEnum,
   UiInputTypeEnum,
 } from '../../ui-input/ui-input.component';
-import { UiAutocompleteInputComponent } from '../../ui-autocomplete-input/ui-autocomplete-input.component';
 import {TeamsDataService} from '@frontend/team';
 import {TeamApiResponseModel} from '@frontend/team-data';
 import {TournamentsDataService} from '@frontend/tournament';
 import {TournamentApiResponseModel} from '@frontend/tournament-data';
 import {
+  AdditionalFieldsEnum, VideoFormModel,
+  VideoFormService
+} from '@frontend/video';
+import {
   GameSystemTypesEnum,
   VideoCategoriesEnum,
   WeaponTypesEnum,
 } from '@frontend/video-data';
-
-function differentTeamsValidator(control: AbstractControl): ValidationErrors | null {
-  const formGroup = control.parent;
-  if (!formGroup) return null;
-
-  const teamOneId = formGroup.get('teamOneId')?.value;
-  const teamTwoId = formGroup.get('teamTwoId')?.value;
-
-  if (teamOneId && teamTwoId && teamOneId === teamTwoId) {
-    return { sameTeam: true };
-  }
-
-  return null;
-}
-
-export const createVideoForm = new FormGroup<{
-  name: FormControl<string>;
-  videoLink: FormControl<string>;
-  channelLink: FormControl<string>;
-  category: FormControl<VideoCategoriesEnum | null>;
-  uploadDate: FormControl<string>;
-  dateOfRecording: FormControl<string>;
-  topic: FormControl<string>;
-  guests: FormControl<string>;
-  weaponType: FormControl<WeaponTypesEnum | null>;
-  gameSystem: FormControl<GameSystemTypesEnum | null>;
-  tournamentId: FormControl<number>;
-  teamOneId: FormControl<number>;
-  teamTwoId: FormControl<number>;
-  comment: FormControl<string>;
-}>({
-  name: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required, Validators.email],
-  }),
-  videoLink: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  channelLink: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  category: new FormControl({ value: null, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  uploadDate: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  dateOfRecording: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  topic: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  guests: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  weaponType: new FormControl({ value: null, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  gameSystem: new FormControl({ value: null, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  tournamentId: new FormControl({ value: 0, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-  teamOneId: new FormControl({ value: 0, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required, differentTeamsValidator],
-  }),
-  teamTwoId: new FormControl({ value: 0, disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required, differentTeamsValidator],
-  }),
-  comment: new FormControl({ value: '', disabled: false }, {
-    nonNullable: true,
-    validators: [Validators.required],
-  }),
-});
-
-export enum AdditionalFieldsEnum {
-  GAME_SYSTEM = 'gameSystem',
-  WEAPON_TYPE = 'weaponType',
-  TOPIC = 'topic',
-  GUESTS = 'guests',
-  TEAMS = 'teams',
-  TOURNAMENT = 'tournament',
-}
 
 @Component({
   imports: [
@@ -145,13 +49,12 @@ export class PageCreateVideoComponent implements OnInit {
   public teams: Signal<TeamApiResponseModel[]  | undefined>;
   public tournaments: Signal<TournamentApiResponseModel[]  | undefined>;
 
-  protected readonly form = createVideoForm;
+  protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
   protected readonly UiInputDirectionEnum = UiInputDirectionEnum;
-  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
   protected readonly Object = Object;
   protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
@@ -160,10 +63,12 @@ export class PageCreateVideoComponent implements OnInit {
   constructor(
     private router: Router,
     private tournamentService: TournamentsDataService,
-    private teamService: TeamsDataService
+    private teamService: TeamsDataService,
+    private readonly videoFormService: VideoFormService,
   ) {
-    this.teams = this.teamService.getTeams()
-    this.tournaments = this.tournamentService.getTournaments()
+    this.teams = this.teamService.getTeams();
+    this.tournaments = this.tournamentService.getTournaments();
+    this.form = this.videoFormService.create();
   }
 
   public ngOnInit() {
@@ -266,4 +171,6 @@ export class PageCreateVideoComponent implements OnInit {
     // Hier können wir später die Logik für neue Teams implementieren
     console.log('Neues Team:', name);
   }
+
+  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
 }

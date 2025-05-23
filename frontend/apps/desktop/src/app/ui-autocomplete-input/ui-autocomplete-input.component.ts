@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import {UiInfoButtonComponent} from "../ui-info-button/ui-info-button.component";
+
+import {UiInfoButtonComponent} from '../ui-info-button/ui-info-button.component';
+import {TeamApiResponseModel} from '@frontend/team-data';
+import {TournamentApiResponseModel} from '@frontend/tournament-data';
+
+type OptionType = TournamentApiResponseModel | TeamApiResponseModel;
+type DisplayFieldType = keyof Pick<OptionType, 'name'>;
+type ValueFieldType = keyof Pick<OptionType, 'id'>;
 
 @Component({
   selector: 'ui-autocomplete-input',
@@ -14,15 +22,15 @@ import {UiInfoButtonComponent} from "../ui-info-button/ui-info-button.component"
 export class UiAutocompleteInputComponent {
   @Input() public labelText!: string;
   @Input() public formControlElement!: FormControl;
-  @Input() public options: any[] = [];
-  @Input() public displayField: string = 'name';
-  @Input() public valueField: string = 'id';
+  @Input() public options: OptionType[] = [];
+  @Input() public displayField: DisplayFieldType = 'name';
+  @Input() public valueField: ValueFieldType = 'id';
   @Input() public placeholder: string = 'Suchen...';
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
   @Output() public onNewOption = new EventEmitter<string>();
 
-  public filteredOptions: any[] = [];
+  public filteredOptions: OptionType[] = [];
   public showDropdown = false;
   public searchControl = new FormControl('');
 
@@ -46,7 +54,7 @@ export class UiAutocompleteInputComponent {
     );
   }
 
-  public onOptionSelect(option: any): void {
+  public onOptionSelect(option: OptionType): void {
     this.formControlElement.setValue(option[this.valueField]);
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
@@ -58,7 +66,6 @@ export class UiAutocompleteInputComponent {
   }
 
   public onInputBlur(): void {
-    // Verzögern des Schließens, damit Klicks auf Optionen noch funktionieren
     setTimeout(() => {
       this.showDropdown = false;
     }, 200);
