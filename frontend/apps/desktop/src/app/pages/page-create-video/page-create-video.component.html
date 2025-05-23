@@ -44,7 +44,7 @@
     [direction]="UiInputDirectionEnum.ROW"
   />
 
-  @for (field of additionalFields; track additionalFields) { @switch (field) {
+  @for (field of additionalFields; track field) { @switch (field) {
   @case (AdditionalFieldsEnum.TOPIC) {
   <ui-input
     [labelText]="'Thema:'"
@@ -60,39 +60,53 @@
     [direction]="UiInputDirectionEnum.ROW"
   />
   } @case (AdditionalFieldsEnum.TOURNAMENT) {
-  <ui-input
-    [labelText]="'Turnier:'"
-    [type]="UiInputTypeEnum.DROPDOWN"
-    [formControlElement]="form.controls.tournamentId"
-    [direction]="UiInputDirectionEnum.ROW"
-    [dropdownOptions]="tournamentOptions"
-  />
+    <ui-autocomplete-input
+      [formControlElement]="form.controls.tournamentId"
+      [labelText]="'Turnier: '"
+      [options]="tournaments() || []"
+      [displayField]="'name'"
+      [valueField]="'id'"
+      [placeholder]="'Turnier suchen...'"
+      (onNewOption)="onNewTournament($event)"
+    />
   } @case (AdditionalFieldsEnum.TEAMS) {
-  <div class="team-row">
-    <ui-input
-      [labelText]="'Team 1:'"
-      [type]="UiInputTypeEnum.DROPDOWN"
-      [formControlElement]="form.controls.teamOneId"
-      [direction]="UiInputDirectionEnum.ROW"
-      [dropdownOptions]="teamOptions"
-    />
-    <ui-input
-      [labelText]="'Team 2:'"
-      [type]="UiInputTypeEnum.DROPDOWN"
-      [formControlElement]="form.controls.teamTwoId"
-      [direction]="UiInputDirectionEnum.ROW"
-      [dropdownOptions]="teamOptions"
-    />
-  </div>
+    <div class="team-row">
+      <ui-autocomplete-input
+        class="team-input"
+        [formControlElement]="form.controls.teamOneId"
+        [labelText]="'Team 1: '"
+        [options]="teams() || []"
+        [displayField]="'name'"
+        [valueField]="'id'"
+        [placeholder]="'Team 1 suchen...'"
+        (onNewOption)="onNewTeam($event)"
+      />
+      @if (form.controls.teamOneId.errors?.['sameTeam']) {
+        <div class="error-message">Dieses Team wurde bereits als Team 2 ausgewählt</div>
+      }
 
+      <ui-autocomplete-input
+        class="team-input"
+        [formControlElement]="form.controls.teamTwoId"
+        [labelText]="'Team 2: '"
+        [options]="teams() || []"
+        [displayField]="'name'"
+        [valueField]="'id'"
+        [placeholder]="'Team 2 suchen...'"
+        (onNewOption)="onNewTeam($event)"
+      />
+      @if (form.controls.teamTwoId.errors?.['sameTeam']) {
+        <div class="error-message">Dieses Team wurde bereits als Team 1 ausgewählt</div>
+      }
+    </div>
   } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
-  <ui-input
-    [labelText]="'Pompfenart:'"
-    [type]="UiInputTypeEnum.DROPDOWN"
-    [formControlElement]="form.controls.weaponType"
-    [direction]="UiInputDirectionEnum.ROW"
-    [dropdownOptions]="Object.values(WeaponTypesEnum)"
-  />
+    <ui-input
+      [labelText]="'Pompfenart:'"
+      [type]="UiInputTypeEnum.DROPDOWN"
+      [formControlElement]="form.controls.weaponType"
+      [direction]="UiInputDirectionEnum.ROW"
+      [dropdownOptions]="Object.values(WeaponTypesEnum)"
+    />
   } @case (AdditionalFieldsEnum.GAME_SYSTEM) {
   <ui-input
     [labelText]="'Spielsystem:'"

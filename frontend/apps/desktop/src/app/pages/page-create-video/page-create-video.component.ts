@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Signal} from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -18,11 +20,30 @@ import {
   UiInputDirectionEnum,
   UiInputTypeEnum,
 } from '../../ui-input/ui-input.component';
+import { UiAutocompleteInputComponent } from '../../ui-autocomplete-input/ui-autocomplete-input.component';
+import {TeamsDataService} from '@frontend/team';
+import {TeamApiResponseModel} from '@frontend/team-data';
+import {TournamentsDataService} from '@frontend/tournament';
+import {TournamentApiResponseModel} from '@frontend/tournament-data';
 import {
   GameSystemTypesEnum,
   VideoCategoriesEnum,
   WeaponTypesEnum,
 } from '@frontend/video-data';
+
+function differentTeamsValidator(control: AbstractControl): ValidationErrors | null {
+  const formGroup = control.parent;
+  if (!formGroup) return null;
+
+  const teamOneId = formGroup.get('teamOneId')?.value;
+  const teamTwoId = formGroup.get('teamTwoId')?.value;
+
+  if (teamOneId && teamTwoId && teamOneId === teamTwoId) {
+    return { sameTeam: true };
+  }
+
+  return null;
+}
 
 export const createVideoForm = new FormGroup<{
   name: FormControl<string>;
@@ -40,59 +61,59 @@ export const createVideoForm = new FormGroup<{
   teamTwoId: FormControl<number>;
   comment: FormControl<string>;
 }>({
-  name: new FormControl('', {
+  name: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required, Validators.email],
   }),
-  videoLink: new FormControl('', {
+  videoLink: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  channelLink: new FormControl('', {
+  channelLink: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  category: new FormControl(null, {
+  category: new FormControl({ value: null, disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  uploadDate: new FormControl('', {
+  uploadDate: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  dateOfRecording: new FormControl('', {
+  dateOfRecording: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  topic: new FormControl('', {
+  topic: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  guests: new FormControl('', {
+  guests: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  weaponType: new FormControl(null, {
+  weaponType: new FormControl({ value: null, disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  gameSystem: new FormControl(null, {
+  gameSystem: new FormControl({ value: null, disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  tournamentId: new FormControl(0, {
+  tournamentId: new FormControl({ value: 0, disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
-  teamOneId: new FormControl(0, {
+  teamOneId: new FormControl({ value: 0, disabled: false }, {
     nonNullable: true,
-    validators: [Validators.required],
+    validators: [Validators.required, differentTeamsValidator],
   }),
-  teamTwoId: new FormControl(0, {
+  teamTwoId: new FormControl({ value: 0, disabled: false }, {
     nonNullable: true,
-    validators: [Validators.required],
+    validators: [Validators.required, differentTeamsValidator],
   }),
-  comment: new FormControl('', {
+  comment: new FormControl({ value: '', disabled: false }, {
     nonNullable: true,
     validators: [Validators.required],
   }),
@@ -113,6 +134,7 @@ export enum AdditionalFieldsEnum {
     FormsModule,
     UiButtonComponent,
     UiInputComponent,
+    UiAutocompleteInputComponent,
     ReactiveFormsModule,
   ],
   standalone: true,
@@ -120,7 +142,29 @@ export enum AdditionalFieldsEnum {
   styleUrl: './page-create-video.component.less',
 })
 export class PageCreateVideoComponent implements OnInit {
-  constructor(private router: Router) {}
+  public teams: Signal<TeamApiResponseModel[]  | undefined>;
+  public tournaments: Signal<TournamentApiResponseModel[]  | undefined>;
+
+  protected readonly form = createVideoForm;
+  protected additionalFields: AdditionalFieldsEnum[] = [];
+
+  protected readonly UiButtonColorEnum = UiButtonColorEnum;
+  protected readonly UiInputTypeEnum = UiInputTypeEnum;
+  protected readonly UiInputDirectionEnum = UiInputDirectionEnum;
+  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
+  protected readonly Object = Object;
+  protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
+  protected readonly WeaponTypesEnum = WeaponTypesEnum;
+  protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
+
+  constructor(
+    private router: Router,
+    private tournamentService: TournamentsDataService,
+    private teamService: TeamsDataService
+  ) {
+    this.teams = this.teamService.getTeams()
+    this.tournaments = this.tournamentService.getTournaments()
+  }
 
   public ngOnInit() {
     this.form.controls.category.valueChanges.subscribe(
@@ -179,9 +223,6 @@ export class PageCreateVideoComponent implements OnInit {
     );
   }
 
-  protected readonly form = createVideoForm;
-  protected additionalFields: AdditionalFieldsEnum[] = [];
-
   public onSubmit(): void {
     if (!this.form.valid) {
       this.markAllFieldsAsTouched();
@@ -204,15 +245,25 @@ export class PageCreateVideoComponent implements OnInit {
     });
   }
 
-  public tournamentOptions = [];
-  public teamOptions = [];
+  public onNewTournament(name: string): void {
+    // Hier können wir später die Logik für neue Turniere implementieren
+    console.log('Neues Turnier:', name);
+  }
 
-  protected readonly UiButtonColorEnum = UiButtonColorEnum;
-  protected readonly UiInputTypeEnum = UiInputTypeEnum;
-  protected readonly UiInputDirectionEnum = UiInputDirectionEnum;
-  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
-  protected readonly Object = Object;
-  protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
-  protected readonly WeaponTypesEnum = WeaponTypesEnum;
-  protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
+  public onNewTeam(name: string): void {
+    // Prüfe, ob das Team bereits in einem der beiden Felder existiert
+    const existingTeam = this.teams()?.find(team => team.name.toLowerCase() === name.toLowerCase());
+    if (existingTeam) {
+      const teamOneId = this.form.controls.teamOneId.value;
+      const teamTwoId = this.form.controls.teamTwoId.value;
+
+      if (teamOneId === existingTeam.id || teamTwoId === existingTeam.id) {
+        console.warn('Dieses Team wurde bereits ausgewählt');
+        return;
+      }
+    }
+
+    // Hier können wir später die Logik für neue Teams implementieren
+    console.log('Neues Team:', name);
+  }
 }
