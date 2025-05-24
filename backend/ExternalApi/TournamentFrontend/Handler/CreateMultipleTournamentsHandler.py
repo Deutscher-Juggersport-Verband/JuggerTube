@@ -38,7 +38,8 @@ class CreateMultipleTournamentsHandler:
                 )
 
                 # Check if tournament already exists
-                if TournamentRepository.checkIfTournamentAlreadyExists(tournament.name, tournament.start_date):
+                if TournamentRepository.checkIfTournamentAlreadyExists(
+                        tournament.name, tournament.start_date):
                     failed_tournaments.append({
                         'name': tournament.name,
                         'reason': 'Tournament with this name and start date already exists'

@@ -12,6 +12,7 @@ from DataDomain.Database import db
 from ExternalApi.ChannelFrontend.config import channel_frontend
 from ExternalApi.TeamFrontend.config import team_frontend
 from ExternalApi.TournamentFrontend.config import tournament_frontend
+from ExternalApi.UserFrontend.config import user_frontend
 from ExternalApi.VideoFrontend.config import video_frontend
 
 
@@ -29,8 +30,8 @@ def createApp() -> Flask:
                            url_prefix='/api/tournament-frontend')
     app.register_blueprint(team_frontend,
                            url_prefix='/api/team-frontend')
-    # app.register_blueprint(user_frontend,
-    #                       url_prefix='/api/user-frontend')
+    app.register_blueprint(user_frontend,
+                           url_prefix='/api/user-frontend')
     # app.register_blueprint(system, url_prefix='/api/system')
 
     cache.init_app(app)
@@ -38,11 +39,13 @@ def createApp() -> Flask:
     db.init_app(app)
 
     Migrate(
-        app,
-        db,
+        app=app,
+        db=db,
         directory=os.path.join(
             app.config['DATABASE_PATH'],
-            'Migration'))
+            'Migration'
+        )
+    )
 
     Talisman(app, content_security_policy={
         'default-src': ["'self'"],

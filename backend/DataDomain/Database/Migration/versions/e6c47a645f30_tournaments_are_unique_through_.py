@@ -6,8 +6,6 @@ Create Date: 2025-05-15 10:40:06.487151
 
 """
 from alembic import op
-import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision = 'e6c47a645f30'
@@ -28,7 +26,9 @@ def upgrade():
         batch_op.create_unique_constraint(None, ['name'])
 
     with op.batch_alter_table('tournaments', schema=None) as batch_op:
-        batch_op.create_unique_constraint('uix_tournament_name_date', ['name', 'start_date'])
+        batch_op.create_unique_constraint(
+            'uix_tournament_name_date', [
+                'name', 'start_date'])
         batch_op.create_unique_constraint(None, ['id'])
         batch_op.create_unique_constraint(None, ['jtr_link'])
 

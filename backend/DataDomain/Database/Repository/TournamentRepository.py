@@ -1,9 +1,10 @@
 from typing import List
 
+from sqlalchemy import func
+
 from DataDomain.Database import db
 from DataDomain.Database.Model import Tournaments
 from Infrastructure.Logger import logger
-from sqlalchemy import func
 
 
 class TournamentRepository:
@@ -63,7 +64,6 @@ class TournamentRepository:
         ).first())
 
         return tournament is not None
-
 
     @staticmethod
     def create(tournament: Tournaments) -> int:

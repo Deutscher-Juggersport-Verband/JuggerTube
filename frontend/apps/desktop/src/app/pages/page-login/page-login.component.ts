@@ -43,7 +43,7 @@ export const loginForm = new FormGroup<{
   styleUrl: './page-login.component.less',
 })
 export class PageLoginComponent {
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   protected readonly form = loginForm;
 

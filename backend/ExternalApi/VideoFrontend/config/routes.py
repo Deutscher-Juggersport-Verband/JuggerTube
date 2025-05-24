@@ -5,12 +5,13 @@ from DataDomain.Model import Response
 from ExternalApi.VideoFrontend.Handler import (
     CreateMultipleVideosHandler,
     CreateVideoHandler,
-    GetVideoOverviewHandler,GetPaginatedVideosHandler
+    GetPaginatedVideosHandler,
+    GetVideoOverviewHandler,
 )
 from ExternalApi.VideoFrontend.InputFilter import (
     CreateMultipleVideosInputFilter,
     CreateVideoInputFilter,
-    GetPaginatedVideosInputFilter
+    GetPaginatedVideosInputFilter,
 )
 
 video_frontend = Blueprint('video-frontend', __name__)

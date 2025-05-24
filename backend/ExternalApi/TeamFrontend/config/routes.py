@@ -4,7 +4,7 @@ from config import cache
 from DataDomain.Model import Response
 from ExternalApi.TeamFrontend.Handler import (
     CreateMultipleTeamsHandler,
-    GetTeamOverviewHandler
+    GetTeamOverviewHandler,
 )
 from ExternalApi.TeamFrontend.InputFilter import (
     CreateMultipleTeamsInputFilter,

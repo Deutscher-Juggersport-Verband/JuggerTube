@@ -89,7 +89,7 @@ class VideoRepository:
                 'guests': video.guests,
                 'uploadDate': parse_date(video.upload_date),
                 'dateOfRecording': parse_date(video.date_of_recording),
-                'channel':{
+                'channel': {
                     'name': video.channel_name,
                     'link': video.channel_link,
                 },

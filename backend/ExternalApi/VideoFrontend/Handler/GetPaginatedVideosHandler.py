@@ -1,4 +1,5 @@
 from flask import g
+
 from DataDomain.Database.Repository import VideoRepository
 from DataDomain.Model import Response
 

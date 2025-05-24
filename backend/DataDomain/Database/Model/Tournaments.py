@@ -17,7 +17,7 @@ class Tournaments(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique = True,
+        unique=True,
     )
 
     name: str = db.Column(
@@ -43,7 +43,7 @@ class Tournaments(BaseModel):
     jtr_link: str = db.Column(
         db.String(255),
         nullable=False,
-        unique = True,
+        unique=True,
     )
 
     is_deleted: bool = db.Column(
