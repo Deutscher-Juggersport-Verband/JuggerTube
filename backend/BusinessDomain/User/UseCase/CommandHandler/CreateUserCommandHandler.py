@@ -1,4 +1,3 @@
-from datetime import datetime
 
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash
@@ -16,25 +15,18 @@ class CreateUserCommandHandler:
 
         user = Users()
 
-        user.birthdate = datetime.fromisoformat(
-            command.birthdate) if command.birthdate else None
-        user.birthdate_visibility = command.isBirthdateVisible
-        user.city = command.city
-        user.city_visibility = command.isCityVisible
         user.email = command.email
         user.escaped_username = command.username.lower().replace(' ', '-')
-        user.language = command.language
         user.name = command.name
-        user.name_visibility = command.isNameVisible
         user.password_hash = generate_password_hash(command.password)
         user.username = command.username
 
-        userId = UserRepository.create(user)
+        user_id = UserRepository.create(user)
 
-        accessToken = create_access_token(
-            identity=userId
+        access_token = create_access_token(
+            identity=user_id
         )
 
         return CreateUserResult(
-            token=accessToken,
+            token=access_token,
         )

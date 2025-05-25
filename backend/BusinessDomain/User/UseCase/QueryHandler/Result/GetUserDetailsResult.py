@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 
+from DataDomain.Database.Enum import UserRoleEnum
+
 
 @dataclass
 class GetUserDetailsResult:
@@ -8,8 +10,8 @@ class GetUserDetailsResult:
     id: int
     createdAt: datetime
     email: str
-    isDeleted: bool
     name: str
     pictureUrl: str
-    updatedAt: datetime
+    role: UserRoleEnum
     username: str
+    escaped_username: str

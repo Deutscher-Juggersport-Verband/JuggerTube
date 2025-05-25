@@ -37,15 +37,10 @@ components:
           type: string
         password:
           type: string
-        birthdate:
-          type: string
-          format: date
         email:
           type: string
           format: email
         name:
-          type: string
-        language:
           type: string
 
     RegisterResponseBody:
@@ -54,3 +49,5 @@ components:
         token:
           type: string
           example: eyJhbGciOifghjkgfdsfghj
+        error:
+          type: string

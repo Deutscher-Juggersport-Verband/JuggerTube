@@ -39,11 +39,6 @@ components:
     UpdateUserRequestBody:
       type: object
       properties:
-        birthdate:
-          type: string
-          format: date
-        city:
-          type: string
         email:
           type: string
           format: email
@@ -51,16 +46,8 @@ components:
           type: string
         password:
           type: string
-        pronouns:
-          type: string
         username:
           type: string
-        isCityVisible:
-          type: boolean
-        isBirthdateVisible:
-          type: boolean
-        isNameVisible:
-          type: boolean
 
     UpdateUserResponseBody:
       type: object
@@ -68,3 +55,5 @@ components:
         token:
           type: string
           example: eyJhbGciOifghjkgfdsfghj
+        error:
+          type: string

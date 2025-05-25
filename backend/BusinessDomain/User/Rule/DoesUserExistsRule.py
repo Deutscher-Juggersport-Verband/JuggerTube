@@ -5,11 +5,15 @@ class DoesUserExistsRule:
 
     @staticmethod
     def applies(
-            userId: int | None = None,
-            escapedUsername: str | None = None,
+            user_id: int | None = None,
+            escaped_username: str | None = None,
             email: str | None = None) -> bool:
 
-        if userId is None and escapedUsername is None and email is None:
+        if user_id is None and escaped_username is None and email is None:
             return False
 
-        return UserRepository.exists(userId, escapedUsername, email)
+        return UserRepository.exists(
+            user_id=user_id,
+            escaped_username=escaped_username,
+            email=email
+        )

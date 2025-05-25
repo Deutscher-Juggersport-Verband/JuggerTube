@@ -31,12 +31,12 @@ user_frontend = Blueprint('user-frontend', __name__)
 
 @user_frontend.route('/get-user-details',
                      methods=['GET'], endpoint='get-user-details')
-@user_frontend.route('/get-user-details/<escaped_username>',
+@user_frontend.route('/get-user-details/<escapedUsername>',
                      methods=['GET'], endpoint='get-user-details')
 @cache.cached(key_prefix=create_user_cache_key)
 @jwt_required(optional=True)
 @GetUserDetailsInputFilter.validate()
-def get_user_details(escaped_username=None) -> Response:
+def get_user_details(escapedUsername=None) -> Response:
     return GetUserDetailsHandler.handle()
 
 

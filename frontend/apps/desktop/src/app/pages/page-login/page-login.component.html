@@ -15,6 +15,10 @@
     [formControlElement]="form.controls.password"
   />
 
+  @if (error) {
+  <span class="error-message">{{ error }}</span>
+  }
+
   <ui-button
     (click)="onSubmit()"
     (keydown)="onSubmit()"

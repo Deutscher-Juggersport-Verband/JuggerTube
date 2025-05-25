@@ -18,8 +18,7 @@ class LoginUserCommandHandler:
     @staticmethod
     def execute(command: LoginUserCommand) -> LoginUserResult | bool:
 
-        user = UserRepository.getUserByUsernameOrEmail(
-            username=command.username,
+        user = UserRepository.getUserByEmail(
             email=command.email
         )
 
@@ -41,8 +40,7 @@ class LoginUserCommandHandler:
             )
 
             return LoginUserResult(
-                token=access_token,
-                language=user.language
+                token=access_token
             )
 
         current_attempts = CreateOrIncreaseLoginAttemptsRule.applies(

@@ -7,15 +7,11 @@ class LoginAttemptRepository:
 
     @staticmethod
     def exists(username: str) -> bool:
-        """Check if a LoginAttempt entry exists"""
-
         return LoginAttempts.query.filter_by(
-            username=username).first() is not None
+            username=username).first()
 
     @staticmethod
     def update() -> None:
-        """Update a LoginAttempt entry"""
-
         try:
             db.session.commit()
 
@@ -27,8 +23,6 @@ class LoginAttemptRepository:
 
     @staticmethod
     def create(username: str) -> LoginAttempts:
-        """Create a new LoginAttempt entry"""
-
         try:
             loginAttempt = LoginAttempts()
 
@@ -49,6 +43,4 @@ class LoginAttemptRepository:
 
     @staticmethod
     def getByUsername(username: str) -> LoginAttempts | None:
-        """Get a LoginAttempt entry by username"""
-
         return LoginAttempts.query.filter_by(username=username).first()

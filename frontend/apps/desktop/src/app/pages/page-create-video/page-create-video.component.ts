@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,12 +12,10 @@ import { Router } from '@angular/router';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../ui-button/ui-button.component';
-import {
   UiInputComponent,
   UiInputDirectionEnum,
   UiInputTypeEnum,
-} from '../../ui-input/ui-input.component';
+} from '../../ui-shared';
 import {
   GameSystemTypesEnum,
   VideoCategoriesEnum,
@@ -120,7 +118,7 @@ export enum AdditionalFieldsEnum {
   styleUrl: './page-create-video.component.less',
 })
 export class PageCreateVideoComponent implements OnInit {
-  constructor(private router: Router) {}
+  private readonly router: Router = inject(Router);
 
   public ngOnInit() {
     this.form.controls.category.valueChanges.subscribe(

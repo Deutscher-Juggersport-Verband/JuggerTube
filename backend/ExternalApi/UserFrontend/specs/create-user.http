@@ -3,14 +3,10 @@ POST https://{{host}}/api/user-frontend/create-user
 Content-Type: application/json
 
 {
+    "name": "Max Pecu",
     "username": "MaxPecu",
     "password": "123456",
-    "email": "max-pecu@gmail.de",
-    "isBirthdateVisible": true,
-    "birthdate": "1990-01-01",
-    "isCityVisible": true,
-    "city": "Berlin",
-    "isNameVisible": true
+    "email": "max-pecu@gmail.de"
 }
 
 > {%

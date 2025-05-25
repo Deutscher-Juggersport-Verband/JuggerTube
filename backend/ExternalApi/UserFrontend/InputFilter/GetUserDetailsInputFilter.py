@@ -10,7 +10,7 @@ class GetUserDetailsInputFilter(InputFilter):
         super().__init__()
 
         self.add(
-            'escaped_username',
+            'escapedUsername',
             required=False,
             filters=[ToNullFilter()],
             validators=[

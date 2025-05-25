@@ -1,8 +1,7 @@
 from flask_inputfilter import InputFilter
 from flask_inputfilter.enums import RegexEnum
-from flask_inputfilter.filters import StringTrimFilter, ToBooleanFilter, ToNullFilter
+from flask_inputfilter.filters import StringTrimFilter, ToNullFilter
 from flask_inputfilter.validators import (
-    IsBooleanValidator,
     IsStringValidator,
     RegexValidator,
 )
@@ -13,44 +12,6 @@ class CreateUserInputFilter(InputFilter):
     def __init__(self) -> None:
 
         super().__init__()
-
-        self.add(
-            'birthdate',
-            required=False,
-            filters=[
-                ToNullFilter()
-            ],
-            validators=[
-                RegexValidator(
-                    RegexEnum.ISO_DATE.value,
-                    'Das Geburtsdatum muss im iso format sein.'
-                )
-            ]
-        )
-
-        self.add(
-            'isBirthdateVisible',
-            required=True,
-            filters=[ToBooleanFilter()],
-            validators=[IsBooleanValidator()]
-        )
-
-        self.add(
-            'city',
-            required=False,
-            filters=[
-                StringTrimFilter(),
-                ToNullFilter()
-            ],
-            validators=[IsStringValidator()]
-        )
-
-        self.add(
-            'isCityVisible',
-            required=True,
-            filters=[ToBooleanFilter()],
-            validators=[IsBooleanValidator()]
-        )
 
         self.add(
             'email',
@@ -78,13 +39,6 @@ class CreateUserInputFilter(InputFilter):
         )
 
         self.add(
-            'isNameVisible',
-            required=True,
-            filters=[ToBooleanFilter()],
-            validators=[IsBooleanValidator()]
-        )
-
-        self.add(
             'password',
             required=True,
             filters=[StringTrimFilter()],
@@ -94,15 +48,6 @@ class CreateUserInputFilter(InputFilter):
         self.add(
             'username',
             required=True,
-            filters=[
-                StringTrimFilter()
-            ],
-            validators=[IsStringValidator()]
-        )
-
-        self.add(
-            'language',
-            required=False,
             filters=[
                 StringTrimFilter()
             ],

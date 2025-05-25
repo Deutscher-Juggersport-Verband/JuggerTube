@@ -19,13 +19,17 @@ class CreateUserHandler:
         if DoesUsernameExistsRule.applies(username):
             return Response(
                 status=400,
-                response='Username already exists'
+                response={
+                    'error': 'Der Nutzername existiert bereits.'
+                }
             )
 
         if DoesEmailExistsRule.applies(email):
             return Response(
                 status=400,
-                response='Email already exists'
+                response={
+                    'error': 'Die E-Mail-Adresse existiert bereits.'
+                }
             )
 
         try:
@@ -35,12 +39,6 @@ class CreateUserHandler:
                     email=email,
                     password=data.get('password'),
                     name=data.get('name'),
-                    city=data.get('city'),
-                    birthdate=data.get('birthdate'),
-                    language=data.get('language'),
-                    isNameVisible=data.get('isNameVisible'),
-                    isCityVisible=data.get('isCityVisible'),
-                    isBirthdateVisible=data.get('isBirthdateVisible')
                 )
             )
 

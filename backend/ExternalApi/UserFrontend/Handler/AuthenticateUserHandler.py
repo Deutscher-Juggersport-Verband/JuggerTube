@@ -15,17 +15,18 @@ class AuthenticateUserHandler:
 
         email: str | None = data.get('email')
 
-        user = UserRepository.getUserByUsernameOrEmail(email)
+        user = UserRepository.getUserByEmail(email)
 
         if user is None:
             return Response(
-                response='Falsche Anmeldedaten.',
+                response={
+                    'error': 'Falsche Anmeldedaten.'
+                },
                 status=401
             )
 
         login_user_result = LoginUserCommandHandler.execute(
             LoginUserCommand(
-                username=user.username,
                 email=user.email,
                 password=data.get('password')
             )
@@ -33,20 +34,21 @@ class AuthenticateUserHandler:
 
         if not login_user_result:
             return Response(
-                response='Falsche Anmeldedaten.',
+                response={
+                    'error': 'Falsche Anmeldedaten.'
+                },
                 status=401
             )
 
-        if login_user_result.token is not None:
+        if login_user_result.token:
             return Response(
                 response={
                     'token': login_user_result.token,
-                    'language': user.language,
                 },
                 status=200,
             )
 
-        if login_user_result.lockType is not None:
+        if login_user_result.lockType:
             return Response(
                 response={
                     'lockType': login_user_result.lockType,
@@ -56,6 +58,8 @@ class AuthenticateUserHandler:
             )
 
         return Response(
-            response='Falsche Anmeldedaten.',
+            response={
+                'error': 'Falsche Anmeldedaten.'
+            },
             status=401
         )

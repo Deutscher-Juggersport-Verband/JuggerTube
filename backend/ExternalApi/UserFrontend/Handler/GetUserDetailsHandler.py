@@ -14,15 +14,17 @@ class GetUserDetailsHandler:
 
         data = g.validated_data
 
-        escaped_username: str | None = data.get('escaped_username')
+        escaped_username: str | None = data.get('escapedUsername')
 
         if escaped_username is None and get_jwt_identity() is None:
             return Response(
                 status=400,
-                response='Username or session is required')
+                response='Username or session is required'
+            )
 
-        if escaped_username is not None and not DoesUserExistsRule.applies(
-                escaped_username=escaped_username):
+        if escaped_username and not DoesUserExistsRule.applies(
+            escaped_username=escaped_username
+        ):
             return Response(
                 status=404,
                 response='User not found'

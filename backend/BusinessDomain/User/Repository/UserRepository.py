@@ -23,14 +23,14 @@ class UserRepository:
 
     @staticmethod
     def exists(
-            userId: int | None = None,
-            escapedUsername: str | None = None,
+            user_id: int | None = None,
+            escaped_username: str | None = None,
             email: str | None = None) -> bool:
 
         return Users.query.filter(
             or_(
-                Users.id == userId,
-                Users.escaped_username == escapedUsername,
+                Users.id == user_id,
+                Users.escaped_username == escaped_username,
                 Users.email == email,
             ),
             Users.is_deleted == False
@@ -72,13 +72,13 @@ class UserRepository:
             raise e
 
     @staticmethod
-    def update(userId: int) -> None:
+    def update(user_id: int) -> None:
         try:
             db.session.commit()
 
             logger.info(
                 f'UserRepository | update | User with id {
-                    userId} updated')
+                    user_id} updated')
 
         except Exception as e:
             db.session.rollback()
@@ -86,16 +86,16 @@ class UserRepository:
             raise e
 
     @staticmethod
-    def delete(userId: int) -> None:
+    def delete(user_id: int) -> None:
         try:
-            user = UserRepository.get(userId)
+            user = UserRepository.get(user_id)
 
             user.is_deleted = True
 
             db.session.commit()
 
             logger.info(
-                f'UserRepository | delete | User with id {userId} deleted')
+                f'UserRepository | delete | User with id {user_id} deleted')
 
         except Exception as e:
             db.session.rollback()
@@ -107,6 +107,12 @@ class UserRepository:
         """Get a user by username"""
 
         return Users.query.filter(Users.username == username).first()
+
+    @staticmethod
+    def getUserByEscapedUsername(escaped_username: str) -> Users | None:
+        """Get a user by escaped username"""
+
+        return Users.query.filter(Users.escaped_username == escaped_username).first()
 
     @staticmethod
     def getUserByEmail(email: str) -> Users | None:

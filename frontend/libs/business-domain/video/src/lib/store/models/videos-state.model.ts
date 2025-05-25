@@ -28,3 +28,16 @@ export interface VideosState {
 export interface VideosStateAware {
   [videosFeatureKey]: VideosState;
 }
+
+export const initialState: VideosState = {
+  allVideos: {},
+  loadedRanges: [],
+  requestState: RequestStateEnum.Initial,
+  count: 0,
+  error: null,
+  currentView: {
+    start: 0,
+    limit: 20,
+    displayedVideos: [],
+  },
+};

@@ -12,33 +12,47 @@ import {
   loadNextVideosError,
   loadNextVideosSuccess,
 } from '../actions/videos.actions';
-import {PaginatedVideosApiResponseModel, VideosApiClient, VideoApiResponseModel} from '@frontend/video-data';
+import {
+  PaginatedVideosApiResponseModel,
+  VideoApiResponseModel,
+  VideosApiClient,
+} from '@frontend/video-data';
 
 const unknownError = { form: 'Unknown error' };
 
 function convertStringToDate(dateStr: string): Date {
   if (!dateStr) return new Date();
-  
+
   // Handle ISO format (2010-07-10T00:00:00)
   if (dateStr.includes('T')) {
     return new Date(dateStr);
   }
-  
+
   // Handle DD-MM-YYYY format
-  const [day, month, year] = dateStr.split('-').map(num => parseInt(num, 10));
+  const [day, month, year] = dateStr.split('-').map((num) => parseInt(num, 10));
   return new Date(year, month - 1, day);
 }
 
-function convertDatesInVideo(video: VideoApiResponseModel): VideoApiResponseModel {
+function convertDatesInVideo(
+  video: VideoApiResponseModel
+): VideoApiResponseModel {
   return {
     ...video,
     uploadDate: convertStringToDate(video.uploadDate as unknown as string),
-    dateOfRecording: convertStringToDate(video.dateOfRecording as unknown as string),
-    tournament: video.tournament ? {
-      ...video.tournament,
-      startDate: convertStringToDate(video.tournament.startDate as unknown as string),
-      endDate: convertStringToDate(video.tournament.endDate as unknown as string)
-    } : video.tournament
+    dateOfRecording: convertStringToDate(
+      video.dateOfRecording as unknown as string
+    ),
+    tournament: video.tournament
+      ? {
+          ...video.tournament,
+          startDate: convertStringToDate(
+            video.tournament.startDate as unknown as string
+          ),
+          endDate: convertStringToDate(
+            video.tournament.endDate as unknown as string
+          ),
+        }
+      : video.tournament,
   };
 }
 
@@ -51,22 +65,25 @@ export class LoadNextVideosEffects {
     this.actions$.pipe(
       ofType(loadNextVideos),
       exhaustMap((action: ReturnType<typeof loadNextVideos>) =>
-        this.videosApiClient.getPaginatedVideos(action.start, action.limit).pipe(
-          map((data: PaginatedVideosApiResponseModel) => {
-            const convertedVideos = data.results.map(convertDatesInVideo);
-            return loadNextVideosSuccess({
-              videos: convertedVideos,
-              count: data.count,
-            });
-          }),
-          catchError((response: HttpErrorResponse) => {
-            return of(
-              loadNextVideosError({
-                error: response.status === 422 ? response.error : unknownError,
-              })
-            );
-          })
-        )
+        this.videosApiClient
+          .getPaginatedVideos(action.start, action.limit)
+          .pipe(
+            map((data: PaginatedVideosApiResponseModel) => {
+              const convertedVideos = data.results.map(convertDatesInVideo);
+              return loadNextVideosSuccess({
+                videos: convertedVideos,
+                count: data.count,
+              });
+            }),
+            catchError((response: HttpErrorResponse) => {
+              return of(
+                loadNextVideosError({
+                  error:
+                    response.status === 422 ? response.error : unknownError,
+                })
+              );
+            })
+          )
       )
     )
   );

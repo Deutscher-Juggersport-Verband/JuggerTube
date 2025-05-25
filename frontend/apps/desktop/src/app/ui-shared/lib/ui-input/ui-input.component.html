@@ -14,6 +14,7 @@
   id="{{ labelText }}"
   [formControl]="formControlElement"
   [disabled]="disabled"
+  [class.invalid]="formControlElement.touched && formControlElement.invalid"
 >
   @for (option of dropdownOptions; track option) {
   <option [value]="option">
@@ -28,5 +29,15 @@
   [placeholder]="placeholder"
   [disabled]="disabled"
   [formControl]="formControlElement"
+  [class.invalid]="formControlElement.touched && formControlElement.invalid"
 />
-} }
+} } @if (formControlElement.touched && formControlElement.invalid &&
+formControlElement.errors) {
+<span class="error-message">
+  @if (formControlElement.errors['required']) { Dieses Feld ist erforderlich. }
+  @if (formControlElement.errors['email']) { Bitte geben Sie eine gültige
+  E-Mail-Adresse ein. } @if (formControlElement.errors['minlength']) { Die
+  Eingabe ist zu kurz. Mindestlänge:
+  {{ formControlElement.errors['minlength'].requiredLength }} Zeichen. }
+</span>
+}

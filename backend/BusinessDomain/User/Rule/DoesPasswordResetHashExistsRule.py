@@ -9,4 +9,4 @@ class DoesPasswordResetHashExistsRule:
         if not hash:
             return False
 
-        return UserRepository.getUserByPasswordResetHash(hash) is not None
+        return UserRepository.getUserByPasswordResetHash(hash)

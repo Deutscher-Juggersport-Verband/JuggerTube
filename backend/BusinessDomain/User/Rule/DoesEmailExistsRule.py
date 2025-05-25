@@ -6,4 +6,4 @@ class DoesEmailExistsRule:
     @staticmethod
     def applies(email: str) -> bool:
 
-        return UserRepository.usernameExists(email)
+        return UserRepository.emailExists(email)

@@ -13,8 +13,20 @@ class UpdateUserCommandHandler:
         user = getJwtIdentity()
 
         email = command.email
-        if email is not None:
+        if email:
             user.email = email
+
+        name = command.name
+        if name:
+            user.name = name
+
+        password = command.password
+        if password:
+            user.password = password
+
+        username = command.username
+        if username:
+            user.username = username
 
         UserRepository.update(user.id)
 

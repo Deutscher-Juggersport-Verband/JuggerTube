@@ -10,7 +10,6 @@ export enum UiInputTypeEnum {
   DATE = 'date',
   EMAIL = 'email',
   PASSWORD = 'password',
-  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   DROPDOWN = 'dropdown',
 }
 

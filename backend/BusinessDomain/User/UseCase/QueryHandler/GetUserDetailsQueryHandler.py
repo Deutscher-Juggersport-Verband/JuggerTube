@@ -10,7 +10,7 @@ class GetUserDetailsQueryHandler:
     def execute(query: GetUserDetailsQuery) -> GetUserDetailsResult:
 
         if query.escaped_username:
-            user = UserRepository.getUserByUsername(query.escaped_username)
+            user = UserRepository.getUserByEscapedUsername(query.escaped_username)
 
         else:
             user = getJwtIdentity()
@@ -19,9 +19,9 @@ class GetUserDetailsQueryHandler:
             id=user.id,
             createdAt=user.created_at,
             email=user.email,
-            isDeleted=user.is_deleted,
             name=user.name,
             pictureUrl=user.picture_url,
-            updatedAt=user.updated_at,
+            role=user.role,
             username=user.username,
+            escaped_username=user.escaped_username,
         )

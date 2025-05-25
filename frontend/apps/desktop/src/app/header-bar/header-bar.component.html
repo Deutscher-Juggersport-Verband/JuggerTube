@@ -1,13 +1,12 @@
 <button [routerLink]="['/video-overview']">
-  <img
-    src="juggertube-logo.png"
-    alt="Juggertube Logo"
-    width="50"
-    height="50"
-  />
+  <img src="juggertube-logo.png" alt="Juggertube Logo" width="50" height="50" />
   <h1>JuggerTube</h1>
 </button>
 
 <div class="user-row">
+  @if (isAuthenticated$ | async) {
+  <span (click)="logout()">Logout</span>
+  } @else {
   <span [routerLink]="['/login']">Login</span>
+  }
 </div>

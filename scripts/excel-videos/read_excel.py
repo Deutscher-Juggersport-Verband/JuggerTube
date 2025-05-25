@@ -92,7 +92,7 @@ if __name__ == "__main__":
 def clean_value(value):
     if pd.isna(value) or (isinstance(value, float) and (math.isnan(value) or math.isinf(value))):
         return None
-    return str(value) if value is not None else None
+    return str(value) if value else None
 
 # Function to send data to backend
 def send_data_to_backend(endpoint, data, entity_name):

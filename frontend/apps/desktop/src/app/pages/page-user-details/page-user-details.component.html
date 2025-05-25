@@ -1,5 +1,6 @@
+@let user = user$ | async; @if (user) {
 <div class="details-row">
-  <img src="{{ user.profilePicture }}" alt="Profil von {{ user.username }}" />
+  <img src="{{ user.pictureUrl }}" alt="Profil von {{ user.username }}" />
 
   <div class="names-column">
     <h1>{{ user.name }}</h1>
@@ -24,7 +25,11 @@
     />
 
     <ui-button
-      (click)="form.controls.password.enable()"
+      (click)="
+        form.controls.password.enabled
+          ? form.controls.password.disable()
+          : form.controls.password.enable()
+      "
       [text]="'Passwort zurücksetzen'"
       [color]="UiButtonColorEnum.SECONDARY"
     />
@@ -44,3 +49,6 @@
     />
   </div>
 </form>
+} @else {
+<p>Es konnte kein Benutzer gefunden werden</p>
+}

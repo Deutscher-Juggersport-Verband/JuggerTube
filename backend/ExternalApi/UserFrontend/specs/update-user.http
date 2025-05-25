@@ -5,13 +5,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "birthdate": "1990-12-19",
-  "city": "Berlin",
   "email": "joseph12435@gmail.de",
-  "name": "Joseph",
-  "isCityVisible": true,
-  "isBirthdateVisible": true,
-  "isNameVisible": true
+  "name": "Joseph"
 }
 
 > {%
