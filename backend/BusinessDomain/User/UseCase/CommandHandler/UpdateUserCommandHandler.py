@@ -1,4 +1,5 @@
 from flask_jwt_extended import create_access_token
+from werkzeug.security import generate_password_hash
 
 from BusinessDomain.User.Repository import UserRepository
 from BusinessDomain.User.Rule.tools import getJwtIdentity
@@ -22,7 +23,7 @@ class UpdateUserCommandHandler:
 
         password = command.password
         if password:
-            user.password = password
+            user.password = generate_password_hash(password)
 
         username = command.username
         if username:
