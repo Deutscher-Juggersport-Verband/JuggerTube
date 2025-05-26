@@ -8,16 +8,16 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { UiAutocompleteInputComponent } from '../../ui-autocomplete-input/ui-autocomplete-input.component';
+import { UiAutocompleteInputComponent } from '../../shared/ui-autocomplete-input/ui-autocomplete-input.component';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../ui-button/ui-button.component';
+} from '../../shared/ui-button/ui-button.component';
 import {
   UiInputComponent,
   UiInputTypeEnum,
-} from '../../ui-input/ui-input.component';
-import { UiLabelRowComponent } from '../../ui-label-row/ui-label-row.component';
+} from '../../shared/ui-input/ui-input.component';
+import { UiLabelRowComponent } from '../../shared/ui-label-row/ui-label-row.component';
 import {ChannelsDataService} from '@frontend/channel';
 import {ChannelApiResponseModel} from '@frontend/channel-data';
 import {TeamsDataService} from '@frontend/team';

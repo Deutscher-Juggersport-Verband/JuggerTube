@@ -14,11 +14,11 @@ import { Router } from '@angular/router';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../ui-button/ui-button.component';
+} from '../../shared/ui-button/ui-button.component';
 import {
   UiInputComponent,
   UiInputTypeEnum,
-} from '../../ui-input/ui-input.component';
+} from '../../shared/ui-input/ui-input.component';
 
 export const PasswordsMatchValidator: ValidatorFn = (
   control: AbstractControl

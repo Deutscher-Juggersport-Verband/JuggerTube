@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+
 import { Toast } from '@frontend/video';
 
 @Component({
@@ -10,5 +11,5 @@ import { Toast } from '@frontend/video';
   styleUrls: ['./ui-toast.component.less']
 })
 export class UiToastComponent {
-  @Input() toast!: Toast;
+  @Input() public toast!: Toast;
 }
