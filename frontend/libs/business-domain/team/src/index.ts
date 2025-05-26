@@ -1,1 +1,1 @@
-export * from './lib/team/services/teams.data-service';
+export * from './lib/services/teams.data-service';

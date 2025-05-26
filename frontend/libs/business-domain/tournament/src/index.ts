@@ -1,1 +1,1 @@
-export * from './lib/tournament/services/tournaments.data-service';
+export * from './lib/services/tournaments.data-service';
