@@ -1,6 +1,7 @@
 from datetime import datetime
 import logging
 
+from DataDomain.Database.Model import Channels
 from flask import g
 
 from DataDomain.Database.Enum import VideoCategoriesEnum
@@ -73,24 +74,16 @@ class CreateVideoHandler:
     def _create_base_video(data: dict) -> Videos:
         """Create a video with base properties"""
         video = Videos()
-        channelLink = data.get('channelLink')
+        video.channel_id = CreateVideoHandler._handle_channel_data(data.get('channel'))
         
-        if not channelLink:
-            logging.error("No channel link provided")
-            raise ValueError("Channel link is required")
-            
-        channelId = ChannelRepository.getChannelIdByLink(channelLink=channelLink)
-        logging.info(f"Looking up channel ID for link: {channelLink}, found: {channelId}")
-        
-        if not channelId:
-            logging.error(f"No channel found for link: {channelLink}")
-            raise ValueError(f"No channel found for link: {channelLink}")
+        if not video.channel_id:
+            logging.error(f"Channel not found")
+            raise ValueError(f"Channel not found")
 
         # Set required fields
         video.name = data.get('name')
         video.category = data.get('category')
         video.video_link = data.get('videoLink')
-        video.channel_id = channelId
 
         # Set optional fields
         video.comment = data.get('comment')
@@ -143,6 +136,21 @@ class CreateVideoHandler:
             video.team_two_id = CreateVideoHandler._handle_team_data(data.get('teamTwo'))
             video.topic = data.get('topic') or ''
 
+    @staticmethod
+    def _handle_channel_data(channel_data: dict) -> int | None:
+        """Handle channel data and return channel ID"""
+
+        if 'id' in channel_data:
+            return channel_data.get('id')
+
+        channel = Channels()
+        if not ChannelRepository.getChannelIdByName(channel_data.get('name')):
+            return None
+
+        channel.name = channel_data.get('name')
+        channel.link = channel_data.get('link')
+        return ChannelRepository.create(channel)
+    
     @staticmethod
     def _handle_tournament_data(tournament_data: dict) -> int | None:
         """Handle tournament data and return tournament ID"""
