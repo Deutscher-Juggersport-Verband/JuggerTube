@@ -17,6 +17,8 @@
     "paths": {
       "@frontend/api": ["libs/infrastructure/api/src/index.ts"],
       "@frontend/cache": ["libs/infrastructure/cache/src/index.ts"],
+      "@frontend/channel": ["libs/business-domain/channel/src/index.ts"],
+      "@frontend/channel-data": ["libs/data-domain/channel-data/src/index.ts"],
       "@frontend/team": ["libs/business-domain/team/src/index.ts"],
       "@frontend/team-data": ["libs/data-domain/team-data/src/index.ts"],
       "@frontend/tournament": ["libs/business-domain/tournament/src/index.ts"],
