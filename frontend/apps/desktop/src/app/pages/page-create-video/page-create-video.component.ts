@@ -288,4 +288,11 @@ export class PageCreateVideoComponent implements OnInit {
   }
 
   protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
+
+  public hasTeamValidationError(): boolean {
+    return (
+      (this.form.controls.teamOneId.touched && this.form.controls.teamOneId.hasError('sameTeam')) ||
+      (this.form.controls.teamTwoId.touched && this.form.controls.teamTwoId.hasError('sameTeam'))
+    );
+  }
 }

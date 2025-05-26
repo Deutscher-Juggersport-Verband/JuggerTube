@@ -16,7 +16,7 @@
 
     <ui-label-row [labelText]="'Channel:'" />
     <ui-autocomplete-input
-      [formControlElement]="form.controls.channelLink"
+      [formControlElement]="form.controls.channelId"
       [options]="channels() || []"
       [displayField]="'name'"
       [valueField]="'id'"
@@ -172,6 +172,12 @@
             (valueChange)="onMixTeamToggle($event, 'one')"
             class="mixteam-input"
           />
+        </div>
+      }
+
+      @if (hasTeamValidationError()) {
+        <div class="error-message">
+          Ein Team kann nicht gegen sich selbst antreten.
         </div>
       }
     } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
