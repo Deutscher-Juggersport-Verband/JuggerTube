@@ -16,6 +16,7 @@ export enum AdditionalFieldsEnum {
 export type VideoFormModel = {
   name: FormControl<string>;
   videoLink: FormControl<string>;
+  channelId: FormControl<number>;
   channelLink: FormControl<string>;
   category: FormControl<VideoCategoriesEnum | null>;
   uploadDate: FormControl<string>;
@@ -50,6 +51,10 @@ export class VideoFormService {
           validators: [Validators.required],
         }),
         videoLink: new FormControl({ value: '', disabled: false }, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        channelId: new FormControl({ value: 0, disabled: false }, {
           nonNullable: true,
           validators: [Validators.required],
         }),

@@ -96,6 +96,28 @@
     }
   }
 
+  .new-channel-fields {
+    grid-column: 2 / -1;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'info info'
+      'channel-link-label channel-link-input';
+
+    .info {
+      grid-area: info;
+    }
+
+    .channel-link-label {
+      grid-area: channel-link-label;
+    }
+
+    .channel-link-input {
+      grid-area: channel-link-input;
+    }
+  }
+
   .error-message {
     color: @color-red;
     grid-column: 1 / -1;

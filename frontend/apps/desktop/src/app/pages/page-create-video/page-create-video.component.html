@@ -14,11 +14,28 @@
       [formControlElement]="form.controls.videoLink"
     />
 
-    <ui-label-row [labelText]="'Channellink:'" />
-    <ui-input
-      [type]="UiInputTypeEnum.TEXT"
+    <ui-label-row [labelText]="'Channel:'" />
+    <ui-autocomplete-input
       [formControlElement]="form.controls.channelLink"
+      [options]="channels() || []"
+      [displayField]="'name'"
+      [valueField]="'id'"
+      [placeholder]="'Channel suchen...'"
+      (newOption)="onNewChannel()"
     />
+
+    @if (showNewChannelFields) {
+      <div class="new-channel-fields">
+        <p class="info">Dieser Channel ist uns noch nicht bekannt. Um den Channel bei uns zu registrieren, gib uns bitte folgende Daten:</p>
+
+        <ui-label-row [labelText]="'Channellink:'" class="channel-link-label" />
+        <ui-input
+          [type]="UiInputTypeEnum.TEXT"
+          [formControlElement]="form.controls.channelLink"
+          class="channel-link-input"
+        />
+      </div>
+    }
 
     <ui-label-row [labelText]="'Kategorie:'" />
     <ui-input

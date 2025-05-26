@@ -7,7 +7,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { UiAutocompleteInputComponent } from '../../ui-autocomplete-input/ui-autocomplete-input.component';
 import {
@@ -19,6 +18,8 @@ import {
   UiInputTypeEnum,
 } from '../../ui-input/ui-input.component';
 import { UiLabelRowComponent } from '../../ui-label-row/ui-label-row.component';
+import {ChannelsDataService} from '@frontend/channel';
+import {ChannelApiResponseModel} from '@frontend/channel-data';
 import {TeamsDataService} from '@frontend/team';
 import {TeamApiResponseModel} from '@frontend/team-data';
 import {TournamentsDataService} from '@frontend/tournament';
@@ -52,12 +53,14 @@ import {
 export class PageCreateVideoComponent implements OnInit {
   public teams: Signal<TeamApiResponseModel[]  | undefined>;
   public tournaments: Signal<TournamentApiResponseModel[]  | undefined>;
+  public channels: Signal<ChannelApiResponseModel[]  | undefined>;
 
   protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
   protected showNewTournamentFields = false;
   protected showNewTeamOneFields = false;
   protected showNewTeamTwoFields = false;
+  protected showNewChannelFields = false;
   protected isTeamOneMix = false;
   protected isTeamTwoMix = false;
 
@@ -69,15 +72,16 @@ export class PageCreateVideoComponent implements OnInit {
   protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
 
   constructor(
-    private router: Router,
-    private tournamentService: TournamentsDataService,
-    private teamService: TeamsDataService,
+    private readonly tournamentService: TournamentsDataService,
+    private readonly teamService: TeamsDataService,
+    private readonly channelsDataService: ChannelsDataService,
     private readonly videoFormService: VideoFormService,
     private readonly videosDataService: VideosDataService,
     private readonly toastService: ToastService
   ) {
     this.teams = this.teamService.getTeams();
     this.tournaments = this.tournamentService.getTournaments();
+    this.channels = this.channelsDataService.getChannels();
     this.form = this.videoFormService.create();
   }
 
@@ -277,6 +281,10 @@ export class PageCreateVideoComponent implements OnInit {
         this.form.controls.teamTwoCity.enable();
       }
     }
+  }
+
+  public onNewChannel(): void {
+    this.showNewChannelFields = true;
   }
 
   protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;

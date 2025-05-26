@@ -6,8 +6,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
+import {ChannelApiResponseModel} from '@frontend/channel-data';
 
-type OptionType = TournamentApiResponseModel | TeamApiResponseModel;
+type OptionType = TournamentApiResponseModel | TeamApiResponseModel | ChannelApiResponseModel;
 type DisplayFieldType = keyof Pick<OptionType, 'name'>;
 type ValueFieldType = keyof Pick<OptionType, 'id'>;
 
