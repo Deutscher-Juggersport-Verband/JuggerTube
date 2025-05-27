@@ -96,11 +96,11 @@ export class VideoFormService {
         }),
         teamOneId: new FormControl({ value: 0, disabled: false }, {
           nonNullable: true,
-          validators: [Validators.required, differentTeamsValidator],
+          validators: [Validators.required],
         }),
         teamTwoId: new FormControl({ value: 0, disabled: false }, {
           nonNullable: true,
-          validators: [Validators.required, differentTeamsValidator],
+          validators: [Validators.required],
         }),
         teamOneCity: new FormControl({ value: '', disabled: false }, {
           nonNullable: true,
@@ -136,7 +136,7 @@ export class VideoFormService {
           nonNullable: true,
           validators: [Validators.required],
         }),
-      });
+      }, { validators: [differentTeamsValidator()] });
     }
     return this.currentForm;
   }

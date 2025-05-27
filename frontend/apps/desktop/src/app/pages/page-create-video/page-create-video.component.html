@@ -148,15 +148,23 @@
       }
 
       <ui-label-row [labelText]="'Team 2:'" />
-      <ui-autocomplete-input
-        [formControlElement]="form.controls.teamTwoId"
-        [options]="teams() || []"
-        [displayField]="'name'"
-        [valueField]="'id'"
-        [placeholder]="'Team 2 suchen...'"
-        (newOption)="onNewTeam($event, 'two')"
-        (existingOptionSelected)="onExistingTeamSelected('two')"
-      />
+        <div>
+        <ui-autocomplete-input
+          [formControlElement]="form.controls.teamTwoId"
+          [options]="teams() || []"
+          [displayField]="'name'"
+          [valueField]="'id'"
+          [placeholder]="'Team 2 suchen...'"
+          (newOption)="onNewTeam($event, 'two')"
+          (existingOptionSelected)="onExistingTeamSelected('two')"
+        />
+
+        @if (hasTeamValidationError()) {
+          <div class="error-message">
+            Ein Team kann nicht gegen sich selbst antreten.
+          </div>
+        }
+        </div>
 
       @if (showNewTeamTwoFields) {
         <div class="new-team-fields">
@@ -176,12 +184,6 @@
             (valueChange)="onMixTeamToggle($event, 'one')"
             class="mixteam-input"
           />
-        </div>
-      }
-
-      @if (hasTeamValidationError()) {
-        <div class="error-message">
-          Ein Team kann nicht gegen sich selbst antreten.
         </div>
       }
     } @case (AdditionalFieldsEnum.WEAPON_TYPE) {

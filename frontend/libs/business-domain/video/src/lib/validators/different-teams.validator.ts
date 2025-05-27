@@ -1,15 +1,26 @@
-import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 
-export function differentTeamsValidator(control: AbstractControl): ValidationErrors | null {
-  const formGroup = control.parent;
-  if (!formGroup) return null;
+export function differentTeamsValidator(): ValidatorFn {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
+    if (!(formGroup instanceof FormGroup)) {
+      return null;
+    }
 
-  const teamOneId = formGroup.get('teamOneId')?.value;
-  const teamTwoId = formGroup.get('teamTwoId')?.value;
+    const teamOneControl = formGroup.get('teamOneId');
+    const teamTwoControl = formGroup.get('teamTwoId');
 
-  if (teamOneId && teamTwoId && teamOneId === teamTwoId) {
-    return {sameTeam: true};
-  }
+    if (!teamOneControl || !teamTwoControl) {
+      return null;
+    }
 
-  return null;
+    const teamOneId = teamOneControl.value;
+    const teamTwoId = teamTwoControl.value;
+
+    // Only validate if both teams have non-zero values
+    if (!teamOneId || !teamTwoId || teamOneId === 0 || teamTwoId === 0) {
+      return null;
+    }
+
+    return teamOneId === teamTwoId ? {sameTeam: true} : null;
+  };
 }

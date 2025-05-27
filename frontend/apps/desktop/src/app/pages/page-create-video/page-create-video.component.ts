@@ -25,7 +25,7 @@ import {TeamApiResponseModel} from '@frontend/team-data';
 import {TournamentsDataService} from '@frontend/tournament';
 import {TournamentApiResponseModel} from '@frontend/tournament-data';
 import {
-  AdditionalFieldsEnum,   differentTeamsValidator,
+  AdditionalFieldsEnum,
   ToastService,
 VideoFormModel,
   VideoFormService,
@@ -186,8 +186,8 @@ export class PageCreateVideoComponent implements OnInit {
           }
           break;
         case AdditionalFieldsEnum.TEAMS:
-          this.form.controls.teamOneId.addValidators([Validators.required, differentTeamsValidator]);
-          this.form.controls.teamTwoId.addValidators([Validators.required, differentTeamsValidator]);
+          this.form.controls.teamOneId.addValidators([Validators.required]);
+          this.form.controls.teamTwoId.addValidators([Validators.required]);
           if (this.showNewTeamOneFields) {
             this.form.controls.teamOneCity.addValidators(Validators.required);
           }
@@ -279,6 +279,7 @@ export class PageCreateVideoComponent implements OnInit {
     } else {
       this.showNewTeamTwoFields = false;
     }
+    this.form.updateValueAndValidity();
   }
 
   public onMixTeamToggle(isMix: boolean, teamNumber: 'one' | 'two'): void {
@@ -304,9 +305,6 @@ export class PageCreateVideoComponent implements OnInit {
   }
 
   public hasTeamValidationError(): boolean {
-    return (
-      (this.form.controls.teamOneId.touched && this.form.controls.teamOneId.hasError('sameTeam')) ||
-      (this.form.controls.teamTwoId.touched && this.form.controls.teamTwoId.hasError('sameTeam'))
-    );
+    return this.form.touched && this.form.hasError('sameTeam');
   }
 }
