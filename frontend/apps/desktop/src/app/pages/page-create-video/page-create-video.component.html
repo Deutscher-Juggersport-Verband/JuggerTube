@@ -26,16 +26,19 @@
     />
 
     @if (showNewChannelFields) {
-      <div class="new-channel-fields">
-        <p class="info">Dieser Channel ist uns noch nicht bekannt. Um den Channel bei uns zu registrieren, gib uns bitte folgende Daten:</p>
+    <div class="new-channel-fields">
+      <p class="info">
+        Dieser Channel ist uns noch nicht bekannt. Um den Channel bei uns zu
+        registrieren, gib uns bitte folgende Daten:
+      </p>
 
-        <ui-label-row [labelText]="'Channellink:'" class="channel-link-label" />
-        <ui-input
-          [type]="UiInputTypeEnum.TEXT"
-          [formControlElement]="form.controls.channelLink"
-          class="channel-link-input"
-        />
-      </div>
+      <ui-label-row [labelText]="'Channellink:'" class="channel-link-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.TEXT"
+        [formControlElement]="form.controls.channelLink"
+        class="channel-link-input"
+      />
+    </div>
     }
 
     <ui-label-row [labelText]="'Kategorie:'" />
@@ -57,149 +60,156 @@
       [formControlElement]="form.controls.dateOfRecording"
     />
 
-    @for (field of additionalFields; track field) { @switch (field) {
-    @case (AdditionalFieldsEnum.TOPIC) {
-      <ui-label-row [labelText]="'Thema:'" />
-      <ui-input
-        [type]="UiInputTypeEnum.TEXT"
-        [formControlElement]="form.controls.topic"
-      />
+    @for (field of additionalFields; track field) { @switch (field) { @case
+    (AdditionalFieldsEnum.TOPIC) {
+    <ui-label-row [labelText]="'Thema:'" />
+    <ui-input
+      [type]="UiInputTypeEnum.TEXT"
+      [formControlElement]="form.controls.topic"
+    />
     } @case (AdditionalFieldsEnum.GUESTS) {
-      <ui-label-row [labelText]="'Gäste:'" />
+    <ui-label-row [labelText]="'Gäste:'" />
+    <ui-input
+      [type]="UiInputTypeEnum.TEXT"
+      [formControlElement]="form.controls.guests"
+    />
+    } @case (AdditionalFieldsEnum.TOURNAMENT) {
+    <ui-label-row [labelText]="'Turnier: '" />
+    <ui-autocomplete-input
+      [formControlElement]="form.controls.tournamentId"
+      [options]="tournaments() || []"
+      [displayField]="'name'"
+      [valueField]="'id'"
+      [placeholder]="'Turnier suchen...'"
+      (newOption)="onNewTournament()"
+      (existingOptionSelected)="onExistingTournamentSelected()"
+    />
+    @if (showNewTournamentFields) {
+    <div class="new-tournament-fields">
+      <p class="info">
+        Dieses Turnier ist uns noch nicht bekannt. Um das Turnier bei uns zu
+        registrieren, gib uns bitte folgende Daten:
+      </p>
+
+      <ui-label-row [labelText]="'Stadt:'" class="city-label" />
       <ui-input
         [type]="UiInputTypeEnum.TEXT"
-        [formControlElement]="form.controls.guests"
+        [formControlElement]="form.controls.tournamentCity"
+        class="city-input"
       />
-    } @case (AdditionalFieldsEnum.TOURNAMENT) {
-      <ui-label-row [labelText]="'Turnier: '" />
-      <ui-autocomplete-input
-        [formControlElement]="form.controls.tournamentId"
-        [options]="tournaments() || []"
-        [displayField]="'name'"
-        [valueField]="'id'"
-        [placeholder]="'Turnier suchen...'"
-        (newOption)="onNewTournament()"
-        (existingOptionSelected)="onExistingTournamentSelected()"
+
+      <ui-label-row [labelText]="'Startdatum:'" class="start-date-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.DATE"
+        [formControlElement]="form.controls.tournamentStartDate"
+        class="start-date-input"
       />
-      @if (showNewTournamentFields) {
-        <div class="new-tournament-fields">
-          <p class="info">Dieses Turnier ist uns noch nicht bekannt. Um das Turnier bei uns zu registrieren, gib uns bitte folgende Daten:</p>
 
-          <ui-label-row [labelText]="'Stadt:'" class="city-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TEXT"
-            [formControlElement]="form.controls.tournamentCity"
-            class="city-input"
-          />
+      <ui-label-row [labelText]="'Enddatum:'" class="end-date-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.DATE"
+        [formControlElement]="form.controls.tournamentEndDate"
+        class="end-date-input"
+      />
 
-          <ui-label-row [labelText]="'Startdatum:'" class="start-date-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.DATE"
-            [formControlElement]="form.controls.tournamentStartDate"
-            class="start-date-input"
-          />
+      <ui-label-row [labelText]="'Adresse:'" class="address-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.TEXT"
+        [formControlElement]="form.controls.tournamentAddress"
+        class="address-input"
+      />
+    </div>
+    } } @case (AdditionalFieldsEnum.TEAMS) {
+    <ui-label-row [labelText]="'Team 1:'" />
+    <ui-autocomplete-input
+      [formControlElement]="form.controls.teamOneId"
+      [options]="teams() || []"
+      [displayField]="'name'"
+      [valueField]="'id'"
+      [placeholder]="'Team 1 suchen...'"
+      (newOption)="onNewTeam($event, 'one')"
+      (existingOptionSelected)="onExistingTeamSelected('one')"
+    />
 
-          <ui-label-row [labelText]="'Enddatum:'" class="end-date-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.DATE"
-            [formControlElement]="form.controls.tournamentEndDate"
-            class="end-date-input"
-          />
+    @if (showNewTeamOneFields) {
+    <div class="new-team-fields">
+      <p class="info">
+        Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu
+        hinterlegen, gib uns bitte folgende Daten:
+      </p>
 
-          <ui-label-row [labelText]="'Adresse:'" class="address-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TEXT"
-            [formControlElement]="form.controls.tournamentAddress"
-            class="address-input"
-          />
-        </div>
-      }
-    } @case (AdditionalFieldsEnum.TEAMS) {
-      <ui-label-row [labelText]="'Team 1:'" />
+      <ui-label-row [labelText]="'Stadt:'" class="city-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.TEXT"
+        [formControlElement]="form.controls.teamOneCity"
+        class="city-input"
+      />
+
+      <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.TOGGLE"
+        [formControlElement]="form.controls.teamOneMix"
+        (valueChange)="onMixTeamToggle($event, 'one')"
+        class="mixteam-input"
+      />
+    </div>
+    }
+
+    <ui-label-row [labelText]="'Team 2:'" />
+    <div>
       <ui-autocomplete-input
-        [formControlElement]="form.controls.teamOneId"
+        [formControlElement]="form.controls.teamTwoId"
         [options]="teams() || []"
         [displayField]="'name'"
         [valueField]="'id'"
-        [placeholder]="'Team 1 suchen...'"
-        (newOption)="onNewTeam($event, 'one')"
-        (existingOptionSelected)="onExistingTeamSelected('one')"
+        [placeholder]="'Team 2 suchen...'"
+        (newOption)="onNewTeam($event, 'two')"
+        (existingOptionSelected)="onExistingTeamSelected('two')"
       />
 
-      @if (showNewTeamOneFields) {
-        <div class="new-team-fields">
-          <p class="info">Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu hinterlegen, gib uns bitte folgende Daten:</p>
-
-          <ui-label-row [labelText]="'Stadt:'" class="city-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TEXT"
-            [formControlElement]="form.controls.teamOneCity"
-            class="city-input"
-          />
-
-          <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TOGGLE"
-            [formControlElement]="form.controls.teamOneMix"
-            (valueChange)="onMixTeamToggle($event, 'one')"
-            class="mixteam-input"
-          />
-        </div>
+      @if (hasTeamValidationError()) {
+      <div class="error-message">
+        Ein Team kann nicht gegen sich selbst antreten.
+      </div>
       }
+    </div>
 
-      <ui-label-row [labelText]="'Team 2:'" />
-        <div>
-        <ui-autocomplete-input
-          [formControlElement]="form.controls.teamTwoId"
-          [options]="teams() || []"
-          [displayField]="'name'"
-          [valueField]="'id'"
-          [placeholder]="'Team 2 suchen...'"
-          (newOption)="onNewTeam($event, 'two')"
-          (existingOptionSelected)="onExistingTeamSelected('two')"
-        />
+    @if (showNewTeamTwoFields) {
+    <div class="new-team-fields">
+      <p class="info">
+        Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu
+        hinterlegen, gib uns bitte folgende Daten:
+      </p>
 
-        @if (hasTeamValidationError()) {
-          <div class="error-message">
-            Ein Team kann nicht gegen sich selbst antreten.
-          </div>
-        }
-        </div>
-
-      @if (showNewTeamTwoFields) {
-        <div class="new-team-fields">
-          <p class="info">Das Team kennen wir noch nicht. Um das Team als neues Team bei uns zu hinterlegen, gib uns bitte folgende Daten:</p>
-
-          <ui-label-row [labelText]="'Stadt:'" class="city-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TEXT"
-            [formControlElement]="form.controls.teamOneCity"
-            class="city-input"
-          />
-
-          <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
-          <ui-input
-            [type]="UiInputTypeEnum.TOGGLE"
-            [formControlElement]="form.controls.teamOneMix"
-            (valueChange)="onMixTeamToggle($event, 'one')"
-            class="mixteam-input"
-          />
-        </div>
-      }
-    } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
-      <ui-label-row [labelText]="'Pompfenart:'" />
+      <ui-label-row [labelText]="'Stadt:'" class="city-label" />
       <ui-input
-        [type]="UiInputTypeEnum.DROPDOWN"
-        [formControlElement]="form.controls.weaponType"
-        [dropdownOptions]="Object.values(WeaponTypesEnum)"
+        [type]="UiInputTypeEnum.TEXT"
+        [formControlElement]="form.controls.teamOneCity"
+        class="city-input"
       />
+
+      <ui-label-row [labelText]="'Mixteam?'" class="mixteam-label" />
+      <ui-input
+        [type]="UiInputTypeEnum.TOGGLE"
+        [formControlElement]="form.controls.teamOneMix"
+        (valueChange)="onMixTeamToggle($event, 'one')"
+        class="mixteam-input"
+      />
+    </div>
+    } } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
+    <ui-label-row [labelText]="'Pompfenart:'" />
+    <ui-input
+      [type]="UiInputTypeEnum.DROPDOWN"
+      [formControlElement]="form.controls.weaponType"
+      [dropdownOptions]="Object.values(WeaponTypesEnum)"
+    />
     } @case (AdditionalFieldsEnum.GAME_SYSTEM) {
-      <ui-label-row [labelText]="'Spielsystem:'" />
-      <ui-input
-        [type]="UiInputTypeEnum.DROPDOWN"
-        [formControlElement]="form.controls.gameSystem"
-        [dropdownOptions]="Object.values(GameSystemTypesEnum)"
-      />
+    <ui-label-row [labelText]="'Spielsystem:'" />
+    <ui-input
+      [type]="UiInputTypeEnum.DROPDOWN"
+      [formControlElement]="form.controls.gameSystem"
+      [dropdownOptions]="Object.values(GameSystemTypesEnum)"
+    />
     } } }
 
     <ui-label-row [labelText]="'Kommentar:'" />

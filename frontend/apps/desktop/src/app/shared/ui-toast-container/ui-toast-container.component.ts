@@ -9,7 +9,7 @@ import { ToastService } from '@frontend/video';
   standalone: true,
   imports: [CommonModule, UiToastComponent],
   templateUrl: './ui-toast-container.component.html',
-  styleUrls: ['./ui-toast-container.component.less']
+  styleUrls: ['./ui-toast-container.component.less'],
 })
 export class UiToastContainerComponent {
   public toasts$;

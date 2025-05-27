@@ -10,11 +10,12 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 
 import { appRoutes } from './app.routes';
+import { metaReducers, reducers } from '@frontend/video';
 import {
-  metaReducers,
-  reducers,
+  CreateVideoEffects,
+  LoadNextVideosEffects,
+  LoadPaginatedVideosEffects,
 } from '@frontend/video';
-import {CreateVideoEffects,LoadNextVideosEffects, LoadPaginatedVideosEffects} from '@frontend/video';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +23,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideAnimationsAsync(),
     provideStore(reducers, { metaReducers }),
-    provideEffects([LoadPaginatedVideosEffects, LoadNextVideosEffects, CreateVideoEffects]),
+    provideEffects([
+      LoadPaginatedVideosEffects,
+      LoadNextVideosEffects,
+      CreateVideoEffects,
+    ]),
     provideHttpClient(withInterceptorsFromDi()),
   ],
 };

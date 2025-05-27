@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {TeamApiResponseModel} from "../models/team-api-response.model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { TeamApiResponseModel } from '../models/team-api-response.model';
 
 @Injectable({
   providedIn: 'root',

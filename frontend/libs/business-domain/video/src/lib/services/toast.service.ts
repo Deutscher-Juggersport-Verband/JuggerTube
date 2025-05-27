@@ -29,6 +29,6 @@ export class ToastService {
   }
 
   public remove(id: number): void {
-    this.toasts.next(this.toasts.value.filter(t => t.id !== id));
+    this.toasts.next(this.toasts.value.filter((t) => t.id !== id));
   }
 }

@@ -1,8 +1,12 @@
-import {Injectable} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import {differentTeamsValidator} from '../validators/different-teams.validator';
-import {GameSystemTypesEnum, VideoCategoriesEnum, WeaponTypesEnum} from '@frontend/video-data';
+import { differentTeamsValidator } from '../validators/different-teams.validator';
+import {
+  GameSystemTypesEnum,
+  VideoCategoriesEnum,
+  WeaponTypesEnum,
+} from '@frontend/video-data';
 
 export enum AdditionalFieldsEnum {
   GAME_SYSTEM = 'gameSystem',
@@ -37,7 +41,7 @@ export type VideoFormModel = {
   tournamentStartDate: FormControl<string>;
   tournamentEndDate: FormControl<string>;
   tournamentAddress: FormControl<string>;
-}
+};
 
 @Injectable({ providedIn: 'root' })
 export class VideoFormService {
@@ -45,98 +49,170 @@ export class VideoFormService {
 
   public create(): FormGroup<VideoFormModel> {
     if (!this.currentForm) {
-      this.currentForm = new FormGroup<VideoFormModel>({
-        name: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        videoLink: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        channelId: new FormControl({ value: 0, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        channelLink: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        category: new FormControl({ value: null, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        uploadDate: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        dateOfRecording: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        topic: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        guests: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        weaponType: new FormControl({ value: null, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        gameSystem: new FormControl({ value: null, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        tournamentId: new FormControl({ value: 0, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        teamOneId: new FormControl({ value: 0, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        teamTwoId: new FormControl({ value: 0, disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        teamOneCity: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        teamTwoCity: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        teamOneMix: new FormControl({ value: false, disabled: false }, {
-          nonNullable: true,
-        }),
-        teamTwoMix: new FormControl({ value: false, disabled: false }, {
-          nonNullable: true,
-        }),
-        comment: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        tournamentCity: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        tournamentStartDate: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        tournamentEndDate: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        tournamentAddress: new FormControl({ value: '', disabled: false }, {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-      }, { validators: [differentTeamsValidator()] });
+      this.currentForm = new FormGroup<VideoFormModel>(
+        {
+          name: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          videoLink: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          channelId: new FormControl(
+            { value: 0, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          channelLink: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          category: new FormControl(
+            { value: null, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          uploadDate: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          dateOfRecording: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          topic: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          guests: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          weaponType: new FormControl(
+            { value: null, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          gameSystem: new FormControl(
+            { value: null, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          tournamentId: new FormControl(
+            { value: 0, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          teamOneId: new FormControl(
+            { value: 0, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          teamTwoId: new FormControl(
+            { value: 0, disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          teamOneCity: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          teamTwoCity: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          teamOneMix: new FormControl(
+            { value: false, disabled: false },
+            {
+              nonNullable: true,
+            }
+          ),
+          teamTwoMix: new FormControl(
+            { value: false, disabled: false },
+            {
+              nonNullable: true,
+            }
+          ),
+          comment: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          tournamentCity: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          tournamentStartDate: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          tournamentEndDate: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+          tournamentAddress: new FormControl(
+            { value: '', disabled: false },
+            {
+              nonNullable: true,
+              validators: [Validators.required],
+            }
+          ),
+        },
+        { validators: [differentTeamsValidator()] }
+      );
     }
     return this.currentForm;
   }

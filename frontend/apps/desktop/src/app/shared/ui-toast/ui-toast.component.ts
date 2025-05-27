@@ -8,7 +8,7 @@ import { Toast } from '@frontend/video';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ui-toast.component.html',
-  styleUrls: ['./ui-toast.component.less']
+  styleUrls: ['./ui-toast.component.less'],
 })
 export class UiToastComponent {
   @Input() public toast!: Toast;

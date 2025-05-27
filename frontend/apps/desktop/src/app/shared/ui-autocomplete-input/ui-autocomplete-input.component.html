@@ -8,27 +8,19 @@
   />
 
   @if (showDropdown) {
-    <div class="dropdown">
-      @if (filteredOptions.length > 0) {
-        @for (option of filteredOptions; track option[valueField]) {
-          <div
-            class="option"
-            (mousedown)="onOptionSelect(option)"
-          >
-            {{ option[displayField] }}
-          </div>
-        }
-      }
-      @if (!hasExactMatch) {
-        <div class="option no-results">
-          <button
-            class="add-new"
-            (mousedown)="onAddNewOption()"
-          >
-            "{{ searchControl.value }}" neu hinzufügen
-          </button>
-        </div>
-      }
+  <div class="dropdown">
+    @if (filteredOptions.length > 0) { @for (option of filteredOptions; track
+    option[valueField]) {
+    <div class="option" (mousedown)="onOptionSelect(option)">
+      {{ option[displayField] }}
     </div>
+    } } @if (!hasExactMatch) {
+    <div class="option no-results">
+      <button class="add-new" (mousedown)="onAddNewOption()">
+        "{{ searchControl.value }}" neu hinzufügen
+      </button>
+    </div>
+    }
+  </div>
   }
 </div>

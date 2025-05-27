@@ -4,11 +4,14 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import {ChannelApiResponseModel} from '@frontend/channel-data';
+import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
 
-type OptionType = TournamentApiResponseModel | TeamApiResponseModel | ChannelApiResponseModel;
+type OptionType =
+  | TournamentApiResponseModel
+  | TeamApiResponseModel
+  | ChannelApiResponseModel;
 type DisplayFieldType = keyof Pick<OptionType, 'name'>;
 type ValueFieldType = keyof Pick<OptionType, 'id'>;
 

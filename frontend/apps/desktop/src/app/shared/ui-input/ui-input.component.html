@@ -1,8 +1,5 @@
 @switch (type) { @case (UiInputTypeEnum.DROPDOWN) {
-<select
-  id="{{ labelText }}"
-  [formControl]="formControlElement"
->
+<select id="{{ labelText }}" [formControl]="formControlElement">
   @for (option of dropdownOptions; track option) {
   <option [value]="option">
     {{ option }}

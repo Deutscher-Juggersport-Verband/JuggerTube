@@ -1,4 +1,9 @@
-import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+} from '@angular/forms';
 
 export function differentTeamsValidator(): ValidatorFn {
   return (formGroup: AbstractControl): ValidationErrors | null => {
@@ -21,6 +26,6 @@ export function differentTeamsValidator(): ValidatorFn {
       return null;
     }
 
-    return teamOneId === teamTwoId ? {sameTeam: true} : null;
+    return teamOneId === teamTwoId ? { sameTeam: true } : null;
   };
 }

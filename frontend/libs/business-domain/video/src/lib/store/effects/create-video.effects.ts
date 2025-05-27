@@ -6,7 +6,11 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 
-import { createVideo, createVideoFailure,createVideoSuccess } from '../actions/videos.actions';
+import {
+  createVideo,
+  createVideoFailure,
+  createVideoSuccess,
+} from '../actions/videos.actions';
 import { ToastService, VideoFormService } from '@frontend/video';
 import { VideosApiClient } from '@frontend/video-data';
 

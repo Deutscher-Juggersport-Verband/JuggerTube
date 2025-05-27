@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {Component, OnInit, Signal} from '@angular/core';
+import { Component, OnInit, Signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -18,23 +18,25 @@ import {
   UiInputTypeEnum,
 } from '../../shared/ui-input/ui-input.component';
 import { UiLabelRowComponent } from '../../shared/ui-label-row/ui-label-row.component';
-import {ChannelsDataService} from '@frontend/channel';
-import {ChannelApiResponseModel} from '@frontend/channel-data';
-import {TeamsDataService} from '@frontend/team';
-import {TeamApiResponseModel} from '@frontend/team-data';
-import {TournamentsDataService} from '@frontend/tournament';
-import {TournamentApiResponseModel} from '@frontend/tournament-data';
+import { ChannelsDataService } from '@frontend/channel';
+import { ChannelApiResponseModel } from '@frontend/channel-data';
+import { TeamsDataService } from '@frontend/team';
+import { TeamApiResponseModel } from '@frontend/team-data';
+import { TournamentsDataService } from '@frontend/tournament';
+import { TournamentApiResponseModel } from '@frontend/tournament-data';
 import {
   AdditionalFieldsEnum,
   ToastService,
-VideoFormModel,
+  VideoFormModel,
   VideoFormService,
-  VideosDataService} from '@frontend/video';
+  VideosDataService,
+} from '@frontend/video';
 import {
   CreateVideoRequest,
   GameSystemTypesEnum,
   VideoCategoriesEnum,
-  WeaponTypesEnum} from '@frontend/video-data';
+  WeaponTypesEnum,
+} from '@frontend/video-data';
 
 @Component({
   imports: [
@@ -51,9 +53,9 @@ import {
   styleUrl: './page-create-video.component.less',
 })
 export class PageCreateVideoComponent implements OnInit {
-  public teams: Signal<TeamApiResponseModel[]  | undefined>;
-  public tournaments: Signal<TournamentApiResponseModel[]  | undefined>;
-  public channels: Signal<ChannelApiResponseModel[]  | undefined>;
+  public teams: Signal<TeamApiResponseModel[] | undefined>;
+  public tournaments: Signal<TournamentApiResponseModel[] | undefined>;
+  public channels: Signal<ChannelApiResponseModel[] | undefined>;
 
   protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
@@ -162,7 +164,7 @@ export class PageCreateVideoComponent implements OnInit {
     this.form.controls.tournamentAddress.clearValidators();
 
     // Add validators based on visible fields
-    this.additionalFields.forEach(field => {
+    this.additionalFields.forEach((field) => {
       switch (field) {
         case AdditionalFieldsEnum.TOPIC:
           this.form.controls.topic.addValidators(Validators.required);
@@ -179,10 +181,18 @@ export class PageCreateVideoComponent implements OnInit {
         case AdditionalFieldsEnum.TOURNAMENT:
           this.form.controls.tournamentId.addValidators(Validators.required);
           if (this.showNewTournamentFields) {
-            this.form.controls.tournamentCity.addValidators(Validators.required);
-            this.form.controls.tournamentStartDate.addValidators(Validators.required);
-            this.form.controls.tournamentEndDate.addValidators(Validators.required);
-            this.form.controls.tournamentAddress.addValidators(Validators.required);
+            this.form.controls.tournamentCity.addValidators(
+              Validators.required
+            );
+            this.form.controls.tournamentStartDate.addValidators(
+              Validators.required
+            );
+            this.form.controls.tournamentEndDate.addValidators(
+              Validators.required
+            );
+            this.form.controls.tournamentAddress.addValidators(
+              Validators.required
+            );
           }
           break;
         case AdditionalFieldsEnum.TEAMS:
@@ -199,7 +209,7 @@ export class PageCreateVideoComponent implements OnInit {
     });
 
     // Update validation state
-    Object.keys(this.form.controls).forEach(key => {
+    Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
       if (control) {
         control.updateValueAndValidity();
@@ -210,7 +220,9 @@ export class PageCreateVideoComponent implements OnInit {
   public onSubmit(): void {
     if (!this.form.valid) {
       this.markAllFieldsAsTouched();
-      this.toastService.showError('Bitte fülle alle erforderlichen Felder aus.');
+      this.toastService.showError(
+        'Bitte fülle alle erforderlichen Felder aus.'
+      );
       return;
     }
 
@@ -224,7 +236,7 @@ export class PageCreateVideoComponent implements OnInit {
       ...formValue,
       category: formValue.category as VideoCategoriesEnum,
       weaponType: formValue.weaponType as WeaponTypesEnum | undefined,
-      gameSystem: formValue.gameSystem as GameSystemTypesEnum | undefined
+      gameSystem: formValue.gameSystem as GameSystemTypesEnum | undefined,
     };
 
     this.videosDataService.create(videoData);
@@ -256,7 +268,9 @@ export class PageCreateVideoComponent implements OnInit {
   }
 
   public onNewTeam(name: string, teamNumber: 'one' | 'two'): void {
-    const existingTeam = this.teams()?.find(team => team.name.toLowerCase() === name.toLowerCase());
+    const existingTeam = this.teams()?.find(
+      (team) => team.name.toLowerCase() === name.toLowerCase()
+    );
     if (existingTeam) {
       const teamOneId = this.form.controls.teamOneId.value;
       const teamTwoId = this.form.controls.teamTwoId.value;

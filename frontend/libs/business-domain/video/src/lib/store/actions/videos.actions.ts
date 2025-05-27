@@ -19,7 +19,7 @@ export enum VideosActionNamesEnum {
   RequestVideoRange = '[Videos] Request Video Range',
   CreateVideo = '[Videos] Create Video',
   CreateVideoSuccess = '[Videos] Create Video Success',
-  CreateVideoFailure = '[Videos] Create Video Failure'
+  CreateVideoFailure = '[Videos] Create Video Failure',
 }
 
 export const loadPaginatedVideosAction = createAction(

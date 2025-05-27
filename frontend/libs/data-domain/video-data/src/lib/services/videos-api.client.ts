@@ -77,7 +77,9 @@ export class VideosApiClient {
     );
   }
 
-  public create(videoData: CreateVideoRequest): Observable<{ id: number; message: string }> {
+  public create(
+    videoData: CreateVideoRequest
+  ): Observable<{ id: number; message: string }> {
     return this.httpClient
       .post<{ id: number; message: string }>(
         '/api/video-frontend/create-video',
@@ -102,7 +104,9 @@ export class VideosApiClient {
       );
   }
 
-  public createChannel(channelData: CreateChannelRequest): Observable<ChannelModel> {
+  public createChannel(
+    channelData: CreateChannelRequest
+  ): Observable<ChannelModel> {
     return this.httpClient
       .post<ChannelModel>('/api/channel-frontend/create-channel', channelData)
       .pipe(

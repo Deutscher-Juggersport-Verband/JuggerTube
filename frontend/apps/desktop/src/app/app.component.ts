@@ -12,9 +12,9 @@ import { UiToastContainerComponent } from './shared/ui-toast-container/ui-toast-
     RouterOutlet,
     HeaderBarComponent,
     InfoBarComponent,
-    UiToastContainerComponent
+    UiToastContainerComponent,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrls: ['./app.component.less'],
 })
 export class AppComponent {}

@@ -13,9 +13,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UiRedirectComponent } from '../../shared/ui-redirect/ui-redirect.component';
 import { UiTagComponent } from '../../shared/ui-tag/ui-tag.component';
 import { VideosDataService } from '@frontend/video';
-import {
-  VideoApiResponseModel
-} from '@frontend/video-data';
+import { VideoApiResponseModel } from '@frontend/video-data';
 
 @Component({
   imports: [CommonModule, UiRedirectComponent, RouterLink, UiTagComponent],
@@ -53,7 +51,8 @@ export class PageVideoDetailsComponent {
   }
 
   public getIsYoutubeUrl(url: string): boolean {
-    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+    const youtubeRegex =
+      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
     return youtubeRegex.test(url);
   }
 
