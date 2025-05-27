@@ -22,6 +22,7 @@
       [valueField]="'id'"
       [placeholder]="'Channel suchen...'"
       (newOption)="onNewChannel()"
+      (existingOptionSelected)="onExistingChannelSelected()"
     />
 
     @if (showNewChannelFields) {
@@ -78,6 +79,7 @@
         [valueField]="'id'"
         [placeholder]="'Turnier suchen...'"
         (newOption)="onNewTournament()"
+        (existingOptionSelected)="onExistingTournamentSelected()"
       />
       @if (showNewTournamentFields) {
         <div class="new-tournament-fields">
@@ -121,6 +123,7 @@
         [valueField]="'id'"
         [placeholder]="'Team 1 suchen...'"
         (newOption)="onNewTeam($event, 'one')"
+        (existingOptionSelected)="onExistingTeamSelected('one')"
       />
 
       @if (showNewTeamOneFields) {
@@ -152,6 +155,7 @@
         [valueField]="'id'"
         [placeholder]="'Team 2 suchen...'"
         (newOption)="onNewTeam($event, 'two')"
+        (existingOptionSelected)="onExistingTeamSelected('two')"
       />
 
       @if (showNewTeamTwoFields) {

@@ -29,6 +29,7 @@ export class UiAutocompleteInputComponent {
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
   @Output() public newOption = new EventEmitter<string>();
+  @Output() public existingOptionSelected = new EventEmitter<void>();
 
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
@@ -79,6 +80,7 @@ export class UiAutocompleteInputComponent {
     this.formControlElement.setValue(option[this.valueField]);
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
+    this.existingOptionSelected.emit();
   }
 
   public onInputFocus(): void {

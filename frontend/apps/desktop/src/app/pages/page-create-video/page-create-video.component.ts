@@ -243,8 +243,16 @@ export class PageCreateVideoComponent implements OnInit {
     this.showNewChannelFields = true;
   }
 
+  public onExistingChannelSelected(): void {
+    this.showNewChannelFields = false;
+  }
+
   public onNewTournament(): void {
     this.showNewTournamentFields = true;
+  }
+
+  public onExistingTournamentSelected(): void {
+    this.showNewTournamentFields = false;
   }
 
   public onNewTeam(name: string, teamNumber: 'one' | 'two'): void {
@@ -262,6 +270,14 @@ export class PageCreateVideoComponent implements OnInit {
       this.showNewTeamOneFields = true;
     } else {
       this.showNewTeamTwoFields = true;
+    }
+  }
+
+  public onExistingTeamSelected(teamNumber: 'one' | 'two'): void {
+    if (teamNumber === 'one') {
+      this.showNewTeamOneFields = false;
+    } else {
+      this.showNewTeamTwoFields = false;
     }
   }
 
