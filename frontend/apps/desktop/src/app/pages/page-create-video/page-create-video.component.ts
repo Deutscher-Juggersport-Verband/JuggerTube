@@ -70,6 +70,7 @@ export class PageCreateVideoComponent implements OnInit {
   protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
   protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
+  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
 
   constructor(
     private readonly tournamentService: TournamentsDataService,
@@ -227,7 +228,6 @@ export class PageCreateVideoComponent implements OnInit {
     };
 
     this.videosDataService.create(videoData);
-    this.form.reset();
   }
 
   private markAllFieldsAsTouched(): void {
@@ -237,6 +237,10 @@ export class PageCreateVideoComponent implements OnInit {
         control.markAsTouched({ onlySelf: true });
       }
     });
+  }
+
+  public onNewChannel(): void {
+    this.showNewChannelFields = true;
   }
 
   public onNewTournament(): void {
@@ -282,12 +286,6 @@ export class PageCreateVideoComponent implements OnInit {
       }
     }
   }
-
-  public onNewChannel(): void {
-    this.showNewChannelFields = true;
-  }
-
-  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
 
   public hasTeamValidationError(): boolean {
     return (

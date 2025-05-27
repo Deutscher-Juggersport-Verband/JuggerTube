@@ -7,7 +7,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action } from '@ngrx/store';
 
 import { createVideo, createVideoFailure,createVideoSuccess } from '../actions/videos.actions';
-import { ToastService } from '@frontend/video';
+import { ToastService, VideoFormService } from '@frontend/video';
 import { VideosApiClient } from '@frontend/video-data';
 
 @Injectable()
@@ -15,6 +15,7 @@ export class CreateVideoEffects {
   private readonly actions$ = inject(Actions);
   private readonly videosApiClient = inject(VideosApiClient);
   private readonly toastService = inject(ToastService);
+  private readonly videoFormService = inject(VideoFormService);
 
   public readonly createVideo: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
@@ -23,6 +24,7 @@ export class CreateVideoEffects {
         return this.videosApiClient.create(videoData).pipe(
           map((response) => {
             this.toastService.showSuccess('Video wurde erfolgreich erstellt.');
+            this.videoFormService.create().reset();
             return createVideoSuccess({ response });
           }),
           catchError((error) => {
