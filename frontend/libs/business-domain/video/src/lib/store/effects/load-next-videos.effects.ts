@@ -12,7 +12,7 @@ import {
   loadNextVideosError,
   loadNextVideosSuccess,
 } from '../actions/videos.actions';
-import {PaginatedVideosApiResponseModel, VideosApiClient, VideoApiResponseModel} from '@frontend/video-data';
+import {PaginatedVideosApiResponseModel, VideoApiResponseModel,VideosApiClient} from '@frontend/video-data';
 
 const unknownError = { form: 'Unknown error' };
 

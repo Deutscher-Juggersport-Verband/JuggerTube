@@ -1,9 +1,10 @@
 import { Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+
 import {
   ChannelApiResponseModel,
   ChannelsApiClient,
 } from '@frontend/channel-data';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelsDataService {
