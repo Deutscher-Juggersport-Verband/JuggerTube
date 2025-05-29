@@ -28,7 +28,7 @@ tournament_suffix = 'tournament.php?id='
 results_suffix = 'tournament.result.php?id='
 
 #change url depending on the environment
-base_host = os.getenv('BASE_HOST', 'localhost:8080')
+base_host = os.getenv('BASE_URL', 'localhost:8080')
 
 add_tournaments_url = f'https://{base_host}/api/tournament-frontend/create-multiple-tournaments'
 add_teams_url = f'https://{base_host}/api/team-frontend/create-multiple-teams'
