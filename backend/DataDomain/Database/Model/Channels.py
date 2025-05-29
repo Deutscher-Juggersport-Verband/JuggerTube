@@ -20,13 +20,13 @@ class Channels(BaseModel):
     name: str = db.Column(
         db.String(100),
         nullable=False,
-        unique = True,
+        unique=True,
     )
 
     channel_link: str = db.Column(
         db.String(255),
         nullable=False,
-        unique = True,
+        unique=True,
     )
 
     is_deleted: bool = db.Column(

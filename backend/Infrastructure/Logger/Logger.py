@@ -6,13 +6,13 @@ from DataDomain.Model.LogHandler import LogHandler
 
 logger = logging.getLogger('juggertube_mysql_logger')
 
-lowestLogLevel = logging.DEBUG if os.getenv(
+lowest_log_level = logging.DEBUG if os.getenv(
     'FLASK_ENV') == 'development' else logging.INFO
-logger.setLevel(lowestLogLevel)
+logger.setLevel(lowest_log_level)
 
 
-dbHandler = LogHandler(db.session)
+db_handler = LogHandler(db.session)
 formatter = logging.Formatter('%(message)s')
-dbHandler.setFormatter(formatter)
+db_handler.setFormatter(formatter)
 
-logger.addHandler(dbHandler)
+logger.addHandler(db_handler)

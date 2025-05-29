@@ -1,0 +1,8 @@
+### Get videos overview
+GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10
+
+> {%
+    client.test("It should return a successful status code", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}

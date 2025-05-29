@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -14,11 +14,10 @@ import { Router } from '@angular/router';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../ui-button/ui-button.component';
-import {
   UiInputComponent,
   UiInputTypeEnum,
-} from '../../ui-input/ui-input.component';
+} from '../../ui-shared';
+import { RegisterRequestBody, UserApiClient } from '@frontend/user-data';
 
 export const PasswordsMatchValidator: ValidatorFn = (
   control: AbstractControl
@@ -72,24 +71,33 @@ export const registerForm = new FormGroup<{
   styleUrl: './page-register.component.less',
 })
 export class PageRegisterComponent {
-  constructor(private router: Router) {}
+  private readonly router: Router = inject(Router);
+  private readonly authService: UserApiClient = inject(UserApiClient);
 
   protected readonly form = registerForm;
+  protected error: string = '';
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
 
-  public onSubmit(): void {
+  public async onSubmit(): Promise<void> {
     if (!this.form.valid) {
       this.markAllFieldsAsTouched();
       return;
     }
 
-    //this.authService.register(this.form.value);
+    const response = await this.authService.register(
+      this.form.value as RegisterRequestBody
+    );
+
+    if (response.error) {
+      this.error = response.error;
+      return;
+    }
 
     this.form.reset();
 
-    this.router.navigate(['/']);
+    await this.router.navigate(['/']);
   }
 
   private markAllFieldsAsTouched(): void {

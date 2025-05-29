@@ -4,7 +4,7 @@
 
 <form [formGroup]="form">
   <ui-input
-    [labelText]="'Email *'"
+    [labelText]="'Email (einzigartig) *'"
     [type]="UiInputTypeEnum.EMAIL"
     [formControlElement]="form.controls.email"
   />
@@ -38,6 +38,10 @@
       'Dein Anzeige-Name. Trage hier am besten den Namen ein, unter dem dich die meisten Menschen in der Community kennen.'
     "
   />
+
+  @if (error) {
+  <span class="error-message">{{ error }}</span>
+  }
 
   <ui-button
     (click)="onSubmit()"

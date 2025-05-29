@@ -1,3 +1,5 @@
+export * from './lib/rules/is-youtube-url.rule';
+
 export * from './lib/store/effects/load-paginated-videos.effects';
 export * from './lib/store/effects/load-next-videos.effects';
 

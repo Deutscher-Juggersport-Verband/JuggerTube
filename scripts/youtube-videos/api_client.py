@@ -1,3 +1,5 @@
+import os
+
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from error_logger import log_video_error
@@ -6,7 +8,8 @@ from error_logger import log_video_error
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # API configuration
-CREATE_VIDEOS_URL = 'https://localhost:8080/api/video-frontend/create-multiple-videos'
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
+CREATE_VIDEOS_URL = f'https://{base_host}/api/video-frontend/create-multiple-videos'
 
 def send_videos_to_api(videos_data):
     """Send video data to the API and handle responses"""
@@ -17,7 +20,7 @@ def send_videos_to_api(videos_data):
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Host': 'localhost:8080'
+        'Host': base_host
     }
     
     try:

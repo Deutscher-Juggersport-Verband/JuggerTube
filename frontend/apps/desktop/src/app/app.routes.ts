@@ -6,6 +6,7 @@ import { PageRegisterComponent } from './pages/page-register/page-register.compo
 import { PageUserDetailsComponent } from './pages/page-user-details/page-user-details.component';
 import { PageVideoDetailsComponent } from './pages/page-video-details/page-video-details.component';
 import { PageVideoOverviewComponent } from './pages/page-video-overview/page-video-overview.component';
+import { UserDetailsResolver } from '@frontend/user';
 
 export const appRoutes: Route[] = [
   {
@@ -23,6 +24,16 @@ export const appRoutes: Route[] = [
   {
     path: 'user-details',
     component: PageUserDetailsComponent,
+    resolve: {
+      userDetails: UserDetailsResolver,
+    },
+  },
+  {
+    path: 'user-details/:escapedUsername?',
+    component: PageUserDetailsComponent,
+    resolve: {
+      userDetails: UserDetailsResolver,
+    },
   },
   {
     path: 'register',

@@ -17,6 +17,8 @@
     "paths": {
       "@frontend/api": ["libs/infrastructure/api/src/index.ts"],
       "@frontend/cache": ["libs/infrastructure/cache/src/index.ts"],
+      "@frontend/user": ["libs/business-domain/user/src/index.ts"],
+      "@frontend/user-data": ["libs/data-domain/user-data/src/index.ts"],
       "@frontend/video": ["libs/business-domain/video/src/index.ts"],
       "@frontend/video-data": ["libs/data-domain/video-data/src/index.ts"]
     }

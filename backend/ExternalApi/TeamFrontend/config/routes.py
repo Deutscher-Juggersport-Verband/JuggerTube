@@ -2,11 +2,11 @@ from flask import Blueprint
 
 from config import cache
 from DataDomain.Model import Response
-from ExternalApi.TeamFrontend.Handler import GetTeamOverviewHandler
-from ExternalApi.TeamFrontend.Handler.CreateMultipleTeamsHandler import (
+from ExternalApi.TeamFrontend.Handler import (
     CreateMultipleTeamsHandler,
+    GetTeamOverviewHandler,
 )
-from ExternalApi.TeamFrontend.InputFilter.CreateMultipleTeamsInputFilter import (
+from ExternalApi.TeamFrontend.InputFilter import (
     CreateMultipleTeamsInputFilter,
 )
 

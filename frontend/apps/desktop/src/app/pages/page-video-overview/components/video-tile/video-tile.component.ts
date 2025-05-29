@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
-import { UiTagComponent } from '../../../../ui-tag/ui-tag.component';
+import { UiTagComponent } from '../../../../ui-shared';
 import { VideoApiResponseModel } from '@frontend/video-data';
 
 @Component({
