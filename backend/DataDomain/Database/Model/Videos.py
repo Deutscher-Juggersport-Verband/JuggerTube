@@ -18,7 +18,7 @@ class Videos(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique = True,
+        unique=True,
     )
 
     name: str = db.Column(
@@ -36,7 +36,7 @@ class Videos(BaseModel):
     video_link: str = db.Column(
         db.String(255),
         nullable=False,
-        unique = True,
+        unique=True,
     )
 
     upload_date: datetime = db.Column(

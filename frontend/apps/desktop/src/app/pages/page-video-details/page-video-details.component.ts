@@ -10,6 +10,8 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { isYoutubeUrl, VideosDataService } from '@frontend/video';
+import { VideoApiResponseModel } from '@frontend/video-data';
 import { UiRedirectComponent } from '../../shared/ui-redirect/ui-redirect.component';
 import { UiTagComponent } from '../../shared/ui-tag/ui-tag.component';
 import { VideosDataService } from '@frontend/video';
@@ -30,30 +32,24 @@ import { VideoApiResponseModel } from '@frontend/video-data';
 })
 export class PageVideoDetailsComponent {
   public video: VideoApiResponseModel | undefined = undefined;
-  public isYoutubeUrl: boolean = false;
+  public isYoutubeUrl = false;
   public embeddedUrl: SafeResourceUrl = '';
 
-  public showTournamentDetails: boolean = false;
-  public showTeamOneDetails: boolean = false;
-  public showTeamTwoDetails: boolean = false;
+  public showTournamentDetails = false;
+  public showTeamOneDetails = false;
+  public showTeamTwoDetails = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private videosDataService: VideosDataService,
-    private sanitizer: DomSanitizer
+    private readonly route: ActivatedRoute,
+    private readonly videosDataService: VideosDataService,
+    private readonly sanitizer: DomSanitizer
   ) {
     const videoId = Number(this.route.snapshot.paramMap.get('id'));
     this.video = this.videosDataService.getVideoById(videoId);
-    this.isYoutubeUrl = this.getIsYoutubeUrl(this.video?.videoLink ?? '');
+    this.isYoutubeUrl = isYoutubeUrl(this.video?.videoLink ?? '');
     if (this.isYoutubeUrl) {
       this.embeddedUrl = this.getEmbeddedUrl(this.video?.videoLink ?? '');
     }
-  }
-
-  public getIsYoutubeUrl(url: string): boolean {
-    const youtubeRegex =
-      /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-    return youtubeRegex.test(url);
   }
 
   public getEmbeddedUrl(url: string): SafeResourceUrl {

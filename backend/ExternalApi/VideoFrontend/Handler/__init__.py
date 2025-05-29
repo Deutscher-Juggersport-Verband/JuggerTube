@@ -1,3 +1,4 @@
 from .CreateMultipleVideosHandler import CreateMultipleVideosHandler
 from .CreateVideoHandler import CreateVideoHandler
+from .GetPaginatedVideosHandler import GetPaginatedVideosHandler
 from .GetVideoOverviewHandler import GetVideoOverviewHandler

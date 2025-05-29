@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import requests
 from urllib3.exceptions import InsecureRequestWarning
@@ -7,6 +9,7 @@ from enums import TARGET_SHEETS, VideoCategoriesEnum
 from data_processor import DataProcessor
 from helpers import send_data_to_backend
 
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -89,13 +92,13 @@ if __name__ == "__main__":
 def clean_value(value):
     if pd.isna(value) or (isinstance(value, float) and (math.isnan(value) or math.isinf(value))):
         return None
-    return str(value) if value is not None else None
+    return str(value) if value else None
 
 # Function to send data to backend
 def send_data_to_backend(endpoint, data, entity_name):
     try:
         response = requests.post(
-            f'https://localhost:8080{endpoint}',
+            f'https://{base_host}{endpoint}',
             json=data,
             verify=False  # Since it's localhost, we can skip SSL verification
         )

@@ -1,9 +1,10 @@
 from typing import List
 
+from sqlalchemy import func
+
 from DataDomain.Database import db
 from DataDomain.Database.Model import Teams
 from Infrastructure.Logger import logger
-from sqlalchemy import func
 
 
 class TeamRepository:

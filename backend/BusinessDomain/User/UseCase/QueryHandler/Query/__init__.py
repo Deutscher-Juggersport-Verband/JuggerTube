@@ -1,0 +1,1 @@
+from .GetUserDetailsQuery import GetUserDetailsQuery

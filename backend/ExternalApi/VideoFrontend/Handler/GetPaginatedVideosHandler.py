@@ -1,32 +1,30 @@
-from flask import request
+from flask import g
+
 from DataDomain.Database.Repository import VideoRepository
 from DataDomain.Model import Response
 
 
 class GetPaginatedVideosHandler:
-    """Handler for getting paginated videos"""
 
     @staticmethod
     def handle() -> Response:
 
-        url = '/api/video-frontend/get-paginated-videos'
+        data = g.validated_data
 
-        videos = VideoRepository.getVideoOverview()
+        start = data.get('start')
+        limit = data.get('limit')
 
-        start = int(request.args.get('start'))
-        limit = int(request.args.get('limit'))
-        count = len(videos)
-
-        if count < start or limit < -1:
-            return Response(
-                response="No videos at this index or limit must be higher then 0",
-                status=404
-            )
-
-        # make response
-        response = {'start': start, 'limit': limit, 'count': count, 'results': videos[start:(start + limit)]}
+        videos = VideoRepository.getPaginatedVideos(
+            start=start,
+            limit=limit
+        )
 
         return Response(
-            response=response,
+            response={
+                'start': start,
+                'limit': limit,
+                'count': VideoRepository.count(),
+                'results': videos
+            },
             status=200,
         )

@@ -1,5 +1,5 @@
 from flask_inputfilter import InputFilter
-from flask_inputfilter.Validator import (
+from flask_inputfilter.validators import (
     ArrayLengthValidator,
     IsArrayValidator,
 )

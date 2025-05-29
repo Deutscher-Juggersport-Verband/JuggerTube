@@ -8,19 +8,11 @@ from DataDomain.Model import Response
 
 
 class CreateMultipleTeamsHandler:
-    """Handler for creating multiple teams"""
 
     @staticmethod
     def handle() -> Response:
-        """Create multiple teams from an array of team data"""
         data = g.validated_data
-        teams_data = data.get('teams', [])
-
-        if not teams_data:
-            return Response(
-                response='No teams provided',
-                status=400
-            )
+        teams_data = data.get('teams')
 
         created_teams: List[Dict] = []
         failed_teams: List[Dict] = []

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -58,7 +58,7 @@ export interface CreateVideoRequest {
   providedIn: 'root',
 })
 export class VideosApiClient {
-  constructor(private httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient = inject(HttpClient);
 
   public get(): Observable<VideoApiResponseModel[]> {
     return this.httpClient.get<VideoApiResponseModel[]>(

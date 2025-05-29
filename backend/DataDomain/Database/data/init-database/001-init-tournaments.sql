@@ -10,4 +10,4 @@ INSERT IGNORE INTO tournaments (
 ('5. Frängsche Meisterschaft', 'Erlangen', '2018-04-24', '2023-04-02', ''),
 ('Pömmeltreff Karlsruhe', 'Karlsruhe', '2024-10-30', '2025-02-23', 'https://turniere.jugger.org/tournament.php?id=506'),
 ('16. Badische Meisterschaft', 'Freiburg', '2019-10-08', '2020-02-09', 'https://turniere.jugger.org/tournament.php?id=497'),
-('Catch the Fish - Kiel International Tournament', 'Kiel', '2017-08-06', '2017-11-17', 'https://turniere.jugger.org/tournament.php?id=365'),
+('Catch the Fish - Kiel International Tournament', 'Kiel', '2017-08-06', '2017-11-17', 'https://turniere.jugger.org/tournament.php?id=365');

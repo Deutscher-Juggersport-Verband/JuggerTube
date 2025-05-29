@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Dict, List
 
-from flask import g, current_app
+from flask import g
 
 from DataDomain.Database.Enum import GameSystemTypesEnum, VideoCategoriesEnum
-from DataDomain.Database.Model import Channels, Videos
+from DataDomain.Database.Model import Videos
 from DataDomain.Database.Repository import (
     ChannelRepository,
     TeamRepository,
@@ -80,7 +80,8 @@ class CreateMultipleVideosHandler:
             # Set required fields
             video.name = video_data.get('name')
             category_str = video_data.get('category')
-            video.category = CreateMultipleVideosHandler._map_category_to_enum(category_str)
+            video.category = CreateMultipleVideosHandler._map_category_to_enum(
+                category_str)
             video.video_link = video_data.get('videoLink')
             video.channel_id = channel_id
             video.topic = ''
@@ -142,7 +143,8 @@ class CreateMultipleVideosHandler:
             elif video.category in [VideoCategoriesEnum.HIGHLIGHTS, VideoCategoriesEnum.AWARDS]:
                 tournament_name = video_data.get('tournamentName')
                 if tournament_name:
-                    tournament_id = TournamentRepository.getTournamentByName(tournament_name)
+                    tournament_id = TournamentRepository.getTournamentByName(
+                        tournament_name)
                     if tournament_id is None:
                         failed_videos.append({
                             'name': video.name,

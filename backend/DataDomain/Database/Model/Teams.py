@@ -12,13 +12,13 @@ class Teams(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique = True,
+        unique=True,
     )
 
     name: str = db.Column(
         db.String(100),
         nullable=False,
-        unique = True,
+        unique=True,
     )
 
     city: str = db.Column(

@@ -1,4 +1,5 @@
 import {
+  HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
@@ -10,11 +11,14 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 
 import { appRoutes } from './app.routes';
-import { metaReducers, reducers } from '@frontend/video';
+import { GetUserDetailsDataEffect } from '@frontend/user';
+import { JwtInterceptor } from '@frontend/user-data';
 import {
-  CreateVideoEffects,
   LoadNextVideosEffects,
   LoadPaginatedVideosEffects,
+  metaReducers,
+  reducers,
+  CreateVideoEffects,
 } from '@frontend/video';
 
 export const appConfig: ApplicationConfig = {
@@ -26,8 +30,18 @@ export const appConfig: ApplicationConfig = {
     provideEffects([
       LoadPaginatedVideosEffects,
       LoadNextVideosEffects,
+      GetUserDetailsDataEffect,
+    ]),
+    provideEffects([
+      LoadPaginatedVideosEffects,
+      LoadNextVideosEffects,
       CreateVideoEffects,
     ]),
     provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
   ],
 };

@@ -1,4 +1,4 @@
-import { Injectable, Signal } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -18,8 +18,7 @@ import { paginatedVideosDataSelector } from '../store/selectors/paginated-videos
 import { totalCountVideosDataSelector } from '../store/selectors/total-count-videos-data.selector';
 import { videosRequestStateSelector } from '../store/selectors/videos-request-state.selector';
 import { videosStateFeatureSelector } from '../store/selectors/videos-state-feature.selector';
-import { isRangeCached } from '../utils/range-utils';
-import { getDisplayedVideoIndices } from '../utils/range-utils';
+import { getDisplayedVideoIndices, isRangeCached } from '../utils/range-utils';
 import { RequestStateEnum } from '@frontend/api';
 import { SingletonGetter } from '@frontend/cache';
 import {
@@ -44,7 +43,7 @@ export class VideosDataService {
     return this.store$.select(videosRequestStateSelector);
   }
 
-  constructor(private readonly store$: Store<VideosStateAware>) {}
+  private readonly store$: Store<VideosStateAware> = inject(Store);
 
   public loadPaginatedVideos(start: number, limit: number): void {
     this.store$.dispatch(loadPaginatedVideosAction({ start, limit }));

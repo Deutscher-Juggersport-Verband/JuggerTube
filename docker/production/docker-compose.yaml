@@ -25,6 +25,8 @@ services:
       context: ../../
       dockerfile: docker/production/cron.Dockerfile
     container_name: juggertube-cron
+    environment:
+      BASE_URL: 'juggertube-backend:8080'
     networks:
       - backend_network
 

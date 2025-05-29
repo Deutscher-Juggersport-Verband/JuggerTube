@@ -13,11 +13,11 @@ import {
   UiButtonColorEnum,
   UiButtonComponent,
 } from '../../shared/ui-button/ui-button.component';
+import { UiLabelRowComponent } from '../../shared/ui-label-row/ui-label-row.component';
 import {
   UiInputComponent,
   UiInputTypeEnum,
-} from '../../shared/ui-input/ui-input.component';
-import { UiLabelRowComponent } from '../../shared/ui-label-row/ui-label-row.component';
+} from '../../shared/ui-shared';
 import { ChannelsDataService } from '@frontend/channel';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamsDataService } from '@frontend/team';

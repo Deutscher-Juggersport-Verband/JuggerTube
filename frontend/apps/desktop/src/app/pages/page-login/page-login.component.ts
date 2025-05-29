@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,7 +15,12 @@ import {
 import {
   UiInputComponent,
   UiInputTypeEnum,
-} from '../../shared/ui-input/ui-input.component';
+} from '../../shared/ui-shared';
+import {
+  AuthResponse,
+  LoginRequestBody,
+  UserApiClient,
+} from '@frontend/user-data';
 
 export const loginForm = new FormGroup<{
   email: FormControl<string>;
@@ -43,24 +48,40 @@ export const loginForm = new FormGroup<{
   styleUrl: './page-login.component.less',
 })
 export class PageLoginComponent {
-  constructor(private router: Router) {}
+  private readonly router: Router = inject(Router);
+  private readonly authService: UserApiClient = inject(UserApiClient);
 
   protected readonly form = loginForm;
+  protected error: string = '';
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
 
-  public onSubmit(): void {
+  public async onSubmit(): Promise<void> {
     if (!this.form.valid) {
       this.markAllFieldsAsTouched();
       return;
     }
 
-    //this.authService.login(this.form.value);
+    const response: AuthResponse = await this.authService.login(
+      this.form.value as LoginRequestBody
+    );
+
+    if (response.lockedUntil && response.lockType) {
+      this.error = `Dieser Account ist ${
+        response.lockType
+      } gesperrt bis ${new Date(response.lockedUntil).toLocaleString()}`;
+      return;
+    }
+
+    if (response.error) {
+      this.error = response.error;
+      return;
+    }
 
     this.form.reset();
 
-    this.router.navigate(['/']);
+    await this.router.navigate(['/']);
   }
 
   private markAllFieldsAsTouched(): void {

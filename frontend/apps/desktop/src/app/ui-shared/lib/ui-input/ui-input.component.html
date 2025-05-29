@@ -1,0 +1,42 @@
+@switch (type) { @case (UiInputTypeEnum.DROPDOWN) {
+<<<<<<<< HEAD:frontend/apps/desktop/src/app/shared/ui-input/ui-input.component.html
+<select id="{{ labelText }}" [formControl]="formControlElement">
+========
+<select
+  id="{{ labelText }}"
+  [formControl]="formControlElement"
+  [disabled]="disabled"
+  [class.invalid]="formControlElement.touched && formControlElement.invalid"
+>
+>>>>>>>> main:frontend/apps/desktop/src/app/ui-shared/lib/ui-input/ui-input.component.html
+  @for (option of dropdownOptions; track option) {
+  <option [value]="option">
+    {{ option }}
+  </option>
+  }
+</select>
+} @case (UiInputTypeEnum.TOGGLE) {
+<input
+  id="{{ labelText }}"
+  type="checkbox"
+  [formControl]="formControlElement"
+  (change)="onToggleChange($event)"
+/>
+} @default {
+<input
+  id="{{ labelText }}"
+  [type]="type"
+  [placeholder]="placeholder"
+  [formControl]="formControlElement"
+  [class.invalid]="formControlElement.touched && formControlElement.invalid"
+/>
+} } @if (formControlElement.touched && formControlElement.invalid &&
+formControlElement.errors) {
+<span class="error-message">
+  @if (formControlElement.errors['required']) { Dieses Feld ist erforderlich. }
+  @if (formControlElement.errors['email']) { Bitte geben Sie eine gültige
+  E-Mail-Adresse ein. } @if (formControlElement.errors['minlength']) { Die
+  Eingabe ist zu kurz. Mindestlänge:
+  {{ formControlElement.errors['minlength'].requiredLength }} Zeichen. }
+</span>
+}

@@ -1,9 +1,11 @@
+from typing import Dict, List
+
 from flask import g
 
-from DataDomain.Database.Repository import ChannelRepository
 from DataDomain.Database.Model import Channels
+from DataDomain.Database.Repository import ChannelRepository
 from DataDomain.Model import Response
-from typing import List, Dict
+
 
 class CreateMultipleChannelsHandler:
     """Handler for creating multiple channels"""
