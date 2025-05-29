@@ -14,11 +14,11 @@ import { appRoutes } from './app.routes';
 import { GetUserDetailsDataEffect } from '@frontend/user';
 import { JwtInterceptor } from '@frontend/user-data';
 import {
+  CreateVideoEffects,
   LoadNextVideosEffects,
   LoadPaginatedVideosEffects,
   metaReducers,
   reducers,
-  CreateVideoEffects,
 } from '@frontend/video';
 
 export const appConfig: ApplicationConfig = {

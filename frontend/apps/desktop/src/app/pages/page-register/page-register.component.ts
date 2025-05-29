@@ -14,11 +14,9 @@ import { Router } from '@angular/router';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../shared/ui-button/ui-button.component';
-import {
   UiInputComponent,
-  UiInputTypeEnum,
-} from '../../shared/ui-shared';
+  UiInputTypeEnum, UiLabelRowComponent
+} from '../../ui-shared';
 import { RegisterRequestBody, UserApiClient } from '@frontend/user-data';
 
 export const PasswordsMatchValidator: ValidatorFn = (
@@ -67,6 +65,7 @@ export const registerForm = new FormGroup<{
     ReactiveFormsModule,
     UiButtonComponent,
     UiInputComponent,
+    UiLabelRowComponent,
   ],
   standalone: true,
   templateUrl: './page-register.component.html',

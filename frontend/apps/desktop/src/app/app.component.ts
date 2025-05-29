@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { InfoBarComponent } from './info-bar/info-bar.component';
-import { UiToastContainerComponent } from './shared/ui-toast-container/ui-toast-container.component';
+import { UiToastContainerComponent } from './ui-shared';
 
 @Component({
   selector: 'app-root',

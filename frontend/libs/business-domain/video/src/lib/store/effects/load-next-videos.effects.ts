@@ -17,7 +17,6 @@ import {
   VideoApiResponseModel,
   VideosApiClient,
 } from '@frontend/video-data';
-import {PaginatedVideosApiResponseModel, VideoApiResponseModel,VideosApiClient} from '@frontend/video-data';
 
 const unknownError = { form: 'Unknown error' };
 

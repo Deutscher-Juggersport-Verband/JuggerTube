@@ -3,41 +3,66 @@
 <h3>Registrierung</h3>
 
 <form [formGroup]="form">
-  <ui-input
-    [labelText]="'Email (einzigartig) *'"
-    [type]="UiInputTypeEnum.EMAIL"
-    [formControlElement]="form.controls.email"
-  />
+  <div>
+    <ui-label-row
+      [labelText]="'Email (einzigartig) *'"
+    />
+    <ui-input
+      [labelText]="'Email (einzigartig) *'"
+      [type]="UiInputTypeEnum.EMAIL"
+      [formControlElement]="form.controls.email"
+    />
+  </div>
 
-  <ui-input
-    [labelText]="'Benutzername (einzigartig) *'"
-    [formControlElement]="form.controls.username"
-    [infoButtonHeadline]="'Benutzername'"
-    [infoButtonContent]="
+  <div>
+    <ui-label-row
+      [labelText]="'Benutzername (einzigartig) *'"
+    />
+    <ui-input
+      [labelText]="'Benutzername (einzigartig) *'"
+      [formControlElement]="form.controls.username"
+      [infoButtonHeadline]="'Benutzername'"
+      [infoButtonContent]="
       'Dein Benutzername muss eine eindeutige Abfolge von Zahlen und Buchstaben sein, damit dich jeder eindeutig zuordnen kann.'
     "
-  />
+    />
+  </div>
 
-  <ui-input
-    [labelText]="'Passwort *'"
-    [type]="UiInputTypeEnum.PASSWORD"
-    [formControlElement]="form.controls.password"
-  />
+  <div>
+    <ui-label-row
+      [labelText]="'Passwort *'"
+    />
+    <ui-input
+      [labelText]="'Passwort *'"
+      [type]="UiInputTypeEnum.PASSWORD"
+      [formControlElement]="form.controls.password"
+    />
+  </div>
 
-  <ui-input
-    [labelText]="'Passwort wiederholen *'"
-    [type]="UiInputTypeEnum.PASSWORD"
-    [formControlElement]="form.controls.confirmPassword"
-  />
+  <div>
+    <ui-label-row
+      [labelText]="'Passwort wiederholen *'"
+    />
+    <ui-input
+      [labelText]="'Passwort wiederholen *'"
+      [type]="UiInputTypeEnum.PASSWORD"
+      [formControlElement]="form.controls.confirmPassword"
+    />
+  </div>
 
-  <ui-input
-    [labelText]="'Name'"
-    [formControlElement]="form.controls.name"
-    [infoButtonHeadline]="'Name'"
-    [infoButtonContent]="
+  <div>
+    <ui-label-row
+      [labelText]="'Name'"
+    />
+    <ui-input
+      [labelText]="'Name'"
+      [formControlElement]="form.controls.name"
+      [infoButtonHeadline]="'Name'"
+      [infoButtonContent]="
       'Dein Anzeige-Name. Trage hier am besten den Namen ein, unter dem dich die meisten Menschen in der Community kennen.'
     "
-  />
+    />
+  </div>
 
   @if (error) {
   <span class="error-message">{{ error }}</span>

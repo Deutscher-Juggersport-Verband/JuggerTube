@@ -15,11 +15,8 @@ import { Store } from '@ngrx/store';
 import {
   UiButtonColorEnum,
   UiButtonComponent,
-} from '../../shared/ui-button/ui-button.component';
-import {
   UiInputComponent,
-  UiInputTypeEnum,
-} from '../../shared/ui-shared';
+  UiInputTypeEnum} from '../../ui-shared';
 import { SingletonGetter } from '@frontend/cache';
 import { userDetailsSelector } from '@frontend/user';
 import { UpdateRequestBody, User, UserApiClient } from '@frontend/user-data';

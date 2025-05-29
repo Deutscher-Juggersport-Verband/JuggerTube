@@ -10,11 +10,8 @@ import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { UiRedirectComponent, UiTagComponent } from '../../ui-shared';
 import { isYoutubeUrl, VideosDataService } from '@frontend/video';
-import { VideoApiResponseModel } from '@frontend/video-data';
-import { UiRedirectComponent } from '../../shared/ui-redirect/ui-redirect.component';
-import { UiTagComponent } from '../../shared/ui-tag/ui-tag.component';
-import { VideosDataService } from '@frontend/video';
 import { VideoApiResponseModel } from '@frontend/video-data';
 
 @Component({
