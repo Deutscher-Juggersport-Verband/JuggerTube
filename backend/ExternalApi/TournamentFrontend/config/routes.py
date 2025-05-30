@@ -25,6 +25,5 @@ def getTournamentOverview() -> Response:
 @tournament_frontend.route('/create-multiple-tournaments',
                            methods=['POST'], endpoint='create-multiple-tournaments')
 @CreateMultipleTournamentsInputFilter.validate()
-@cache.cached(key_prefix='create-multiple-tournaments')
 def createMultipleTournaments() -> Response:
     return CreateMultipleTournamentsHandler.handle()
