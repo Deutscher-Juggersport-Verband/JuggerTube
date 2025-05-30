@@ -2,7 +2,7 @@ import os
 
 import requests
 
-base_host = os.getenv('BASE_HOST', 'localhost:8080')
+base_host = os.getenv('BASE_URL', 'localhost:8080')
 
 class ApiClient:
     def __init__(self):
