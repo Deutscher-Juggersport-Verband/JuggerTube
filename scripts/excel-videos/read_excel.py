@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 import requests
 from urllib3.exceptions import InsecureRequestWarning
@@ -6,91 +7,29 @@ import time
 import math
 from enums import TARGET_SHEETS, VideoCategoriesEnum
 from data_processor import DataProcessor
+from helpers import send_data_to_backend
 
-base_host = 'juggertube.de'
+base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
+# Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-excel_file = os.path.join(os.path.dirname(__file__), 'Liste aller Juggervideos _ JuggerTube.xlsx')
+# Path to the Excel file
+excel_file = 'Liste aller Juggervideos _ JuggerTube.xlsx'
 
+# Specify the sheets we want to analyze
 target_sheets = ['DATA-Videos', 'DATA-Teams', 'DATA-Channels', 'Output-Tournaments']
 
+# Read all sheets from the Excel file
 excel = pd.ExcelFile(excel_file)
 
+# Dictionaries to store channels and teams
 channels_dict = {}
 teams_dict = {}
 videos_dict = {}
 
 # Get valid category values
 valid_categories = {category.value for category in VideoCategoriesEnum}
-
-def send_data_in_chunks(endpoint: str, data: dict, entity_name: str, chunk_size: int = 50) -> bool:
-    """Send data to the backend API in smaller chunks with improved deduplication and error handling."""
-    items = data[entity_name]
-    total_items = len(items)
-    success = True
-    
-    total_created = 0
-    total_failed = 0
-    processed_items = set()  # Set to track processed items by unique identifier
-    
-    print(f"\nSending {total_items} {entity_name} in chunks of {chunk_size}")
-    
-    for i in range(0, len(items), chunk_size):
-        chunk = items[i:i + chunk_size]
-        chunk_num = i//chunk_size + 1
-        total_chunks = (len(items) + chunk_size - 1)//chunk_size
-        print(f"\nSending chunk {chunk_num} of {total_chunks}")
-        
-        max_retries = 1
-        retry_count = 0
-        
-        while retry_count < max_retries:
-            try:
-                full_url = f'https://{base_host}{endpoint}'
-                response = requests.post(
-                    full_url,
-                    json={entity_name: chunk},
-                    verify=True,
-                    timeout=30
-                )
-                response.raise_for_status()
-                
-                response_data = response.json()
-                
-                created_items = response_data.get(f'created_{entity_name}', [])
-                failed_items = response_data.get(f'failed_{entity_name}', [])
-                
-                created_count = len(created_items)
-                failed_count = len(failed_items)
-                
-                total_created += created_count
-                total_failed += failed_count
-
-                break
-                
-            except requests.exceptions.RequestException as e:
-                retry_count += 1
-                print(f"\nError sending chunk {chunk_num} (Attempt {retry_count}/{max_retries}): {str(e)}")
-                if hasattr(e, 'response') and hasattr(e.response, 'text'):
-                    print(f"Response content: {e.response.text}")
-                
-                if retry_count == max_retries:
-                    print(f"Failed to send chunk {chunk_num} after {max_retries} attempts")
-                    success = False
-                else:
-                    wait_time = 2 ** retry_count
-                    print(f"Retrying in {wait_time} seconds...")
-                    time.sleep(wait_time)
-        
-        time.sleep(1)
-    
-    print(f"\nFinal Statistics for {entity_name}:")
-    print(f"Total items processed: {len(processed_items)}")
-    print(f"Successfully created: {total_created}")
-    print(f"Failed: {total_failed}")
-    
-    return success and total_created > 0
 
 def main():
     # Initialize data processor
@@ -115,7 +54,7 @@ def main():
     teams_list, channels_list, videos_list = processor.prepare_data_for_api()
 
     # Send teams data
-    teams_success = send_data_in_chunks(
+    teams_success = send_data_to_backend(
         '/api/team-frontend/create-multiple-teams',
         {"teams": teams_list},
         'teams'
@@ -123,19 +62,21 @@ def main():
 
     # Send channels data
     print("\nProceeding with channels...")
-    channels_success = send_data_in_chunks(
+    channels_success = send_data_to_backend(
         '/api/channel-frontend/create-multiple-channels',
         {"channels": channels_list},
         'channels'
     )
 
-    # Send videos data in chunks
+    # Wait a bit before sending videos to allow backend processing
+    time.sleep(2)
+    
+    # Send videos data
     print("\nProceeding with videos...")
-    videos_success = send_data_in_chunks(
+    videos_success = send_data_to_backend(
         '/api/video-frontend/create-multiple-videos',
         {"videos": videos_list},
-        'videos',
-        chunk_size=50  # Send 50 videos at a time
+        'videos'
     )
 
     # Print final status
@@ -152,5 +93,22 @@ def clean_value(value):
     if pd.isna(value) or (isinstance(value, float) and (math.isnan(value) or math.isinf(value))):
         return None
     return str(value) if value else None
+
+# Function to send data to backend
+def send_data_to_backend(endpoint, data, entity_name):
+    try:
+        response = requests.post(
+            f'https://{base_host}{endpoint}',
+            json=data,
+            verify=False  # Since it's localhost, we can skip SSL verification
+        )
+        response.raise_for_status()
+        print(f"\nSuccessfully sent {entity_name} data to backend")
+        return True
+    except requests.exceptions.RequestException as e:
+        print(f"\nError sending {entity_name} data to backend: {str(e)}")
+        if hasattr(e, 'response') and hasattr(e.response, 'text'):
+            print(f"Response content: {e.response.text}")
+        return False
 
 print("\nAnalysis complete!") 

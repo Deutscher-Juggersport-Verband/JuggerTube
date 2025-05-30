@@ -33,34 +33,21 @@ class DataProcessor:
 
     def process_channels(self, df: pd.DataFrame) -> Dict:
         """Process channels data from DataFrame."""
-        for idx, row in df.iterrows():
-            channel_name = clean_value(row['name'])
-            channel_url = clean_value(row['Link'])
-
-            self.channels_dict[channel_name] = {
-                'name': channel_name,
-                'url': channel_url
+        for _, row in df.iterrows():
+            if pd.isna(row['Link']):
+                continue
+            
+            self.channels_dict[row['name']] = {
+                'channelLink': row['Link'],
+                'name': row['name']
             }
-
-        print("\nChannel processing summary:")
-        print(f"Total channels found: {len(df)}")
-        print(f"Channels with valid data: {len(self.channels_dict)}")
-        print("-----------------------------")
-        
         return self.channels_dict
 
     def process_teams(self, df: pd.DataFrame) -> Dict:
         """Process teams data from DataFrame."""
         for _, row in df.iterrows():
-            team_name = clean_value(row['Teamname'])
-            if not team_name:
-                continue
-                
-            city = clean_value(row['City/Ort']) if pd.notna(row['City/Ort']) else "Mixteam"
-            self.teams_dict[team_name] = {
-                'name': team_name,
-                'city': city
-            }
+            city = row['City/Ort'] if pd.notna(row['City/Ort']) else "Mixteam"
+            self.teams_dict[row['Teamname']] = {'city': city}
         return self.teams_dict
 
     def process_videos(self, df: pd.DataFrame) -> Dict:
@@ -123,15 +110,15 @@ class DataProcessor:
     def prepare_data_for_api(self) -> tuple[List[Dict], List[Dict], List[Dict]]:
         """Prepare processed data for API submission."""
         teams_list = [
-            {"name": data["name"], "city": data["city"]}
-            for data in self.teams_dict.values()
-            if data["name"] and data["city"]
+            {"name": clean_value(name), "city": clean_value(data["city"])}
+            for name, data in self.teams_dict.items()
+            if clean_value(name) and clean_value(data["city"])
         ]
 
         channels_list = [
-            {"name": data["name"], "channelLink": data["url"]}
+            {"name": clean_value(data["name"]), "channelLink": clean_value(data["channelLink"])}
             for data in self.channels_dict.values()
-            if data["name"] and data["url"]
+            if clean_value(data["name"]) and clean_value(data["channelLink"])
         ]
 
         videos_list = []
