@@ -43,6 +43,5 @@ def createVideo() -> Response:
 @video_frontend.route('/create-multiple-videos',
                       methods=['POST'], endpoint='create-multiple-videos')
 @CreateMultipleVideosInputFilter.validate()
-@cache.cached(key_prefix='create-multiple-videos')
 def createMultipleVideos() -> Response:
     return CreateMultipleVideosHandler.handle()
