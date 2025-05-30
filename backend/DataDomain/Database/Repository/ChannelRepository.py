@@ -96,11 +96,13 @@ class ChannelRepository:
     @staticmethod
     def create(channel: Channels) -> int:
         """Create a new channel"""
+
         try:
             db.session.add(channel)
             db.session.commit()
 
-            logger.info(f'ChannelRepository | Create | created channel {channel.id}')
+            logger.info(
+                f'ChannelRepository | Create | created channel {channel.id}')
 
             return channel.id
 
@@ -108,3 +110,4 @@ class ChannelRepository:
             db.session.rollback()
             logger.error(f'ChannelRepository | Create | {e}')
             raise e
+

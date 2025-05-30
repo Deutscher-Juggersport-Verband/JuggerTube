@@ -15,7 +15,7 @@ import {
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
-  UiInputTypeEnum,
+  UiInputTypeEnum, UiLabelRowComponent
 } from '../../ui-shared';
 import { RegisterRequestBody, UserApiClient } from '@frontend/user-data';
 
@@ -65,6 +65,7 @@ export const registerForm = new FormGroup<{
     ReactiveFormsModule,
     UiButtonComponent,
     UiInputComponent,
+    UiLabelRowComponent,
   ],
   standalone: true,
   templateUrl: './page-register.component.html',

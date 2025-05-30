@@ -12,7 +12,7 @@ import {
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
-  UiInputTypeEnum,
+  UiInputTypeEnum, UiLabelRowComponent
 } from '../../ui-shared';
 import {
   AuthResponse,
@@ -40,6 +40,7 @@ export const loginForm = new FormGroup<{
     ReactiveFormsModule,
     UiButtonComponent,
     UiInputComponent,
+    UiLabelRowComponent,
   ],
   standalone: true,
   templateUrl: './page-login.component.html',

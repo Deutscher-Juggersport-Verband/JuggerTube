@@ -16,8 +16,7 @@ import {
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
-  UiInputTypeEnum,
-} from '../../ui-shared';
+  UiInputTypeEnum} from '../../ui-shared';
 import { SingletonGetter } from '@frontend/cache';
 import { userDetailsSelector } from '@frontend/user';
 import { UpdateRequestBody, User, UserApiClient } from '@frontend/user-data';

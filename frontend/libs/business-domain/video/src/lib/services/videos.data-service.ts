@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import {
+  createVideo,
   loadNextVideos,
   loadPaginatedVideosAction,
   updateCurrentView,
@@ -20,7 +21,10 @@ import { videosStateFeatureSelector } from '../store/selectors/videos-state-feat
 import { getDisplayedVideoIndices, isRangeCached } from '../utils/range-utils';
 import { RequestStateEnum } from '@frontend/api';
 import { SingletonGetter } from '@frontend/cache';
-import { VideoApiResponseModel } from '@frontend/video-data';
+import {
+  CreateVideoRequest,
+  VideoApiResponseModel,
+} from '@frontend/video-data';
 
 @Injectable({ providedIn: 'root' })
 export class VideosDataService {
@@ -65,5 +69,9 @@ export class VideosDataService {
 
   public getVideoById(id: number): VideoApiResponseModel | undefined {
     return this.paginatedVideos().find((video) => video.id === id);
+  }
+
+  public create(videoData: CreateVideoRequest): void {
+    this.store$.dispatch(createVideo({ videoData }));
   }
 }

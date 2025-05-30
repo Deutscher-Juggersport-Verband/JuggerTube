@@ -1,0 +1,20 @@
+@import 'colors-desktop';
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  label {
+    color: @color-green;
+    min-width: max-content;
+
+    &.flexible {
+      flex: 1;
+    }
+  }
+
+  .i-headline {
+    margin-bottom: 8px !important;
+  }
+}

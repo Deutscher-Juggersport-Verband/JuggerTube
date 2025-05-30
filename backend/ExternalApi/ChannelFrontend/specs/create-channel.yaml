@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Create Channels API
+  version: 1.0.0
+  description: API endpoint for creating channels
+
+paths:
+  /api/team-frontend/create-multiple-teams:
+    post:
+      summary: Create channel
+      description: Creates channel in a single request
+      operationId: createChannel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the channel
+                  example: "Jugger Basilisken Basel"
+                channelLink:
+                  type: string
+                  description: Link to the Channel
+                  example: "https://www.youtube.com/@juggerbasel"
+                required:
+                  - name
+                  - channelLink
+      responses:
+        '200':
+          description: channel created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+        '400':
+          description: Invalid request or no channel created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  reason:
+                    type: string

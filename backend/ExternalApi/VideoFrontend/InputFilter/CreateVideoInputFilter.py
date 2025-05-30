@@ -64,9 +64,23 @@ class CreateVideoInputFilter(InputFilter):
         )
 
         self.add(
-            'channelLink',
-            required=True,
-            filters=[StringTrimFilter(), ToNullFilter()],
+            'channel.id',
+            required=False,
+            filters=[ToIntegerFilter()],
+            validators=[IsIntegerValidator()]
+        )
+
+        self.add(
+            'channel.channelName',
+            required=False,
+            filters=[StringTrimFilter()],
+            validators=[IsStringValidator()]
+        )
+
+        self.add(
+            'channel.link',
+            required=False,
+            filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
