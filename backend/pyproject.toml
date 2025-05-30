@@ -18,6 +18,7 @@ dependencies = [
     "flask_migrate",
     "flask_sqlalchemy",
     "flask_talisman",
+    "googleapiclient",
     "gunicorn",
     "isort",
     "pillow",
