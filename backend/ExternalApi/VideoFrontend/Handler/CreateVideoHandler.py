@@ -103,30 +103,17 @@ class CreateVideoHandler:
 
         if category == VideoCategoriesEnum.SPARBUILDING:
             video.weapon_type = data.get('weaponType')
-            video.topic = data.get('topic') or ''
-            video.guests = data.get('guests') or ''
 
         elif category == VideoCategoriesEnum.HIGHLIGHTS:
             video.tournament_id = CreateVideoHandler._handle_tournament_data(
                 data.get('tournament'))
-            video.topic = data.get('topic') or ''
-            video.guests = data.get('guests') or ''
-
-        elif category in [VideoCategoriesEnum.OTHER, VideoCategoriesEnum.PODCAST]:
-            video.topic = data.get('topic') or ''
-            video.guests = data.get('guests') or ''
 
         elif category == VideoCategoriesEnum.TRAINING:
             video.weapon_type = data.get('weaponType')
-            video.topic = data.get('topic') or ''
-
-        elif category == VideoCategoriesEnum.REPORTS:
-            video.topic = data.get('topic') or ''
 
         elif category == VideoCategoriesEnum.AWARDS:
             video.tournament_id = CreateVideoHandler._handle_tournament_data(
                 data.get('tournament'))
-            video.topic = data.get('topic') or ''
 
         elif category == VideoCategoriesEnum.MATCH:
             video.game_system = data.get('gameSystem')
@@ -134,7 +121,6 @@ class CreateVideoHandler:
                 data.get('tournament'))
             video.team_one_id = CreateVideoHandler._handle_team_data(data.get('teamOne'))
             video.team_two_id = CreateVideoHandler._handle_team_data(data.get('teamTwo'))
-            video.topic = data.get('topic') or ''
 
     @staticmethod
     def _handle_channel_data(channel_data: dict) -> int | None:
