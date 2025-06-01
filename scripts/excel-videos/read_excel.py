@@ -41,6 +41,8 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
     """
     total_chunks = math.ceil(len(data_list) / chunk_size)
     all_success = True
+
+    videos_error_messages = []
     
     for i in range(total_chunks):
         start_idx = i * chunk_size
@@ -49,14 +51,14 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
         
         print(f"\nSending chunk {i + 1}/{total_chunks} of {entity_name}...")
         print(f"Processing videos {start_idx + 1} to {end_idx} of {len(data_list)}")
-        print(f"First video in chunk: {chunk[0]['name'] if chunk else 'No videos'}")
-        print(f"Last video in chunk: {chunk[-1]['name'] if chunk else 'No videos'}")
         
         success = send_data_to_backend(
             endpoint,
             {f"{entity_name}": chunk},
             f"{entity_name} chunk {i + 1}/{total_chunks}"
         )
+
+        videos_error_messages.append(success)
         
         if not success:
             all_success = False
@@ -65,59 +67,22 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
         # Add a small delay between chunks to prevent overwhelming the server
         if i < total_chunks - 1:
             time.sleep(1)
+
+    for error_message in videos_error_messages:
+        print(error_message)
     
     return all_success
 
-def send_data_to_backend(endpoint, data, entity_name):
+def send_data_to_backend(endpoint, data, entity_name) -> str | bool:
     try:
         response = requests.post(
             f'https://{base_host}{endpoint}',
             json=data,
             verify=False
         )
-        
-        if response.status_code == 400:
-            error_data = response.json()
-            print(f"\nError details for {entity_name}:")
-            print(f"Response: {error_data}")
-            
-            # Track failed items
-            if 'failed_teams' in error_data:
-                for team in error_data['failed_teams']:
-                    error_msg = team.get('error', '')
-                    if 'already exists' not in error_msg:
-                        error_tracking['teams'].append(f"{team.get('name', 'Unknown team')}: {error_msg}")
-            elif 'failed_channels' in error_data:
-                for channel in error_data['failed_channels']:
-                    error_msg = channel.get('error', '')
-                    if 'already exists' not in error_msg:
-                        error_tracking['channels'].append(f"{channel.get('name', 'Unknown channel')}: {error_msg}")
-            elif 'errors' in error_data:
-                for error in error_data['errors']:
-                    error_msg = error.get('message', '')
-                    if 'already exists' not in error_msg:
-                        if 'Tournament not found' in error_msg:
-                            tournament = error_msg.split(': ')[-1]
-                            error_tracking['tournaments'].append(tournament)
-                        elif 'Channel does not exist' in error_msg:
-                            channel = error_msg.split(': ')[-1]
-                            error_tracking['channels'].append(channel)
-                        else:
-                            error_tracking['other_errors'].append(error_msg)
-        else:
-            # Print success details for videos
-            if entity_name.startswith('videos'):
-                success_data = response.json()
-                if 'created_videos' in success_data:
-                    print(f"\nSuccessfully created {len(success_data['created_videos'])} videos")
-                    if 'failed_videos' in success_data and success_data['failed_videos']:
-                        print(f"Failed to create {len(success_data['failed_videos'])} videos")
-                        for failed in success_data['failed_videos']:
-                            print(f"- {failed.get('name', 'Unknown')}: {failed.get('error', 'Unknown error')}")
-        
-        response.raise_for_status()
-        print(f"\nSuccessfully sent {entity_name} data to backend")
-        return True
+
+        print(f"Status Code: {response.status_code}")
+        return f"Error Message: {response.text}"
     except requests.exceptions.RequestException as e:
         print(f"\nError sending {entity_name} data to backend: {str(e)}")
         if hasattr(e, 'response') and hasattr(e.response, 'text'):
@@ -154,6 +119,7 @@ def main():
         {"teams": teams_list},
         'teams'
     )
+    print(teams_success)
 
     # Send channels data
     print("\nProceeding with channels...")
@@ -162,6 +128,7 @@ def main():
         {"channels": channels_list},
         'channels'
     )
+    print(channels_success)
 
     # Wait a bit before sending videos to allow backend processing
     time.sleep(2)
