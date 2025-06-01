@@ -15,9 +15,7 @@ class CreateNewPasswordCommandHandler:
         user.password_hash = generate_password_hash(command.password)
         user.password_reset_hash = None
 
-        UserRepository.update(
-            user_id=user.id,
-        )
+        user.save()
 
         SendPasswordResetSuccessMail().send(
             user=user

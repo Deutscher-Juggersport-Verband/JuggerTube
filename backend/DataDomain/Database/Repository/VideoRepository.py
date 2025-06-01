@@ -1,27 +1,9 @@
-from datetime import datetime
 from typing import List
 
 from sqlalchemy.orm import aliased
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels, Teams, Tournaments, Videos
-from Infrastructure.Logger import logger
-
-
-def parse_date(date_str) -> str:
-    """Parse date string and return formatted date"""
-    if not date_str:
-        return None
-    try:
-        # Try different date formats
-        for fmt in ['%Y-%m-%d', '%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S']:
-            try:
-                return datetime.strptime(str(date_str)[:19], fmt).strftime('%d-%m-%Y')
-            except ValueError:
-                continue
-        return str(date_str)
-    except Exception:
-        return str(date_str)
 
 
 class VideoRepository:
@@ -31,8 +13,8 @@ class VideoRepository:
     def getVideoOverview() -> List[dict]:
         """Get Video Overview"""
 
-        TeamOne = aliased(Teams)
-        TeamTwo = aliased(Teams)
+        team_one = aliased(Teams)
+        team_two = aliased(Teams)
 
         videos = (db.session.query(
             Videos.id,
@@ -53,10 +35,10 @@ class VideoRepository:
             Tournaments.start_date.label('tournament_start_date'),
             Tournaments.end_date.label('tournament_end_date'),
             Tournaments.jtr_link.label('tournament_jtr_link'),
-            TeamOne.name.label('team_one_name'),
-            TeamOne.city.label('team_one_city'),
-            TeamTwo.name.label('team_two_name'),
-            TeamTwo.city.label('team_two_city')
+            team_one.name.label('team_one_name'),
+            team_one.city.label('team_one_city'),
+            team_two.name.label('team_two_name'),
+            team_two.city.label('team_two_city')
         ).join(
             Channels,
             Videos.channel_id == Channels.id
@@ -64,11 +46,11 @@ class VideoRepository:
             Tournaments,
             Videos.tournament_id == Tournaments.id
         ).outerjoin(
-            TeamOne,
-            Videos.team_one_id == TeamOne.id
+            team_one,
+            Videos.team_one_id == team_one.id
         ).outerjoin(
-            TeamTwo,
-            Videos.team_two_id == TeamTwo.id
+            team_two,
+            Videos.team_two_id == team_two.id
         ).filter(
             Videos.is_deleted != True
         ).order_by(
@@ -87,8 +69,8 @@ class VideoRepository:
                 'weaponType': video.weapon_type.value if video.weapon_type else None,
                 'topic': video.topic,
                 'guests': video.guests,
-                'uploadDate': parse_date(video.upload_date),
-                'dateOfRecording': parse_date(video.date_of_recording),
+                'uploadDate': video.upload_date,
+                'dateOfRecording': video.date_of_recording,
                 'channel': {
                     'name': video.channel_name,
                     'link': video.channel_link,
@@ -114,11 +96,11 @@ class VideoRepository:
         return result
 
     @staticmethod
-    def getVideoByName(videoName: str) -> dict | None:
+    def getVideoByName(video_name: str) -> dict | None:
         """get Video by Name"""
 
-        TeamOne = aliased(Teams)
-        TeamTwo = aliased(Teams)
+        team_one = aliased(Teams)
+        team_two = aliased(Teams)
 
         video = (db.session.query(
             Videos.id,
@@ -134,8 +116,8 @@ class VideoRepository:
             Videos.guests,
             Channels.name.label('channel_name'),
             Tournaments.name.label('tournament_name'),
-            TeamOne.name.label('team_one_name'),
-            TeamTwo.name.label('team_two_name')
+            team_one.name.label('team_one_name'),
+            team_two.name.label('team_two_name')
         ).join(
             Channels,
             Videos.channel_id == Channels.id
@@ -143,14 +125,14 @@ class VideoRepository:
             Tournaments,
             Videos.tournament_id == Tournaments.id
         ).outerjoin(
-            TeamOne,
-            Videos.team_one_id == TeamOne.id
+            team_one,
+            Videos.team_one_id == team_one.id
         ).outerjoin(
-            TeamTwo,
-            Videos.team_two_id == TeamTwo.id
+            team_two,
+            Videos.team_two_id == team_two.id
         ).filter(
             Videos.is_deleted != True,
-            Videos.name == videoName
+            Videos.name == video_name
         ).first())
 
         if not video:
@@ -159,24 +141,9 @@ class VideoRepository:
         return video
 
     @staticmethod
-    def create(video: Videos) -> int:
-        try:
-            db.session.add(video)
-            db.session.commit()
-
-            logger.info(f'VideoRepository | Create | created video {video.id}')
-
-            return video.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'VideoRepository | Create | {e}')
-            raise e
-
-    @staticmethod
     def getPaginatedVideos(start: int, limit: int) -> list:
-        TeamOne = aliased(Teams)
-        TeamTwo = aliased(Teams)
+        team_one = aliased(Teams)
+        team_two = aliased(Teams)
 
         videos = (db.session.query(
             Videos.id,
@@ -197,10 +164,10 @@ class VideoRepository:
             Tournaments.start_date.label('tournament_start_date'),
             Tournaments.end_date.label('tournament_end_date'),
             Tournaments.jtr_link.label('tournament_jtr_link'),
-            TeamOne.name.label('team_one_name'),
-            TeamOne.city.label('team_one_city'),
-            TeamTwo.name.label('team_two_name'),
-            TeamTwo.city.label('team_two_city')
+            team_one.name.label('team_one_name'),
+            team_one.city.label('team_one_city'),
+            team_two.name.label('team_two_name'),
+            team_two.city.label('team_two_city')
         ).join(
             Channels,
             Videos.channel_id == Channels.id
@@ -208,11 +175,11 @@ class VideoRepository:
             Tournaments,
             Videos.tournament_id == Tournaments.id
         ).outerjoin(
-            TeamOne,
-            Videos.team_one_id == TeamOne.id
+            team_one,
+            Videos.team_one_id == team_one.id
         ).outerjoin(
-            TeamTwo,
-            Videos.team_two_id == TeamTwo.id
+            team_two,
+            Videos.team_two_id == team_two.id
         ).filter(
             Videos.is_deleted != True,
         ).order_by(
@@ -231,8 +198,8 @@ class VideoRepository:
                 'weaponType': video.weapon_type.value if video.weapon_type else None,
                 'topic': video.topic,
                 'guests': video.guests,
-                'uploadDate': parse_date(video.upload_date),
-                'dateOfRecording': parse_date(video.date_of_recording),
+                'uploadDate': video.upload_date,
+                'dateOfRecording': video.date_of_recording,
                 'channel': {
                     'name': video.channel_name,
                     'link': video.channel_link,

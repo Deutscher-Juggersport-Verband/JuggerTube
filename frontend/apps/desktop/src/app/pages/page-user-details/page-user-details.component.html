@@ -1,6 +1,6 @@
 @let user = user$ | async; @if (user) {
 <div class="details-row">
-  <img src="{{ user.pictureUrl }}" alt="Profil von {{ user.username }}" />
+  <img [src]="user.pictureUrl" alt="Profil von {{ user.username }}" />
 
   <div class="names-column">
     <h1>{{ user.name }}</h1>
@@ -49,6 +49,9 @@
     />
   </div>
 </form>
-} @else {
+@if (isAdmin | async) {
+<div class="seperator"></div>
+<admin-panel [currentUser]="(user$ | async)!" />
+} } @else {
 <p>Es konnte kein Benutzer gefunden werden</p>
 }

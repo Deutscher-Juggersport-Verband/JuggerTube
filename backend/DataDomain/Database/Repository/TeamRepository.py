@@ -4,7 +4,6 @@ from sqlalchemy import func
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Teams
-from Infrastructure.Logger import logger
 
 
 class TeamRepository:
@@ -35,23 +34,7 @@ class TeamRepository:
         return result
 
     @staticmethod
-    def create(team: Teams) -> int:
-        try:
-            db.session.add(team)
-            db.session.commit()
-
-            logger.info(
-                f'TeamRepository | Create | created team {team.id}')
-
-            return team.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'TeamRepository | Create | {e}')
-            raise e
-
-    @staticmethod
-    def getTeamIdByName(teamName: str) -> int | None:
+    def getTeamIdByName(team_name: str) -> int | None:
         """Get Team by name"""
 
         team = db.session.query(
@@ -59,7 +42,7 @@ class TeamRepository:
             Teams.name
         ).filter(
             Teams.is_deleted != True,
-            func.lower(Teams.name) == func.lower(teamName)
+            func.lower(Teams.name) == func.lower(team_name)
         ).group_by(
             Teams.id
         ).first()

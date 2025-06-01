@@ -6,13 +6,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
-  UiInputTypeEnum, UiLabelRowComponent
+  UiInputTypeEnum,
+  UiLabelRowComponent,
 } from '../../ui-shared';
 import {
   AuthResponse,
@@ -41,6 +42,7 @@ export const loginForm = new FormGroup<{
     UiButtonComponent,
     UiInputComponent,
     UiLabelRowComponent,
+    RouterLink,
   ],
   standalone: true,
   templateUrl: './page-login.component.html',

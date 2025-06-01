@@ -10,10 +10,13 @@ from ExternalApi.UserFrontend.Handler import (
     CreatePasswordResetHandler,
     CreateUserHandler,
     DeleteUserHandler,
+    GetPrivilegedUserShortOverviewHandler,
     GetUserDetailsHandler,
+    GetUserShortOverviewHandler,
     IsAdminHandler,
     UpdateUserHandler,
     UpdateUserPictureHandler,
+    UpdateUserRoleHandler,
 )
 from ExternalApi.UserFrontend.InputFilter import (
     AuthenticateUserInputFilter,
@@ -24,6 +27,7 @@ from ExternalApi.UserFrontend.InputFilter import (
     IsAdminInputFilter,
     UpdateUserInputFilter,
     UpdateUserPictureInputFilter,
+    UpdateUserRoleInputFilter,
 )
 
 user_frontend = Blueprint('user-frontend', __name__)
@@ -31,20 +35,39 @@ user_frontend = Blueprint('user-frontend', __name__)
 
 @user_frontend.route('/get-user-details',
                      methods=['GET'], endpoint='get-user-details')
-@user_frontend.route('/get-user-details/<escapedUsername>',
+@user_frontend.route('/get-user-details/<escaped_username>',
                      methods=['GET'], endpoint='get-user-details')
 @cache.cached(key_prefix=create_user_cache_key)
 @jwt_required(optional=True)
 @GetUserDetailsInputFilter.validate()
-def get_user_details(escapedUsername=None) -> Response:
+def get_user_details(escaped_username=None) -> Response:
     return GetUserDetailsHandler.handle()
 
 
+@user_frontend.route('/get-user-short-overview',
+                     methods=['GET'],
+                     endpoint='get-user-short-overview')
+@cache.cached(key_prefix='get-user-short-overview')
+@jwt_required()
+def get_user_short_overview() -> Response:
+    return GetUserShortOverviewHandler.handle()
+
+
+@user_frontend.route('/get-privileged-user-short-overview',
+                     methods=['GET'], endpoint='get-privileged-user-short-overview')
+@cache.cached(key_prefix='get-privileged-user-short-overview')
+@jwt_required()
+def get_privileged_user_short_overview() -> Response:
+    return GetPrivilegedUserShortOverviewHandler.handle()
+
+
+@user_frontend.route('/is-admin',
+                     methods=['GET'], endpoint='is-admin')
 @user_frontend.route('/is-admin/<userId>',
                      methods=['GET'], endpoint='is-admin')
 @jwt_required()
 @IsAdminInputFilter.validate()
-def is_admin(user_id) -> Response:
+def is_admin(user_id=None) -> Response:
     return IsAdminHandler.handle()
 
 
@@ -64,6 +87,14 @@ def update_user() -> Response:
 @UpdateUserPictureInputFilter.validate()
 def update_user_picture() -> Response:
     return UpdateUserPictureHandler.handle()
+
+
+@user_frontend.route('/update-user-role',
+                     methods=['PUT'], endpoint='update-user-role')
+@jwt_required()
+@UpdateUserRoleInputFilter.validate()
+def update_user_role() -> Response:
+    return UpdateUserRoleHandler.handle()
 
 
 @user_frontend.route('/authenticate-user', methods=['POST'], endpoint='authenticate-user')

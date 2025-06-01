@@ -1,0 +1,10 @@
+### Get all users in short form
+### Execute ExternalApi/specs/requests/000-Authorization.http before using this!
+GET https://{{host}}/api/user-frontend/get-user-short-overview
+Authorization: Bearer {{jwtToken}}
+
+> {%
+    client.test("It should return a successful status code", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}

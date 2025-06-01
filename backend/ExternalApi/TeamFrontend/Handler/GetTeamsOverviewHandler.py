@@ -12,4 +12,4 @@ class GetTeamsOverviewHandler:
         return Response(
             response=teams,
             status=200,
-        ) 
+        )

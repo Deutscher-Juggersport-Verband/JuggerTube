@@ -31,12 +31,12 @@ class CreateTournamentHandler:
             )
 
         try:
-            tournamentId = TournamentRepository.create(tournament)
+            tournament_id = tournament.create()
 
         except Exception:
             return Response(status=500)
 
         return Response(
-            response=tournamentId,
+            response=tournament_id,
             status=200
         )

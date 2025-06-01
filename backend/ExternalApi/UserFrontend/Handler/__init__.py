@@ -3,7 +3,10 @@ from .CreateNewPasswordHandler import CreateNewPasswordHandler
 from .CreatePasswordResetHandler import CreatePasswordResetHandler
 from .CreateUserHandler import CreateUserHandler
 from .DeleteUserHandler import DeleteUserHandler
+from .GetPrivilegedUserShortOverviewHandler import GetPrivilegedUserShortOverviewHandler
 from .GetUserDetailsHandler import GetUserDetailsHandler
+from .GetUserShortOverviewHandler import GetUserShortOverviewHandler
 from .IsAdminHandler import IsAdminHandler
 from .UpdateUserHandler import UpdateUserHandler
 from .UpdateUserPictureHandler import UpdateUserPictureHandler
+from .UpdateUserRoleHandler import UpdateUserRoleHandler

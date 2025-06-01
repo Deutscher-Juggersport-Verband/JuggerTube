@@ -3,7 +3,7 @@ info:
   title: Customer Frontend API
   version: 1.0.0
 paths:
-  /api/user-frontend/is-admin/{escapedName}:
+  /api/user-frontend/is-admin/{escapedName?}:
     get:
       summary: Is user an admin
       operationId: isAdmin

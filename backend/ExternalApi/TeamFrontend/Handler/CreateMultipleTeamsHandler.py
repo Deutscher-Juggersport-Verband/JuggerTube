@@ -25,10 +25,10 @@ class CreateMultipleTeamsHandler:
                 )
 
                 # Check if team already exists
-                if TeamRepository.getTeamIdByName(team.name):
+                if TeamRepository.getTeamIdByName(team_name=team.name):
                     continue
 
-                team_id = TeamRepository.create(team)
+                team_id = team.create()
                 created_teams.append({
                     'name': team.name,
                     'id': team_id

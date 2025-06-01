@@ -18,19 +18,15 @@ class UpdateUserHandler:
         username = data.get('username')
         if username and DoesUsernameExistsRule.applies(username):
             return Response(
+                error='Der Nutzername existiert bereits.',
                 status=400,
-                response={
-                    'error': 'Der Nutzername existiert bereits.'
-                }
             )
 
         email = data.get('email')
         if email and DoesEmailExistsRule.applies(email):
             return Response(
-                status=400,
-                response={
-                    'error': 'Die E-Mail-Adresse existiert bereits.'
-                }
+                error='Die E-Mail-Adresse existiert bereits.',
+                status=400
             )
 
         try:

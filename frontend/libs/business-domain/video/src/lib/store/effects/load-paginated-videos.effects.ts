@@ -66,7 +66,7 @@ export class LoadPaginatedVideosEffects {
       ofType(loadPaginatedVideosAction),
       exhaustMap((action: ReturnType<typeof loadPaginatedVideosAction>) =>
         this.videosApiClient
-          .getPaginatedVideos(action.start, action.limit)
+          .getPaginatedVideos$(action.start, action.limit)
           .pipe(
             map((data: PaginatedVideosApiResponseModel) => {
               const convertedVideos = data.results.map(convertDatesInVideo);

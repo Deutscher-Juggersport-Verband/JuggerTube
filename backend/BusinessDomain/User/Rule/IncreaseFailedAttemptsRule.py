@@ -10,6 +10,6 @@ class IncreaseFailedAttemptsRule:
 
         loginAttempt.attempts += 1
 
-        LoginAttemptRepository.update()
+        loginAttempt.save()
 
         return loginAttempt.attempts

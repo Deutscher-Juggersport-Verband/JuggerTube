@@ -12,7 +12,7 @@
 
     Alphabetisch
   </div>
-  <div [routerLink]="['/create-video']" class="create">
+  <div [routerLink]="['create-video']" class="create">
     neu
 
     <svg width="20" height="20" fill="currentColor">
@@ -23,13 +23,15 @@
 
 <div class="videos">
   @for (video of paginatedVideosSnapshot; track video.id) {
-    <video-tile [video]="video" [routerLink]="['/video-details', video.id]" />
+  <video-tile [video]="video" [routerLink]="['video-details', video.id]" />
   }
 </div>
-<mat-paginator [length]="totalVideos()"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               [showFirstLastButtons]="true"
-               (page)="handlePageEvent($event)"
-               [pageIndex]="pageIndex"
-               aria-label="Select page" />
+<mat-paginator
+  [length]="totalVideos()"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  [showFirstLastButtons]="true"
+  (page)="handlePageEvent($event)"
+  [pageIndex]="pageIndex"
+  aria-label="Select page"
+/>

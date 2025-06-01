@@ -1,8 +1,9 @@
 from sqlalchemy import or_
 
+from BusinessDomain.User.Model import UserShort
 from DataDomain.Database import db
+from DataDomain.Database.Enum import UserRoleEnum
 from DataDomain.Database.Model import Users
-from Infrastructure.Logger import logger
 
 
 class UserRepository:
@@ -55,54 +56,6 @@ class UserRepository:
         ).count() > 0
 
     @staticmethod
-    def create(user: Users) -> int:
-        try:
-            db.session.add(user)
-            db.session.commit()
-
-            logger.info(
-                f'UserRepository | create | User created with id {
-                    user.id}')
-
-            return user.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'UserRepository | create | {e}')
-            raise e
-
-    @staticmethod
-    def update(user_id: int) -> None:
-        try:
-            db.session.commit()
-
-            logger.info(
-                f'UserRepository | update | User with id {
-                    user_id} updated')
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'UserRepository | update | {e}')
-            raise e
-
-    @staticmethod
-    def delete(user_id: int) -> None:
-        try:
-            user = UserRepository.get(user_id)
-
-            user.is_deleted = True
-
-            db.session.commit()
-
-            logger.info(
-                f'UserRepository | delete | User with id {user_id} deleted')
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'UserRepository | delete | {e}')
-            raise e
-
-    @staticmethod
     def getUserByUsername(username: str) -> Users | None:
         """Get a user by username"""
 
@@ -142,3 +95,35 @@ class UserRepository:
             Users.password_reset_hash == hash,
             Users.is_deleted == False
         ).first()
+
+    @staticmethod
+    def getUserShortOverview() -> list[UserShort]:
+
+        return db.session.query(
+            Users.id,
+            Users.escaped_username.label('escapedUsername'),
+            Users.name,
+            Users.picture_url.label('pictureUrl'),
+            Users.role,
+            Users.username
+        ).filter(
+            Users.is_deleted == False
+        ).all()
+
+    @staticmethod
+    def getPrivilegedUserShortOverview() -> list[UserShort]:
+
+        return db.session.query(
+            Users.id,
+            Users.escaped_username.label('escapedUsername'),
+            Users.name,
+            Users.picture_url.label('pictureUrl'),
+            Users.role,
+            Users.username
+        ).filter(
+            or_(
+                Users.role == UserRoleEnum.MODERATOR,
+                Users.role == UserRoleEnum.ADMIN,
+            ),
+            Users.is_deleted == False
+        ).all()

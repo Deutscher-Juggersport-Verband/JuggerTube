@@ -18,18 +18,14 @@ class CreateUserHandler:
 
         if DoesUsernameExistsRule.applies(username):
             return Response(
+                error='Der Nutzername existiert bereits.',
                 status=400,
-                response={
-                    'error': 'Der Nutzername existiert bereits.'
-                }
             )
 
         if DoesEmailExistsRule.applies(email):
             return Response(
+                error='Die E-Mail-Adresse existiert bereits.',
                 status=400,
-                response={
-                    'error': 'Die E-Mail-Adresse existiert bereits.'
-                }
             )
 
         try:

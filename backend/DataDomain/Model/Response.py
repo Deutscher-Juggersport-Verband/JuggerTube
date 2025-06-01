@@ -9,13 +9,16 @@ from DataDomain.Model import CustomJSONEncoder
 class Response(FlaskResponse):
     """Custom Response class that handles JSON serialization"""
 
-    def __init__(self, response: Any = None, status=200, **kwargs):
+    def __init__(self, response: Any = None, error: Any = None, status=200, **kwargs):
         """Custom Response constructor"""
 
-        jsonData = json.dumps(response, cls=CustomJSONEncoder)
+        json_data = json.dumps(response, cls=CustomJSONEncoder)
+
+        if error is not None:
+            json_data = json.dumps({'error': error}, cls=CustomJSONEncoder)
 
         super().__init__(
-            response=jsonData,
+            response=json_data,
             status=status,
             mimetype='application/json',
             **kwargs)

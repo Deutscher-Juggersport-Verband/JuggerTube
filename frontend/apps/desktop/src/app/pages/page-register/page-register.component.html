@@ -2,11 +2,13 @@
 
 <h3>Registrierung</h3>
 
+<span [routerLink]="['login']" class="url login"
+  >du hast schon ein Konto? Einloggen</span
+>
+
 <form [formGroup]="form">
   <div>
-    <ui-label-row
-      [labelText]="'Email (einzigartig) *'"
-    />
+    <ui-label-row [labelText]="'Email (einzigartig) *'" />
     <ui-input
       [labelText]="'Email (einzigartig) *'"
       [type]="UiInputTypeEnum.EMAIL"
@@ -15,23 +17,19 @@
   </div>
 
   <div>
-    <ui-label-row
-      [labelText]="'Benutzername (einzigartig) *'"
-    />
+    <ui-label-row [labelText]="'Benutzername (einzigartig) *'" />
     <ui-input
       [labelText]="'Benutzername (einzigartig) *'"
       [formControlElement]="form.controls.username"
       [infoButtonHeadline]="'Benutzername'"
       [infoButtonContent]="
-      'Dein Benutzername muss eine eindeutige Abfolge von Zahlen und Buchstaben sein, damit dich jeder eindeutig zuordnen kann.'
-    "
+        'Dein Benutzername muss eine eindeutige Abfolge von Zahlen und Buchstaben sein, damit dich jeder eindeutig zuordnen kann.'
+      "
     />
   </div>
 
   <div>
-    <ui-label-row
-      [labelText]="'Passwort *'"
-    />
+    <ui-label-row [labelText]="'Passwort *'" />
     <ui-input
       [labelText]="'Passwort *'"
       [type]="UiInputTypeEnum.PASSWORD"
@@ -40,9 +38,7 @@
   </div>
 
   <div>
-    <ui-label-row
-      [labelText]="'Passwort wiederholen *'"
-    />
+    <ui-label-row [labelText]="'Passwort wiederholen *'" />
     <ui-input
       [labelText]="'Passwort wiederholen *'"
       [type]="UiInputTypeEnum.PASSWORD"
@@ -51,16 +47,14 @@
   </div>
 
   <div>
-    <ui-label-row
-      [labelText]="'Name'"
-    />
+    <ui-label-row [labelText]="'Name'" />
     <ui-input
       [labelText]="'Name'"
       [formControlElement]="form.controls.name"
       [infoButtonHeadline]="'Name'"
       [infoButtonContent]="
-      'Dein Anzeige-Name. Trage hier am besten den Namen ein, unter dem dich die meisten Menschen in der Community kennen.'
-    "
+        'Dein Anzeige-Name. Trage hier am besten den Namen ein, unter dem dich die meisten Menschen in der Community kennen.'
+      "
     />
   </div>
 

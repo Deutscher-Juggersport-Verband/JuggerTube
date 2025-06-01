@@ -14,7 +14,7 @@ class GetUserDetailsHandler:
 
         data = g.validated_data
 
-        escaped_username: str | None = data.get('escapedUsername')
+        escaped_username: str | None = data.get('escaped_username')
 
         if escaped_username is None and get_jwt_identity() is None:
             return Response(

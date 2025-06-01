@@ -1,30 +1,44 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 
-import { Observable } from 'rxjs';
+import { first, Observable, of } from 'rxjs';
 
 import { Store } from '@ngrx/store';
 
 import { loadUserDetailsDataAction } from '../actions/user-details.action';
+import { SessionService } from '@frontend/user-data';
+import { switchMap } from 'rxjs/operators';
+import { userDetailsSelector } from '../selectors/user-details.selector';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserDetailsResolver implements Resolve<boolean> {
   private readonly store$: Store = inject(Store);
+  private readonly sessionService: SessionService = inject(SessionService);
 
   public resolve(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const escapedUsername = route.paramMap.get('escapedUsername');
+    const escapedUsername = route.paramMap.get('escapedUsername') ?? undefined;
 
-    this.store$.dispatch(
-      loadUserDetailsDataAction({
-        escapedUsername: escapedUsername ?? undefined,
+    if (!escapedUsername && !this.sessionService.isAuthenticated()) {
+      return new Observable<boolean>((observer) => {
+        observer.next(false);
+        observer.complete();
+      });
+    }
+
+    return this.store$.select(userDetailsSelector).pipe(
+      first(),
+      switchMap((userDetails) => {
+        if (!userDetails) {
+          this.store$.dispatch(
+            loadUserDetailsDataAction({
+              escapedUsername: escapedUsername ?? undefined,
+            })
+          );
+        }
+        return of(true);
       })
     );
-
-    return new Observable<boolean>((observer) => {
-      observer.next(true);
-      observer.complete();
-    });
   }
 }

@@ -19,9 +19,7 @@ class AuthenticateUserHandler:
 
         if user is None:
             return Response(
-                response={
-                    'error': 'Falsche Anmeldedaten.'
-                },
+                error='Falsche Anmeldedaten.',
                 status=401
             )
 
@@ -34,9 +32,7 @@ class AuthenticateUserHandler:
 
         if not login_user_result:
             return Response(
-                response={
-                    'error': 'Falsche Anmeldedaten.'
-                },
+                error='Falsche Anmeldedaten.',
                 status=401
             )
 
@@ -58,8 +54,6 @@ class AuthenticateUserHandler:
             )
 
         return Response(
-            response={
-                'error': 'Falsche Anmeldedaten.'
-            },
+            error='Falsche Anmeldedaten.',
             status=401
         )

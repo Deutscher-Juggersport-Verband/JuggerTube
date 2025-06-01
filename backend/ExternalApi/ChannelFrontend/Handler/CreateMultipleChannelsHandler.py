@@ -12,15 +12,9 @@ class CreateMultipleChannelsHandler:
 
     @staticmethod
     def handle() -> Response:
-        """Create multiple channels from an array of channel data"""
-        data = g.validated_data
-        channels_data = data.get('channels', [])
 
-        if not channels_data:
-            return Response(
-                response='No channels provided',
-                status=400
-            )
+        data = g.validated_data
+        channels_data = data.get('channels')
 
         created_channels: List[Dict] = []
         failed_channels: List[Dict] = []
@@ -36,7 +30,7 @@ class CreateMultipleChannelsHandler:
                 if ChannelRepository.getChannelIdByName(channel.name):
                     continue
 
-                channel_id = ChannelRepository.create(channel)
+                channel_id = channel.create()
                 created_channels.append({
                     'name': channel.name,
                     'id': channel_id

@@ -2,7 +2,6 @@ import base64
 
 from BusinessDomain.Common.Enum import PictureTypeEnum
 from BusinessDomain.Common.Service import PictureService
-from BusinessDomain.User.Repository import UserRepository
 from BusinessDomain.User.Rule.tools import getJwtIdentity
 from BusinessDomain.User.UseCase.CommandHandler.Command import UpdateUserPictureCommand
 from Infrastructure.Logger import logger
@@ -21,7 +20,7 @@ class UpdateUserPictureCommandHandler:
             user.picture = PictureService.savePicture(
                 decoded_data, PictureTypeEnum.USER)
 
-            UserRepository.update(user.id)
+            user.save()
 
             return user.picture
 

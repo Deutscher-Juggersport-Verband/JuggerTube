@@ -14,7 +14,7 @@ import {
   UiButtonComponent,
   UiInputComponent,
   UiInputTypeEnum,
-  UiLabelRowComponent
+  UiLabelRowComponent,
 } from '../../ui-shared';
 import { ChannelsDataService } from '@frontend/channel';
 import { ChannelApiResponseModel } from '@frontend/channel-data';

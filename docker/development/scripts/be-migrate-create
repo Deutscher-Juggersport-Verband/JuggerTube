@@ -10,5 +10,3 @@ fi
 echo "Creating new migration: $1"
 
 flask db migrate -m "$1"
-
-echo "Migration created"
