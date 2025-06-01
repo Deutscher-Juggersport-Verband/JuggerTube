@@ -18,10 +18,10 @@ import {
   UiInputComponent,
   UiInputTypeEnum,
 } from '../../ui-shared';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { SingletonGetter } from '@frontend/cache';
 import { userDetailsSelector } from '@frontend/user';
 import { UpdateRequestBody, User, UserApiClient } from '@frontend/user-data';
-import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 
 export const userForm = new FormGroup<{
   email: FormControl<string>;

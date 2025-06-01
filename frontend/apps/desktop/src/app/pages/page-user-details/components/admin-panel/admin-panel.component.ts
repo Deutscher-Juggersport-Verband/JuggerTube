@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { User, UserDataClient, UserShort } from '@frontend/user-data';
+
 import { UserRowComponent } from '../user-row/user-row.component';
+import { User, UserDataClient } from '@frontend/user-data';
 
 @Component({
   selector: 'admin-panel',

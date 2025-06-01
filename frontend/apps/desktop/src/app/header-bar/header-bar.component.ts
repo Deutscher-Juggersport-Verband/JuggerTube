@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
-import { SessionService, User, UserApiClient } from '@frontend/user-data';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { userDetailsSelector } from '@frontend/user';
+
+import { Store } from '@ngrx/store';
+
 import { SingletonGetter } from '@frontend/cache';
+import { userDetailsSelector } from '@frontend/user';
+import { SessionService, User } from '@frontend/user-data';
 
 @Component({
   selector: 'header-bar',
