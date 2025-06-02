@@ -5,6 +5,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from datetime import datetime
 import json
 from pathlib import Path
+from telegram_bot.telegram_notifier import notify
 
 from TournamentDetailsParser import parser as tournament_parser
 from TournamentOverviewParser import parser as overview_parser
@@ -214,8 +215,11 @@ def main():
     save_cache(cached_tournaments, unique_teams)
 
     # Send data to APIs
-    api_client.send_tournaments(tournaments_data)
-    api_client.send_teams(unique_teams)
+    tournaments_response = api_client.send_tournaments(tournaments_data)
+    teams_response = api_client.send_teams(unique_teams)
+
+    # Send status message
+    notify("Turniere und Teams wurden importiert", f"Turniere: {tournaments_response}, Teams: {teams_response}")
 
 if __name__ == '__main__':
     main()
