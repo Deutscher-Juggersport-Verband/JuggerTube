@@ -1,8 +1,8 @@
-from BusinessDomain.User.Repository import LoginAttemptRepository
 from BusinessDomain.User.Rule import (
     DoesLoginAttemptExistsRule,
     IncreaseFailedAttemptsRule,
 )
+from DataDomain.Database.Model import LoginAttempts
 
 
 class CreateOrIncreaseLoginAttemptsRule:
@@ -10,10 +10,14 @@ class CreateOrIncreaseLoginAttemptsRule:
     @staticmethod
     def applies(username: str) -> int:
 
-        attemptExists = DoesLoginAttemptExistsRule.applies(username)
+        attempt_exists = DoesLoginAttemptExistsRule.applies(username)
 
-        if not attemptExists:
-            LoginAttemptRepository.create(username)
+        if not attempt_exists:
+            login_attempt = LoginAttempts()
+
+            login_attempt.username = username
+
+            login_attempt.create()
 
             return 1
 

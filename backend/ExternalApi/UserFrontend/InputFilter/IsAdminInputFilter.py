@@ -11,7 +11,7 @@ class IsAdminInputFilter(InputFilter):
 
         self.add(
             'escaped_username',
-            required=True,
+            required=False,
             filters=[ToNullFilter()],
             validators=[
                 IsStringValidator()

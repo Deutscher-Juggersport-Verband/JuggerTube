@@ -18,7 +18,7 @@ class CreatePasswordResetHashCommandHandler:
 
         user.password_reset_hash = hash
 
-        UserRepository.update(user.id)
+        user.save()
 
         SendPasswordResetMail().send(
             user=user,

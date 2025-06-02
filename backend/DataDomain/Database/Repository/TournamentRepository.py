@@ -4,7 +4,6 @@ from sqlalchemy import func
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Tournaments
-from Infrastructure.Logger import logger
 
 
 class TournamentRepository:
@@ -41,13 +40,13 @@ class TournamentRepository:
         return result
 
     @staticmethod
-    def getTournamentByName(tournamentName: str) -> int | None:
+    def getTournamentByName(tournament_name: str) -> int | None:
         """get Tournament ID by Name"""
         tournament = (db.session.query(
             Tournaments.id
         ).filter(
             Tournaments.is_deleted != True,
-            func.lower(Tournaments.name) == func.lower(tournamentName)
+            func.lower(Tournaments.name) == func.lower(tournament_name)
         ).scalar())
 
         return tournament
@@ -64,19 +63,3 @@ class TournamentRepository:
         ).first())
 
         return tournament is not None
-
-    @staticmethod
-    def create(tournament: Tournaments) -> int:
-        try:
-            db.session.add(tournament)
-            db.session.commit()
-
-            logger.info(
-                f'TournamentRepository | Create | created tournament {tournament.id}')
-
-            return tournament.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'TournamentRepository | Create | {e}')
-            raise e

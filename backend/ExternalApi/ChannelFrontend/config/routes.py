@@ -2,11 +2,11 @@ from flask import Blueprint
 
 from config import cache
 from DataDomain.Model import Response
-from ExternalApi.ChannelFrontend.Handler import GetChannelOverviewHandler
-from ExternalApi.ChannelFrontend.Handler.CreateMultipleChannelsHandler import (
+from ExternalApi.ChannelFrontend.Handler import (
     CreateMultipleChannelsHandler,
+    GetChannelOverviewHandler,
 )
-from ExternalApi.ChannelFrontend.InputFilter.CreateMultipleChannelsInputFilter import (
+from ExternalApi.ChannelFrontend.InputFilter import (
     CreateMultipleChannelsInputFilter,
 )
 

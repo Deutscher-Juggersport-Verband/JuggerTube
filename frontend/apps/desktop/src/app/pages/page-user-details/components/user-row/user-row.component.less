@@ -1,0 +1,61 @@
+:host {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 28px;
+    width: 28px;
+    margin-right: 16px;
+    border-radius: 100%;
+  }
+
+  .name {
+    margin-right: auto;
+
+    .current {
+      color: #686868;
+    }
+  }
+
+  ui-tag {
+    margin-right: 24px;
+  }
+
+  .icon-wrapper {
+    position: relative;
+
+    svg {
+      &:not(&.disabled) {
+        cursor: pointer;
+      }
+
+      &.disabled {
+        color: #686868;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 32px;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      z-index: 1000;
+      padding: 8px;
+      width: 140px;
+
+      span {
+        display: block;
+        padding: 8px;
+        cursor: pointer;
+
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+    }
+  }
+}

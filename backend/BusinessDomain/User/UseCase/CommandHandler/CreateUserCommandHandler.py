@@ -1,17 +1,14 @@
-
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash
 
-from BusinessDomain.User.Repository import UserRepository
 from BusinessDomain.User.UseCase.CommandHandler.Command import CreateUserCommand
-from BusinessDomain.User.UseCase.CommandHandler.Result import CreateUserResult
 from DataDomain.Database.Model import Users
 
 
 class CreateUserCommandHandler:
 
     @staticmethod
-    def execute(command: CreateUserCommand) -> CreateUserResult:
+    def execute(command: CreateUserCommand) -> str:
 
         user = Users()
 
@@ -21,12 +18,10 @@ class CreateUserCommandHandler:
         user.password_hash = generate_password_hash(command.password)
         user.username = command.username
 
-        user_id = UserRepository.create(user)
+        user_id = user.create()
 
         access_token = create_access_token(
             identity=user_id
         )
 
-        return CreateUserResult(
-            token=access_token,
-        )
+        return access_token

@@ -10,41 +10,46 @@ import { UserDetailsResolver } from '@frontend/user';
 
 export const appRoutes: Route[] = [
   {
-    path: 'video-overview',
-    component: PageVideoOverviewComponent,
-  },
-  {
-    path: 'video-details/:id',
-    component: PageVideoDetailsComponent,
-  },
-  {
-    path: 'create-video',
-    component: PageCreateVideoComponent,
-  },
-  {
-    path: 'user-details',
-    component: PageUserDetailsComponent,
+    path: '',
     resolve: {
       userDetails: UserDetailsResolver,
     },
-  },
-  {
-    path: 'user-details/:escapedUsername?',
-    component: PageUserDetailsComponent,
-    resolve: {
-      userDetails: UserDetailsResolver,
-    },
-  },
-  {
-    path: 'register',
-    component: PageRegisterComponent,
-  },
-  {
-    path: 'login',
-    component: PageLoginComponent,
-  },
-  {
-    path: '**',
-    redirectTo: 'video-overview',
+    children: [
+      {
+        path: 'video-overview',
+        component: PageVideoOverviewComponent,
+      },
+      {
+        path: 'video-details/:id',
+        component: PageVideoDetailsComponent,
+      },
+      {
+        path: 'create-video',
+        component: PageCreateVideoComponent,
+      },
+      {
+        path: 'user-details',
+        component: PageUserDetailsComponent,
+      },
+      /*{
+        path: 'user-details/:escapedUsername?',
+        component: PageUserDetailsComponent,
+        resolve: {
+          userDetails: UserDetailsResolver,
+        },
+      },*/
+      {
+        path: 'register',
+        component: PageRegisterComponent,
+      },
+      {
+        path: 'login',
+        component: PageLoginComponent,
+      },
+      {
+        path: '**',
+        redirectTo: 'video-overview',
+      },
+    ],
   },
 ];

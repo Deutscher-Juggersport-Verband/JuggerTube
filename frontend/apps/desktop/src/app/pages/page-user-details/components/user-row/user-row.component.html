@@ -1,0 +1,35 @@
+<img [src]="user.pictureUrl" alt="" />
+
+<span class="name">
+  {{ user.name }}
+  @if (isCurrent) {
+  <span class="current"> (ich)</span>
+  }
+</span>
+
+<ui-tag [category]="user.role" />
+
+<div class="icon-wrapper">
+  <svg
+    width="24"
+    height="24"
+    fill="currentColor"
+    (click)="toggleOverlay()"
+    [class.disabled]="isCurrent"
+  >
+    <use href="assets/icons/sprite.svg#icon-more" />
+  </svg>
+
+  @if (isOverlayVisible) {
+  <div class="overlay">
+    @switch (user.role) { @case (UserRoleEnum.ADMIN) {
+    <span (click)="changeRole(UserRoleEnum.MODERATOR)"
+      >Zum Moderator machen</span
+    >
+    } @case (UserRoleEnum.MODERATOR) {
+    <span (click)="changeRole(UserRoleEnum.ADMIN)">Zum Admin machen</span>
+    } }
+    <span (click)="changeRole(UserRoleEnum.USER)">Rechte entfernen</span>
+  </div>
+  }
+</div>

@@ -1,11 +1,10 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
-from DataDomain.Database.Model import Channels
 from flask import g
 
 from DataDomain.Database.Enum import VideoCategoriesEnum
-from DataDomain.Database.Model import Teams, Tournaments, Videos
+from DataDomain.Database.Model import Channels, Teams, Tournaments, Videos
 from DataDomain.Database.Repository import (
     ChannelRepository,
     TeamRepository,
@@ -42,23 +41,23 @@ class CreateVideoHandler:
 
             if ((video.category == VideoCategoriesEnum.REPORTS
                  and not video.topic)
-                    or (video.category == VideoCategoriesEnum.SPARBUILDING
-                        and not video.weapon_type)
-                    or (video.category == VideoCategoriesEnum.MATCH
-                        and not video.game_system
-                        and not video.tournament_id
-                        and not video.team_one_id
-                        and not video.team_two_id
-                        )
+                or (video.category == VideoCategoriesEnum.SPARBUILDING
+                            and not video.weapon_type)
+                or (video.category == VideoCategoriesEnum.MATCH
+                            and not video.game_system
+                            and not video.tournament_id
+                            and not video.team_one_id
+                            and not video.team_two_id
+                            )
                 ):
                 logging.warning(f"Missing required data for category {video.category}")
                 return Response(response='missing required data', status=400)
 
             try:
-                videoId = VideoRepository.create(video)
-                logging.info(f"Successfully created video with ID: {videoId}")
+                video_id = video.create()
+                logging.info(f"Successfully created video with ID: {video_id}")
                 return Response(
-                    response=videoId,
+                    response=video_id,
                     status=200
                 )
 
@@ -75,7 +74,7 @@ class CreateVideoHandler:
         """Create a video with base properties"""
         video = Videos()
         video.channel_id = CreateVideoHandler._handle_channel_data(data.get('channel'))
-        
+
         if not video.channel_id:
             logging.error(f"Channel not found")
             raise ValueError(f"Channel not found")
@@ -88,7 +87,8 @@ class CreateVideoHandler:
         # Set optional fields
         video.comment = data.get('comment')
         video.upload_date = datetime.fromisoformat(data.get('uploadDate'))
-        video.date_of_recording = datetime.fromisoformat(data.get('dateOfRecording')) if data.get('dateOfRecording') else None
+        video.date_of_recording = datetime.fromisoformat(
+            data.get('dateOfRecording')) if data.get('dateOfRecording') else None
 
         return video
 
@@ -96,7 +96,7 @@ class CreateVideoHandler:
     def _handle_category_specific_data(video: Videos, data: dict):
         """Handle category specific data for the video"""
         category = data.get('category')
-        
+
         # Set default empty values for required fields
         video.topic = data.get('topic') or ''
         video.guests = data.get('guests') or ''
@@ -136,7 +136,7 @@ class CreateVideoHandler:
         channel.name = channel_data.get('name')
         channel.link = channel_data.get('link')
         return ChannelRepository.create(channel)
-    
+
     @staticmethod
     def _handle_tournament_data(tournament_data: dict) -> int | None:
         """Handle tournament data and return tournament ID"""
@@ -155,7 +155,7 @@ class CreateVideoHandler:
         tournament.city = tournament_data.get('city')
         tournament.start_date = tournament_data.get('startDate')
         tournament.end_date = tournament_data.get('endDate')
-        return TournamentRepository.create(tournament)
+        return tournament.create()
 
     @staticmethod
     def _handle_team_data(team_data: dict) -> int | None:
@@ -165,9 +165,9 @@ class CreateVideoHandler:
             return team_data.get('id')
 
         team = Teams()
-        if not TeamRepository.getTeamIdByName(team_data.get('name')):
+        if not TeamRepository.getTeamIdByName(team_name=team_data.get('name')):
             return None
 
         team.name = team_data.get('name')
         team.city = team_data.get('city')
-        return TeamRepository.create(team)
+        return team.create()

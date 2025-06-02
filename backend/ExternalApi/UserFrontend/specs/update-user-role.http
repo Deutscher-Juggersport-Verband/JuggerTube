@@ -1,0 +1,16 @@
+### Update a user role
+### Execute ExternalApi/specs/requests/000-Authorization.http before using this!
+PUT https://{{host}}/api/user-frontend/update-user-role
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "userId": 1,
+  "role": "admin"
+}
+
+> {%
+    client.test("It should return a successful status code", function() {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+%}

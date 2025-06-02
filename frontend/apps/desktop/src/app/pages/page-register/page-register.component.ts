@@ -9,13 +9,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import {
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
-  UiInputTypeEnum, UiLabelRowComponent
+  UiInputTypeEnum,
+  UiLabelRowComponent,
 } from '../../ui-shared';
 import { RegisterRequestBody, UserApiClient } from '@frontend/user-data';
 
@@ -66,6 +67,7 @@ export const registerForm = new FormGroup<{
     UiButtonComponent,
     UiInputComponent,
     UiLabelRowComponent,
+    RouterLink,
   ],
   standalone: true,
   templateUrl: './page-register.component.html',

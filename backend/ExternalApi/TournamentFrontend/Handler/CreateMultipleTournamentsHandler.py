@@ -46,7 +46,7 @@ class CreateMultipleTournamentsHandler:
                     })
                     continue
 
-                tournament_id = TournamentRepository.create(tournament)
+                tournament_id = tournament.create()
                 created_tournaments.append({
                     'name': tournament.name,
                     'id': tournament_id

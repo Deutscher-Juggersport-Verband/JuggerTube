@@ -53,7 +53,8 @@ class Users(BaseModel):
 
     picture: str | None = db.Column(
         db.String(255),
-        nullable=True
+        nullable=True,
+        server_default='default.png'
     )
 
     is_deleted: bool = db.Column(
@@ -93,10 +94,6 @@ class Users(BaseModel):
     @hybrid_property
     def picture_url(self) -> str:
         """Creates the URL for the user's profile picture."""
-
-        if self.picture is None or self.picture == '':
-            return ''
-
         match os.getenv('FLASK_ENV'):
             case 'development':
                 return f'https://cdn.localhost/assets/user-pictures/{
@@ -114,8 +111,6 @@ class Users(BaseModel):
         """Creates the URL for the user's profile picture."""
 
         return case(
-            (cls.picture is None, literal(None)),
-            (cls.picture == '', literal(None)),
             (literal(os.getenv('FLASK_ENV')) == 'development',
              literal('https://cdn.localhost/assets/user-pictures/') + cls.picture),
             (literal(os.getenv('FLASK_ENV')) == 'production',

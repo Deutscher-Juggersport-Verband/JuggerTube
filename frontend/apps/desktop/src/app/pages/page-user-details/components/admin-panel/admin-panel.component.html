@@ -1,0 +1,21 @@
+<span>Admins und mods</span>
+
+<div class="admin-panel">
+  @for (privilegedUser of (privilegedUsers$ | async); track privilegedUser.id) {
+  <user-row
+    [user]="privilegedUser"
+    [isCurrent]="privilegedUser.id === currentUser.id"
+    [isOverlayVisible]="openOverlayId === privilegedUser.id"
+    (overlayToggle)="
+      openOverlayId =
+        openOverlayId === privilegedUser.id ? null : privilegedUser.id
+    "
+  />
+  }
+
+  <div class="add">
+    <svg width="24" height="24" fill="currentColor">
+      <use href="assets/icons/sprite.svg#icon-plus" />
+    </svg>
+  </div>
+</div>

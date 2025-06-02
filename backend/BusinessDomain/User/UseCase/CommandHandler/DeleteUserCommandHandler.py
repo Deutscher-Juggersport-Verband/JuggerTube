@@ -1,5 +1,5 @@
-from BusinessDomain.User.Repository import UserRepository
 from BusinessDomain.User.UseCase.CommandHandler.Command import DeleteUserCommand
+from DataDomain.Database.Model import Users
 
 
 class DeleteUserCommandHandler:
@@ -7,4 +7,6 @@ class DeleteUserCommandHandler:
     @staticmethod
     def execute(command: DeleteUserCommand) -> None:
 
-        UserRepository.delete(command.userId)
+        user = Users.query.get(command.userId)
+
+        user.shadow()

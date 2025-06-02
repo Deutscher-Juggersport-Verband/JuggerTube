@@ -2,7 +2,6 @@ from typing import List
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels
-from Infrastructure.Logger import logger
 
 
 class ChannelRepository:
@@ -34,7 +33,7 @@ class ChannelRepository:
         return result
 
     @staticmethod
-    def getChannelById(channelId: int) -> dict | None:
+    def getChannelById(channel_id: int) -> dict | None:
         """Get Channel by id"""
 
         channel = db.session.query(
@@ -42,7 +41,7 @@ class ChannelRepository:
             Channels.name,
             Channels.channel_link
         ).filter(
-            Channels.id == channelId
+            Channels.id == channel_id
         ).group_by(
             Channels.id
         ).first()
@@ -57,14 +56,14 @@ class ChannelRepository:
         }
 
     @staticmethod
-    def getChannelIdByLink(channelLink: str) -> int | None:
+    def getChannelIdByLink(channel_link: str) -> int | None:
         """Get Channel by id"""
 
         channel = db.session.query(
             Channels.id,
             Channels.channel_link
         ).filter(
-            Channels.channel_link == channelLink
+            Channels.channel_link == channel_link
         ).group_by(
             Channels.id
         ).first()
@@ -75,7 +74,7 @@ class ChannelRepository:
         return channel.id
 
     @staticmethod
-    def getChannelIdByName(channelName: str) -> int | None:
+    def getChannelIdByName(channel_name: str) -> int | None:
         """Get Channel by name"""
 
         channel = db.session.query(
@@ -83,7 +82,7 @@ class ChannelRepository:
             Channels.channel_link,
             Channels.name
         ).filter(
-            Channels.name == channelName
+            Channels.name == channel_name
         ).group_by(
             Channels.id
         ).first()
@@ -92,22 +91,3 @@ class ChannelRepository:
             return None
 
         return channel.id
-
-    @staticmethod
-    def create(channel: Channels) -> int:
-        """Create a new channel"""
-
-        try:
-            db.session.add(channel)
-            db.session.commit()
-
-            logger.info(
-                f'ChannelRepository | Create | created channel {channel.id}')
-
-            return channel.id
-
-        except Exception as e:
-            db.session.rollback()
-            logger.error(f'ChannelRepository | Create | {e}')
-            raise e
-

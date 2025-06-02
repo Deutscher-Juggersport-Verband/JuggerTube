@@ -1,1 +1,2 @@
+from .CreateMultipleChannelsHandler import CreateMultipleChannelsHandler
 from .GetChannelOverviewHandler import GetChannelOverviewHandler

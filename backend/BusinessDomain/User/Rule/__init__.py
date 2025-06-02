@@ -7,4 +7,5 @@ from .DoesUserExistsRule import DoesUserExistsRule
 from .DoesUsernameExistsRule import DoesUsernameExistsRule
 from .IncreaseFailedAttemptsRule import IncreaseFailedAttemptsRule
 from .IsCurrentUserAdminRule import IsCurrentUserAdminRule
+from .IsUserAdminRule import IsUserAdminRule
 from .IsUserLockedRule import IsUserLockedRule

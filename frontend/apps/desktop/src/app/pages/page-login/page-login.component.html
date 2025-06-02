@@ -2,11 +2,13 @@
 
 <h3>Login</h3>
 
+<span [routerLink]="['register']" class="url register"
+  >noch kein Konto? Registrieren</span
+>
+
 <form [formGroup]="form">
   <div>
-    <ui-label-row
-      [labelText]="'Email'"
-    />
+    <ui-label-row [labelText]="'Email'" />
     <ui-input
       [labelText]="'Email'"
       [type]="UiInputTypeEnum.EMAIL"
@@ -15,15 +17,17 @@
   </div>
 
   <div>
-    <ui-label-row
-      [labelText]="'Passwort'"
-    />
+    <ui-label-row [labelText]="'Passwort'" />
     <ui-input
       [labelText]="'Passwort'"
       [type]="UiInputTypeEnum.PASSWORD"
       [formControlElement]="form.controls.password"
     />
   </div>
+
+  <span [routerLink]="['reset-password']" class="url reset-password"
+    >Passwort vergessen? zurücksetzen</span
+  >
 
   @if (error) {
   <span class="error-message">{{ error }}</span>

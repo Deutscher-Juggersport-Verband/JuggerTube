@@ -66,7 +66,7 @@ export class VideosApiClient {
     );
   }
 
-  public getPaginatedVideos(
+  public getPaginatedVideos$(
     start: number,
     limit: number
   ): Observable<PaginatedVideosApiResponseModel> {

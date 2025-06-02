@@ -16,11 +16,11 @@ def create_user_cache_key() -> str | None:
     return f"user-{user.id}"
 
 
-def clear_user_cache(userId: int) -> None:
+def clear_user_cache(user_id: int) -> None:
 
     cache.delete('user-overview')
 
-    cache.delete(f'user-{userId}')
+    cache.delete(f'user-{user_id}')
 
 
 def clear_complete_user_cache() -> None:

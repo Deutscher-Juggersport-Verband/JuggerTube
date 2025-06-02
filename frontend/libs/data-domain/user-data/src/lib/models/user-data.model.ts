@@ -1,4 +1,4 @@
-import { RoleType } from '../enums/role-type.enum';
+import { UserRoleEnum } from '../enums/role-type.enum';
 
 export interface User {
   id: number;
@@ -7,6 +7,15 @@ export interface User {
   escaped_username: string;
   name: string;
   pictureUrl: string;
-  role: RoleType;
+  role: UserRoleEnum;
+  username: string;
+}
+
+export interface UserShort {
+  id: number;
+  escapedUsername: string;
+  name: string;
+  pictureUrl: string;
+  role: UserRoleEnum;
   username: string;
 }

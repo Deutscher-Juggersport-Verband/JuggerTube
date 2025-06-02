@@ -64,7 +64,7 @@ class CreateMultipleVideosHandler:
                 })
                 continue
 
-            channel_id = ChannelRepository.getChannelIdByName(channelName=channel_name)
+            channel_id = ChannelRepository.getChannelIdByName(channel_name=channel_name)
 
             if not channel_id:
                 failed_videos.append({
@@ -116,8 +116,8 @@ class CreateMultipleVideosHandler:
                     })
                     continue
 
-                team_one_id = TeamRepository.getTeamIdByName(team_one_name)
-                team_two_id = TeamRepository.getTeamIdByName(team_two_name)
+                team_one_id = TeamRepository.getTeamIdByName(team_name=team_one_name)
+                team_two_id = TeamRepository.getTeamIdByName(team_name=team_two_name)
 
                 if team_one_id is None:
                     failed_videos.append({
@@ -157,7 +157,7 @@ class CreateMultipleVideosHandler:
             video.upload_date = datetime.fromisoformat(video_data.get('uploadDate'))
 
             try:
-                video_id = VideoRepository.create(video)
+                video_id = video.create()
                 created_videos.append({
                     'name': video.name,
                     'id': video_id
