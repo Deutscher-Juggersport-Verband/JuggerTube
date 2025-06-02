@@ -223,7 +223,3 @@ class VideoRepository:
             result.append(video_dict)
 
         return result
-
-    @staticmethod
-    def count() -> int:
-        return db.session.query(Videos).filter(Videos.is_deleted == False).count()

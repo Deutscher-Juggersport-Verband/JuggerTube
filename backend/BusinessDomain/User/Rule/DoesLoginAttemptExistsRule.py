@@ -1,4 +1,4 @@
-from BusinessDomain.User.Repository import LoginAttemptRepository
+from DataDomain.Database.Model import LoginAttempts
 
 
 class DoesLoginAttemptExistsRule:
@@ -9,4 +9,4 @@ class DoesLoginAttemptExistsRule:
         if not username:
             return False
 
-        return LoginAttemptRepository.exists(username=username)
+        return LoginAttempts().exists(username=username)

@@ -49,8 +49,8 @@ jobs:
         with:
           python-version: 3.13
 
-      - name: Install autopep8 and flake8
-        run: pip install autopep8 flake8
+      - name: Install autopep8
+        run: pip install autopep8
 
       - name: Run code style checks
         run: |
