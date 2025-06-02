@@ -1,0 +1,13 @@
+@let videos = pendingVideos$ | async; @if (videos?.length !== 0) {
+<div class="videos">
+  @for (video of videos; track video.id) {
+  <row
+    [video]="video"
+    [isTileVisible]="openTileId === video.id"
+    (tileToggle)="onTileToggle(video.id)"
+  />
+  }
+</div>
+} @else {
+<h2>Keine unveröffentlichten Videos verbleibend</h2>
+}

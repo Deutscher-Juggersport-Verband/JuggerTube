@@ -3,8 +3,8 @@ import { inject, Injectable } from '@angular/core';
 
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 
-import { User, UserShort } from '../models/user-data.model';
 import { UserRoleEnum } from '../enums/role-type.enum';
+import { User, UserShort } from '../models/user-data.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +12,9 @@ import { UserRoleEnum } from '../enums/role-type.enum';
 export class UserDataClient {
   private readonly http: HttpClient = inject(HttpClient);
 
-  private privilegedUserShortOverviewCache$ = new BehaviorSubject<UserShort[]>(
-    []
-  );
+  private readonly privilegedUserShortOverviewCache$ = new BehaviorSubject<
+    UserShort[]
+  >([]);
 
   public getUserData$(username: string | undefined): Observable<User> {
     return this.http.get<User>(

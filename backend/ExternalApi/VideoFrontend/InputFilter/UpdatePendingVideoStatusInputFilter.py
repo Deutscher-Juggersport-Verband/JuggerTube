@@ -1,15 +1,17 @@
 from flask_inputfilter import InputFilter
 from flask_inputfilter.validators import InEnumValidator, IsIntegerValidator
 
-from DataDomain.Database.Enum import UserRoleEnum
+from DataDomain.Database.Enum import VideoStatusEnum
 
 
-class UpdateUserRoleInputFilter(InputFilter):
+class UpdatePendingVideoStatusInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
+        super().__init__()
+
         self.add(
-            'userId',
+            'videoId',
             required=True,
             validators=[
                 IsIntegerValidator()
@@ -17,9 +19,9 @@ class UpdateUserRoleInputFilter(InputFilter):
         )
 
         self.add(
-            'role',
+            'status',
             required=True,
             validators=[
-                InEnumValidator(UserRoleEnum)
+                InEnumValidator(VideoStatusEnum)
             ]
         )

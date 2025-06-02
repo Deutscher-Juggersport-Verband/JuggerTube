@@ -76,6 +76,7 @@ export class PageLoginComponent {
     }
 
     if (response.error) {
+      this.markAllFieldsAsTouched();
       this.error = response.error;
       return;
     }

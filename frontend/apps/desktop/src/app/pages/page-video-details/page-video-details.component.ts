@@ -6,12 +6,16 @@ import {
   trigger,
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, inject } from '@angular/core';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { UiRedirectComponent, UiTagComponent } from '../../ui-shared';
-import { isYoutubeUrl, VideosDataService } from '@frontend/video';
+import {
+  getEmbeddedUrlRule,
+  isYoutubeUrl,
+  VideosDataService,
+} from '@frontend/video';
 import { VideoApiResponseModel } from '@frontend/video-data';
 
 @Component({
@@ -28,31 +32,20 @@ import { VideoApiResponseModel } from '@frontend/video-data';
   ],
 })
 export class PageVideoDetailsComponent {
-  public video: VideoApiResponseModel | undefined = undefined;
-  public isYoutubeUrl = false;
-  public embeddedUrl: SafeResourceUrl = '';
+  private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly videosDataService: VideosDataService =
+    inject(VideosDataService);
+
+  public video: VideoApiResponseModel | undefined =
+    this.videosDataService.getVideoById(
+      Number(this.route.snapshot.paramMap.get('id'))
+    ); // TODO
+  public isYoutubeUrl = isYoutubeUrl(this.video?.videoLink ?? '');
+  public embeddedUrl: SafeResourceUrl = getEmbeddedUrlRule(
+    this.video?.videoLink ?? ''
+  );
 
   public showTournamentDetails = false;
   public showTeamOneDetails = false;
   public showTeamTwoDetails = false;
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly videosDataService: VideosDataService,
-    private readonly sanitizer: DomSanitizer
-  ) {
-    const videoId = Number(this.route.snapshot.paramMap.get('id'));
-    this.video = this.videosDataService.getVideoById(videoId);
-    this.isYoutubeUrl = isYoutubeUrl(this.video?.videoLink ?? '');
-    if (this.isYoutubeUrl) {
-      this.embeddedUrl = this.getEmbeddedUrl(this.video?.videoLink ?? '');
-    }
-  }
-
-  public getEmbeddedUrl(url: string): SafeResourceUrl {
-    const urlParts = url.split('/');
-    const videoId = urlParts[urlParts.length - 1];
-    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(embedUrl);
-  }
 }

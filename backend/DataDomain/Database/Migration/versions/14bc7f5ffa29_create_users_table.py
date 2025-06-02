@@ -78,8 +78,8 @@ def upgrade():
         sa.Column(
             'picture',
             sa.String(
-                length=255,
-                server_default='default.png'),
+                length=255),
+            server_default='default.png',
             nullable=True),
         sa.Column(
             'is_deleted',

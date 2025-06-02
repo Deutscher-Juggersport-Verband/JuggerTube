@@ -34,19 +34,18 @@ class LoginUserCommandHandler:
                 lockedUntil=locked_until
             )
 
-        if check_password_hash(user.password_hash, command.password):
-            access_token = create_access_token(
+        if not check_password_hash(user.password_hash, command.password):
+            current_attempts = CreateOrIncreaseLoginAttemptsRule.applies(
+                username=user.username
+            )
+
+            if current_attempts >= 8:
+                user = UserRepository.getUserByUsername(user.username)
+
+                SendUserLockedMail().send(user)
+
+        return LoginUserResult(
+            token=create_access_token(
                 identity=user.id
             )
-
-            return LoginUserResult(
-                token=access_token
-            )
-
-        current_attempts = CreateOrIncreaseLoginAttemptsRule.applies(
-            user.username)
-
-        if current_attempts >= 8:
-            user = UserRepository.getUserByUsername(user.username)
-
-            SendUserLockedMail().send(user)
+        )

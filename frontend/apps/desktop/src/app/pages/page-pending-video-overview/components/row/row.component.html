@@ -1,0 +1,112 @@
+<div class="headline" (click)="toggleTile()" [class.open]="isTileVisible">
+  <img [src]="video.user.pictureUrl" alt="" />
+
+  <span>{{ video.name }}</span>
+
+  <svg width="24" height="24" fill="currentColor">
+    <use href="assets/icons/sprite.svg#icon-arrow" />
+  </svg>
+</div>
+
+@if (isTileVisible) {
+<div class="content">
+  <main>
+    @if (isYoutubeUrl(video.videoLink)) {
+    <iframe
+      [src]="getEmbeddedUrlRule(video.videoLink)"
+      allowfullscreen
+    ></iframe>
+    } @else {
+    <a href="{{ video.videoLink }}">zum Video >></a>
+    }
+  </main>
+  <aside>
+    <h3>
+      {{ video.name }}
+    </h3>
+
+    <div class="tag-row">
+      @if (video.category) {
+      <ui-tag [category]="video.category" />
+      } @if (video.weaponType) {
+      <ui-tag [category]="video.weaponType" />
+      } @if (video.gameSystem) {
+      <ui-tag>{{ video.gameSystem }}</ui-tag>
+      }
+    </div>
+
+    <div class="details-row">
+      @if (video.channel) {
+      <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
+      }
+      <span>Upload: {{ video.uploadDate | date : 'dd.MM.YYYY' }}</span>
+      <span
+        >Aufnahme:
+        {{
+          video.dateOfRecording
+            ? (video.dateOfRecording | date : 'dd.MM.YYYY')
+            : 'nicht angegeben'
+        }}</span
+      >
+    </div>
+
+    @if (video.tournament) {
+    <div class="tournament-row">
+      <span>{{ video.tournament.name }}</span>
+
+      <p>{{ video.tournament.city }}</p>
+      <p>Startdatum: {{ video.tournament.startDate | date : 'dd.MM.YYYY' }}</p>
+      <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.YYYY' }}</p>
+      <a
+        href="{{ video.tournament.jtrLink }}"
+        target="_blank"
+        (click)="$event.stopPropagation()"
+        >Auf jtr besuchen</a
+      >
+    </div>
+    }
+    <div class="team-row">
+      @if (video.teamOne) {
+      <span>
+        {{ video.teamOne.name }}
+      </span>
+      } @if (video.teamOne && video.teamTwo) {
+      <span>vs.</span>
+      } @if (video.teamTwo) {
+      <span>
+        {{ video.teamTwo.name }}
+      </span>
+      }
+    </div>
+
+    @if (video.topic) {
+    <span>{{ video.topic }}</span>
+    } @if (video.guests) {
+    <span>{{ video.guests }}</span>
+    } @if (video.comment) {
+    <span>{{ video.comment }}</span>
+    }
+
+    <div class="button-row">
+      <ui-button
+        [text]="'edit'"
+        [color]="UiButtonColorEnum.SECONDARY"
+        [type]="UiButtonTypeEnum.BUTTON"
+        [routerLink]="['/edit-pending-video']"
+      />
+      <ui-button
+        [text]="'approve'"
+        [color]="UiButtonColorEnum.PRIMARY"
+        [type]="UiButtonTypeEnum.BUTTON"
+        (click)="updateVideoStatus(VideoStatus.APPROVED)"
+      />
+      <ui-button
+        [text]="'decline'"
+        [color]="UiButtonColorEnum.ERROR"
+        [type]="UiButtonTypeEnum.BUTTON"
+        (click)="updateVideoStatus(VideoStatus.DECLINED)"
+      />
+    </div>
+  </aside>
+</div>
+}

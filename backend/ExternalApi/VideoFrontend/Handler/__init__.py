@@ -1,4 +1,6 @@
 from .CreateMultipleVideosHandler import CreateMultipleVideosHandler
 from .CreateVideoHandler import CreateVideoHandler
 from .GetPaginatedVideosHandler import GetPaginatedVideosHandler
+from .GetPendingVideoOverviewHandler import GetPendingVideoOverviewHandler
 from .GetVideoOverviewHandler import GetVideoOverviewHandler
+from .UpdatePendingVideoStatusHandler import UpdatePendingVideoStatusHandler

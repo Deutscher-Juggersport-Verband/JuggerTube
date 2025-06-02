@@ -22,6 +22,6 @@ def clearVideoCache(videoId: int) -> None:
 def clearCompleteVideoCache() -> None:
     """Clear complete video cache"""
 
-    videoKeys = cache.cache._read_client.keys('video-*')
+    # videoKeys = cache.cache._read_client.keys('video-*')
 
-    [cache.delete(key.decode('utf-8')) for key in videoKeys]
+    # [cache.delete(key.decode('utf-8')) for key in videoKeys]

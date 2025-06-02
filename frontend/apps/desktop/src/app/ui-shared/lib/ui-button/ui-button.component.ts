@@ -4,6 +4,8 @@ import { Component, HostBinding, Input } from '@angular/core';
 export enum UiButtonColorEnum {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
+  SUCCESS = 'success',
+  ERROR = 'error',
   NONE = 'none',
 }
 

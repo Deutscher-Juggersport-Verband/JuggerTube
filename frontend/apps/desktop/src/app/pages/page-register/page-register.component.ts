@@ -18,7 +18,11 @@ import {
   UiInputTypeEnum,
   UiLabelRowComponent,
 } from '../../ui-shared';
-import { RegisterRequestBody, UserApiClient } from '@frontend/user-data';
+import {
+  RegisterRequestBody,
+  RegisterResponse,
+  UserApiClient,
+} from '@frontend/user-data';
 
 export const PasswordsMatchValidator: ValidatorFn = (
   control: AbstractControl
@@ -89,11 +93,12 @@ export class PageRegisterComponent {
       return;
     }
 
-    const response = await this.authService.register(
+    const response: RegisterResponse = await this.authService.register(
       this.form.value as RegisterRequestBody
     );
 
     if (response.error) {
+      this.markAllFieldsAsTouched();
       this.error = response.error;
       return;
     }

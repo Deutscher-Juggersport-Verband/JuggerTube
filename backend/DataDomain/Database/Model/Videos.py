@@ -7,9 +7,10 @@ from DataDomain.Database import db
 from DataDomain.Database.Enum import (
     GameSystemTypesEnum,
     VideoCategoriesEnum,
+    VideoStatusEnum,
     WeaponTypesEnum,
 )
-from DataDomain.Database.Model import BaseModel, Channels, Teams, Tournaments
+from DataDomain.Database.Model import BaseModel, Channels, Teams, Tournaments, Users
 
 
 class Videos(BaseModel):
@@ -73,6 +74,23 @@ class Videos(BaseModel):
     guests: str = db.Column(
         db.String(100),
         nullable=False
+    )
+
+    status = db.Column(
+        db.Enum(VideoStatusEnum),
+        nullable=False,
+        default=VideoStatusEnum.PENDING
+    )
+
+    uploader_id: int | None = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=True
+    )
+
+    uploader: Mapped['Users'] = db.relationship(
+        'Users',
+        foreign_keys=[uploader_id],
     )
 
     channel_id: int = db.Column(

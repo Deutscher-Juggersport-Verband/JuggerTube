@@ -1,0 +1,77 @@
+:host {
+  .headline {
+    height: 32px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    box-sizing: content-box;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #f6f6f6;
+    }
+
+    img {
+      height: 26px;
+      width: 26px;
+      border-radius: 100%;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+
+    span {
+      margin-right: auto;
+    }
+
+    svg {
+      transition: transform 0.2s ease-in-out;
+    }
+
+    &.open {
+      border-radius: 6px 6px 0 0;
+      border-bottom: 1px solid #e6e6e6;
+
+      svg {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .content {
+    border-radius: 0 0 6px 6px;
+    background-color: #ffffff;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+
+    main {
+    }
+
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      > .details-row,
+      > .tournament-row,
+      > .video-row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      > .button-row {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+
+        ui-button {
+          width: 100px;
+        }
+      }
+    }
+  }
+}

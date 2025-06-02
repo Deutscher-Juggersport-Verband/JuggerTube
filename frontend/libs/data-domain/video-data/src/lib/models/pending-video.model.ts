@@ -1,6 +1,7 @@
 import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
 import { VideoCategoriesEnum } from '../enums/video-categories.enum';
 import { WeaponTypesEnum } from '../enums/weapon-types.enum';
+import { UserShort } from '@frontend/user-data';
 
 interface Channel {
   name: string;
@@ -20,25 +21,21 @@ interface Team {
   city: string;
 }
 
-export interface VideoApiResponseModel {
+export interface PendingVideo {
   id: number;
   name: string;
   category: VideoCategoriesEnum;
   videoLink: string;
   uploadDate: Date;
   comment: string;
-  dateOfRecording: Date;
-  gameSystem: GameSystemTypesEnum;
-  weaponType: WeaponTypesEnum;
+  dateOfRecording?: Date;
+  gameSystem?: GameSystemTypesEnum;
+  weaponType?: WeaponTypesEnum;
   topic: string;
   guests: string;
   channel: Channel;
   tournament?: Tournament;
   teamOne?: Team;
   teamTwo?: Team;
-}
-
-export interface PaginatedVideosApiResponseModel {
-  count: number;
-  results: VideoApiResponseModel[];
+  user: UserShort;
 }
