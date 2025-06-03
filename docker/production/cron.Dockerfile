@@ -10,7 +10,9 @@ RUN python -m pip install .
 
 COPY scripts /app/scripts
 COPY docker/production/crontab.txt /app/crontab.txt
+COPY docker/production/provisioning/start.sh /app/provisioning/start.sh
+RUN chmod +x /app/provisioning/start.sh
 
 RUN crontab /app/crontab.txt
 
-CMD cron -f
+CMD ["/app/provisioning/start.sh"]
