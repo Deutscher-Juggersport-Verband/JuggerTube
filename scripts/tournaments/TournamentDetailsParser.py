@@ -1,4 +1,5 @@
 from html.parser import HTMLParser
+import re
 
 
 class TournamentDetailsParser(HTMLParser):
@@ -30,10 +31,13 @@ class TournamentDetailsParser(HTMLParser):
 
     def handle_data(self, data):
         if self.in_title:
-            # Title format is "Tournament Name - JTR 3.2"
-            title_parts = data.split(' - ')
-            if len(title_parts) > 0:
-                self.tournament_name = title_parts[0].strip()
+            # Suche nach " - JTR" (unabhängig von Version und nachfolgendem Text)
+            match = re.match(r"^(.*?)\s+-\s+JTR\\b", data)
+            if match:
+                self.tournament_name = match.group(1).strip()
+            else:
+                # Fallback: alles vor erstem " - ", falls kein " - JTR" gefunden wird
+                self.tournament_name = data.split(' - ')[0].strip()
         elif self.in_date_field:
             data = data.strip()
             if 'Beginn:' in data:
