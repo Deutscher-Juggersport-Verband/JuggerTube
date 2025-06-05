@@ -21,7 +21,12 @@ import {
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { SingletonGetter } from '@frontend/cache';
 import { userDetailsSelector } from '@frontend/user';
-import { UpdateRequestBody, User, UserApiClient } from '@frontend/user-data';
+import {
+  UpdateRequestBody,
+  UpdateResponse,
+  User,
+  UserApiClient,
+} from '@frontend/user-data';
 
 export const userForm = new FormGroup<{
   email: FormControl<string>;
@@ -78,11 +83,12 @@ export class PageUserDetailsComponent {
       return;
     }
 
-    const response = await this.authService.update(
+    const response: UpdateResponse = await this.authService.update(
       this.form.value as UpdateRequestBody
     );
 
     if (response.error) {
+      this.markAllFieldsAsTouched();
       this.error = response.error;
       return;
     }

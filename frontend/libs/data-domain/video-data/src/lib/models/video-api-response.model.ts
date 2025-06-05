@@ -2,12 +2,12 @@ import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
 import { VideoCategoriesEnum } from '../enums/video-categories.enum';
 import { WeaponTypesEnum } from '../enums/weapon-types.enum';
 
-export interface Channel {
+interface Channel {
   name: string;
   link: string;
 }
 
-export interface Tournament {
+interface Tournament {
   name: string;
   city: string;
   startDate: Date;
@@ -15,7 +15,7 @@ export interface Tournament {
   jtrLink: string;
 }
 
-export interface Team {
+interface Team {
   name: string;
   city: string;
 }

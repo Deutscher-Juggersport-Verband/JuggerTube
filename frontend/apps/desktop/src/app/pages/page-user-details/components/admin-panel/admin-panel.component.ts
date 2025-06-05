@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 
+import { Observable } from 'rxjs';
+
 import { UserRowComponent } from '../user-row/user-row.component';
-import { User, UserDataClient } from '@frontend/user-data';
+import { SingletonGetter } from '@frontend/cache';
+import { User, UserDataClient, UserShort } from '@frontend/user-data';
 
 @Component({
   selector: 'admin-panel',
@@ -17,7 +20,8 @@ export class AdminPanelComponent {
   @Input() public currentUser!: User;
   public openOverlayId: number | null = null;
 
-  public get privilegedUsers$() {
+  @SingletonGetter()
+  public get privilegedUsers$(): Observable<UserShort[]> {
     return this.userDataClient.getPrivilegedUserShortOverview$();
   }
 }

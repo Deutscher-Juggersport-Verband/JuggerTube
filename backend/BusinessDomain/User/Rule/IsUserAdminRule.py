@@ -11,6 +11,6 @@ class IsUserAdminRule:
         user = db.session.query(
             Users.role).filter(
             Users.escaped_username == escaped_username,
-            Users.is_deleted == False).first()
+            Users.is_deleted == False).scalar()
 
         return user and user.role == UserRoleEnum.ADMIN

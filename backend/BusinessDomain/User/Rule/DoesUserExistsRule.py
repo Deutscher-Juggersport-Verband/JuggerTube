@@ -1,4 +1,4 @@
-from BusinessDomain.User.Repository import UserRepository
+from DataDomain.Database.Model import Users
 
 
 class DoesUserExistsRule:
@@ -12,7 +12,7 @@ class DoesUserExistsRule:
         if user_id is None and escaped_username is None and email is None:
             return False
 
-        return UserRepository.exists(
+        return Users().exists(
             user_id=user_id,
             escaped_username=escaped_username,
             email=email

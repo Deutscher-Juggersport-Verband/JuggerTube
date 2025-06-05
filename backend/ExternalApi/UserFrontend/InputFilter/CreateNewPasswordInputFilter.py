@@ -7,8 +7,6 @@ class CreateNewPasswordInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
-        super().__init__()
-
         self.add(
             'hash',
             required=True,

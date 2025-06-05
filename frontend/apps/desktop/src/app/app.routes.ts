@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 
 import { PageCreateVideoComponent } from './pages/page-create-video/page-create-video.component';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
+import { PagePendingVideoOverviewComponent } from './pages/page-pending-video-overview/page-pending-video-overview.component';
 import { PageRegisterComponent } from './pages/page-register/page-register.component';
 import { PageUserDetailsComponent } from './pages/page-user-details/page-user-details.component';
 import { PageVideoDetailsComponent } from './pages/page-video-details/page-video-details.component';
@@ -26,6 +27,10 @@ export const appRoutes: Route[] = [
       {
         path: 'create-video',
         component: PageCreateVideoComponent,
+      },
+      {
+        path: 'pending-video-overview',
+        component: PagePendingVideoOverviewComponent,
       },
       {
         path: 'user-details',

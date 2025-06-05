@@ -2,13 +2,13 @@ import { inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 
 import { first, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
 import { loadUserDetailsDataAction } from '../actions/user-details.action';
-import { SessionService } from '@frontend/user-data';
-import { switchMap } from 'rxjs/operators';
 import { userDetailsSelector } from '../selectors/user-details.selector';
+import { SessionService } from '@frontend/user-data';
 
 @Injectable({
   providedIn: 'root',

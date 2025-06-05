@@ -8,8 +8,6 @@ class UpdateUserRoleInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
-        super().__init__()
-
         self.add(
             'userId',
             required=True,

@@ -1,3 +1,4 @@
+export * from './lib/rules/get-embedded-url.rule';
 export * from './lib/rules/is-youtube-url.rule';
 
 export * from './lib/store/effects/load-paginated-videos.effects';

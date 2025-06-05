@@ -7,8 +7,6 @@ class GetUserDetailsInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
-        super().__init__()
-
         self.add(
             'escaped_username',
             required=False,

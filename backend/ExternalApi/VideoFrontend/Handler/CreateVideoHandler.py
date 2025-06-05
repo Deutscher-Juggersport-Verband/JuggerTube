@@ -2,8 +2,12 @@ import logging
 from datetime import datetime
 
 from flask import g
+from flask_jwt_extended import get_jwt_identity
 
-from DataDomain.Database.Enum import VideoCategoriesEnum
+from BusinessDomain.User.Rule import IsCurrentUserPrivilegedRule
+from BusinessDomain.User.Rule.tools import getJwtIdentity
+from config import cache
+from DataDomain.Database.Enum import VideoCategoriesEnum, VideoStatusEnum
 from DataDomain.Database.Model import Channels, Teams, Tournaments, Videos
 from DataDomain.Database.Repository import (
     ChannelRepository,
@@ -12,6 +16,7 @@ from DataDomain.Database.Repository import (
     VideoRepository,
 )
 from DataDomain.Model import Response
+from ExternalApi.VideoFrontend.config.extensions import clearVideoCache
 
 
 class CreateVideoHandler:
@@ -22,7 +27,8 @@ class CreateVideoHandler:
         """Create Video"""
         try:
             data = g.validated_data
-            logging.info(f"Received video creation request with data: {data}")
+            logging.info(
+                f"CreateVideo | Received video creation request with data: {data}")
 
             try:
                 video = CreateVideoHandler._create_base_video(data)
@@ -40,22 +46,25 @@ class CreateVideoHandler:
             CreateVideoHandler._handle_category_specific_data(video, data)
 
             if ((video.category == VideoCategoriesEnum.REPORTS
-                 and not video.topic)
-                or (video.category == VideoCategoriesEnum.SPARBUILDING
+                     and not video.topic)
+                        or (video.category == VideoCategoriesEnum.SPARBUILDING
                             and not video.weapon_type)
-                or (video.category == VideoCategoriesEnum.MATCH
+                        or (video.category == VideoCategoriesEnum.MATCH
                             and not video.game_system
                             and not video.tournament_id
                             and not video.team_one_id
                             and not video.team_two_id
                             )
-                ):
+                    ):
                 logging.warning(f"Missing required data for category {video.category}")
                 return Response(response='missing required data', status=400)
 
             try:
                 video_id = video.create()
                 logging.info(f"Successfully created video with ID: {video_id}")
+
+                clearVideoCache(video_id)
+
                 return Response(
                     response=video_id,
                     status=200
@@ -89,6 +98,15 @@ class CreateVideoHandler:
         video.upload_date = datetime.fromisoformat(data.get('uploadDate'))
         video.date_of_recording = datetime.fromisoformat(
             data.get('dateOfRecording')) if data.get('dateOfRecording') else None
+
+        if get_jwt_identity():
+            if IsCurrentUserPrivilegedRule.applies():
+                video.status = VideoStatusEnum.APPROVED
+            else:
+                video.uploader_id = getJwtIdentity().id
+                cache.delete('pending-video-overview')
+        else:
+            video.status = VideoStatusEnum.APPROVED  # TODO
 
         return video
 

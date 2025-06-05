@@ -1,3 +1,4 @@
+from operator import or_
 from typing import Any
 
 from DataDomain.Database import db
@@ -74,6 +75,17 @@ class BaseModel(db.Model):
             logger.error(f'{self.__table__.name} | delete | {e}')
             raise e
 
-    # exists
+    def exists(self, **kwargs) -> bool:
+        """Überprüft, ob ein Datensatz basierend auf den übergebenen Keyword-Argumenten existiert."""
+        filters = [getattr(self.__class__, key) == value for key,
+                   value in kwargs.items() if value is not None]
 
-    # count
+        return self.__class__.query(db.exists()).filter(
+            or_(*filters),
+            self.__class__.is_deleted == False
+        ).scalar()
+
+    def count(self) -> int:
+        """Count the number of records in the database"""
+        return db.session.query(self.__class__).filter(
+            self.__class__.is_deleted == False).count()

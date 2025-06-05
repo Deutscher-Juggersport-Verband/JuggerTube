@@ -23,21 +23,6 @@ class UserRepository:
         ).first()
 
     @staticmethod
-    def exists(
-            user_id: int | None = None,
-            escaped_username: str | None = None,
-            email: str | None = None) -> bool:
-
-        return Users.query.filter(
-            or_(
-                Users.id == user_id,
-                Users.escaped_username == escaped_username,
-                Users.email == email,
-            ),
-            Users.is_deleted == False
-        ).count() > 0
-
-    @staticmethod
     def all() -> list[Users]:
         """Get user overview"""
 

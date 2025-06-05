@@ -10,8 +10,6 @@ class UpdateUserPictureInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
-        super().__init__()
-
         self.add(
             'picture',
             required=True,
