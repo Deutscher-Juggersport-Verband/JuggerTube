@@ -1,11 +1,15 @@
 import os
+import sys
+
+# Add the root directory to Python path
+sys.path.append('/app')
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from datetime import datetime
 import json
 from pathlib import Path
-from telegram_bot.telegram_notifier import notify
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
 from TournamentDetailsParser import parser as tournament_parser
 from TournamentOverviewParser import parser as overview_parser

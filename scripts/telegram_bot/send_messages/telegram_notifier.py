@@ -1,22 +1,21 @@
 import os
-from telegram.ext import ApplicationBuilder
+import logging
+from telegram import Bot
 import asyncio
 
 from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not TELEGRAM_BOT_TOKEN:
     raise ValueError("TELEGRAM_BOT_TOKEN not set in environment variables")
 
+bot = Bot(token=TELEGRAM_BOT_TOKEN)
+
 async def send_telegram_status(status_message, error_message=None):
-    """Send status message to Telegram
-    
-    Args:
-        status_message (str): Main status message
-        error_message (str, optional): Additional error details
-    """
-    application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
-    await application.initialize()
     
     message = f"Statusmeldung: {status_message}"
     if error_message:
@@ -26,12 +25,18 @@ async def send_telegram_status(status_message, error_message=None):
     
     for user in users:
         try:
-            await application.bot.send_message(chat_id=user, text=message)
+            user_id = user['userId']
+            chat = await bot.get_chat(chat_id=user_id)
+            if not chat:
+                logger.warning(f"Chat not found for user_id: {user_id}")
+                continue
+                
+            await bot.send_message(chat_id=user_id, text=message)
+            
         except Exception as e:
-            print(f"Error sending Telegram message: {e}")
-    
-    await application.stop()
+            logger.error(f"Error sending Telegram message to user_id {user.get('userId')}: {str(e)}")
+
 
 def notify(status_message, error_message=None):
     """Synchronous wrapper for send_telegram_status"""
-    asyncio.run(send_telegram_status(status_message, error_message)) 
+    asyncio.run(send_telegram_status(status_message, error_message))
