@@ -14,6 +14,10 @@ def get_parent(levels=1):
 
 
 def read_users_from_json():
-    with open(get_parent(), 'r') as file:
-        users = json.load(file)
-    return users
+    try:
+        with open(get_parent(), 'r') as file:
+            users = json.load(file)
+        return users
+    except FileNotFoundError:
+        print(f"Error: File {get_parent()} not found.")
+        return None;

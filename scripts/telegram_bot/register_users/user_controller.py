@@ -59,5 +59,4 @@ def delete_user_from_json(user_id):
                 index = list(file_users).index(user)
                 del file_users[index]
                 return f"user {user['userName']} unsubscribed"
-            else:
-                return f"user {user['userName']} not found"
+            return "user not found"
