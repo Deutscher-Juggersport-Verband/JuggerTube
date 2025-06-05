@@ -42,7 +42,7 @@ class Tournaments(BaseModel):
 
     jtr_link: str = db.Column(
         db.String(255),
-        nullable=False,
+        nullable=True,
         unique=True,
     )
 
