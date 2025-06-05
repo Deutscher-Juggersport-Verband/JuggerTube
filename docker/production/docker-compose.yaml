@@ -29,7 +29,7 @@ services:
       BASE_URL: 'juggertube-backend:8080'
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
     env_file:
-      - .env
+      - /home/juggertube/.env
     networks:
       - backend_network
 
