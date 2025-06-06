@@ -27,9 +27,7 @@ services:
     container_name: juggertube-cron
     environment:
       BASE_URL: 'juggertube-backend:8080'
-      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-    env_file:
-      - /home/juggertube/.env
+      TELEGRAM_BOT_TOKEN: 'example123'
     networks:
       - backend_network
 

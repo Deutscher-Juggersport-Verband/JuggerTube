@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class VideoCategoriesEnum(Enum):
     AWARDS = 'awards'
     HIGHLIGHTS = 'highlights'
@@ -10,6 +11,7 @@ class VideoCategoriesEnum(Enum):
     SONG = 'song'
     SPARBUILDING = 'sparbuilding'
     TRAINING = 'training'
+
 
 CATEGORY_MAPPING = {
     'Reports // Berichte': 'reports',
@@ -28,4 +30,4 @@ CATEGORY_MAPPING = {
     'Training & Tutorial': 'training'
 }
 
-TARGET_SHEETS = ['DATA-Videos', 'DATA-Teams', 'DATA-Channels', 'Output-Tournaments'] 
+TARGET_SHEETS = ['DATA-Videos', 'DATA-Teams', 'DATA-Channels', 'Output-Tournaments']

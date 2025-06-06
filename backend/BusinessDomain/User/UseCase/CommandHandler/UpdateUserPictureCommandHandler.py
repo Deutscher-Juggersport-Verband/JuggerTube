@@ -2,8 +2,8 @@ import base64
 
 from BusinessDomain.Common.Enum import PictureTypeEnum
 from BusinessDomain.Common.Service import PictureService
-from BusinessDomain.User.Rule.tools import getJwtIdentity
 from BusinessDomain.User.UseCase.CommandHandler.Command import UpdateUserPictureCommand
+from DataDomain.Database.Model import Users
 from Infrastructure.Logger import logger
 
 
@@ -13,9 +13,9 @@ class UpdateUserPictureCommandHandler:
     def execute(command: UpdateUserPictureCommand) -> str:
 
         try:
-            user = getJwtIdentity()
+            user = Users.query.get(command.user_id)
 
-            decoded_data = base64.b64decode(command.pictureData)
+            decoded_data = base64.b64decode(command.picture_data)
 
             user.picture = PictureService.savePicture(
                 decoded_data, PictureTypeEnum.USER)

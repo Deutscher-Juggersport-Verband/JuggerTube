@@ -5,6 +5,7 @@ from TournamentTeamsParser import TournamentTeamsParser
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+
 class DataFetcher:
     def __init__(self, base_url='https://turniere.jugger.org/'):
         self.base_url = base_url
@@ -34,4 +35,4 @@ class DataFetcher:
             return parser.get_teams()
         except Exception as e:
             print(f"Error fetching teams for tournament {tournament_id}: {str(e)}")
-            return [] 
+            return []

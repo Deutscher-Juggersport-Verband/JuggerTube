@@ -16,7 +16,7 @@ from DataDomain.Database.Repository import (
     VideoRepository,
 )
 from DataDomain.Model import Response
-from ExternalApi.VideoFrontend.config.extensions import clearVideoCache
+from ExternalApi.VideoFrontend.config import clear_video_overview_cache
 
 
 class CreateVideoHandler:
@@ -63,7 +63,7 @@ class CreateVideoHandler:
                 video_id = video.create()
                 logging.info(f"Successfully created video with ID: {video_id}")
 
-                clearVideoCache(video_id)
+                clear_video_overview_cache()
 
                 return Response(
                     response=video_id,

@@ -1,0 +1,30 @@
+name: test backend
+
+on: [push]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  code-style:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Install autopep8
+        run: pip install autopep8
+
+      - name: Run code style checks
+        run: |
+          set -x # Print commands and their arguments as they are executed.
+          set -e # Exit immediately if a command exits with a non-zero status.
+          set -u # Exit immediately if a variable is not defined.
+
+          find ./scripts -name '*.py' -exec autopep8 --in-place --aggressive --aggressive --max-line-length 90 {} \;

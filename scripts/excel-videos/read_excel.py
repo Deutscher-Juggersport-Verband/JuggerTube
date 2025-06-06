@@ -35,6 +35,7 @@ error_tracking = defaultdict(list)
 # Get valid category values
 valid_categories = {category.value for category in VideoCategoriesEnum}
 
+
 def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
     """
     Send data to backend in chunks of specified size
@@ -43,15 +44,15 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
     all_success = True
 
     videos_error_messages = []
-    
+
     for i in range(total_chunks):
         start_idx = i * chunk_size
         end_idx = min((i + 1) * chunk_size, len(data_list))
         chunk = data_list[start_idx:end_idx]
-        
+
         print(f"\nSending chunk {i + 1}/{total_chunks} of {entity_name}...")
         print(f"Processing videos {start_idx + 1} to {end_idx} of {len(data_list)}")
-        
+
         success = send_data_to_backend(
             endpoint,
             {f"{entity_name}": chunk},
@@ -59,19 +60,20 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
         )
 
         videos_error_messages.append(success)
-        
+
         if not success:
             all_success = False
             print(f"Failed to send chunk {i + 1} of {entity_name}")
-        
+
         # Add a small delay between chunks to prevent overwhelming the server
         if i < total_chunks - 1:
             time.sleep(1)
 
     for error_message in videos_error_messages:
         print(error_message)
-    
+
     return all_success
+
 
 def send_data_to_backend(endpoint, data, entity_name) -> str | bool:
     try:
@@ -89,10 +91,11 @@ def send_data_to_backend(endpoint, data, entity_name) -> str | bool:
             print(f"Response content: {e.response.text}")
         return False
 
+
 def main():
     # Initialize data processor
     processor = DataProcessor(excel_file)
-    
+
     # Process each sheet
     for sheet_name in TARGET_SHEETS:
         if sheet_name not in processor.excel.sheet_names:
@@ -100,7 +103,7 @@ def main():
             continue
 
         df = pd.read_excel(excel_file, sheet_name=sheet_name)
-        
+
         if sheet_name == 'DATA-Channels':
             processor.process_channels(df)
         elif sheet_name == 'DATA-Teams':
@@ -132,7 +135,7 @@ def main():
 
     # Wait a bit before sending videos to allow backend processing
     time.sleep(2)
-    
+
     # Send videos data
     print("\nProceeding with videos...")
     videos_success = send_data_in_chunks(
@@ -147,7 +150,7 @@ def main():
     print(f"Teams status: {'Success' if teams_success else 'Failed'}")
     print(f"Channels status: {'Success' if channels_success else 'Failed'}")
     print(f"Videos status: {'Success' if videos_success else 'Failed'}")
-    
+
     # Print error summary
     print("\nError Summary:")
     for error_type, errors in error_tracking.items():
@@ -158,13 +161,20 @@ def main():
             if len(errors) > 10:
                 print(f"... and {len(errors) - 10} more errors")
 
+
 if __name__ == "__main__":
     main()
 
 # Function to check if a value is JSON serializable
+
+
 def clean_value(value):
-    if pd.isna(value) or (isinstance(value, float) and (math.isnan(value) or math.isinf(value))):
+    if pd.isna(value) or (
+        isinstance(
+            value, float) and (
+            math.isnan(value) or math.isinf(value))):
         return None
     return str(value) if value else None
 
-print("\nAnalysis complete!") 
+
+print("\nAnalysis complete!")

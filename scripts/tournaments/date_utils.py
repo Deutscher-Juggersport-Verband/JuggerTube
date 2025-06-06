@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def format_date(date_str):
     """Format date string to ISO format with time"""
     if not date_str:
@@ -16,4 +17,4 @@ def format_date(date_str):
             return parsed_date.strftime('%Y-%m-%d 00:00:00.000000')
     except ValueError as e:
         print(f"Error parsing date '{date_str}': {e}")
-        return None 
+        return None
