@@ -6,6 +6,7 @@ from DataDomain.Model import Response
 from ExternalApi.UserFrontend.config import (
     create_user_admin_cache_key,
     create_user_cache_key,
+    create_user_privileged_cache_key,
 )
 from ExternalApi.UserFrontend.Handler import (
     AuthenticateUserHandler,
@@ -66,8 +67,8 @@ def get_privileged_user_short_overview() -> Response:
 
 @user_frontend.route('/is-admin',
                      methods=['GET'], endpoint='is-admin')
-@cache.cached(key_prefix=create_user_admin_cache_key)
 @jwt_required()
+@cache.cached(key_prefix=create_user_admin_cache_key)
 def is_admin() -> Response:
     return IsAdminHandler.handle()
 
@@ -75,6 +76,7 @@ def is_admin() -> Response:
 @user_frontend.route('/is-privileged',
                      methods=['GET'], endpoint='is-privileged')
 @jwt_required()
+@cache.cached(key_prefix=create_user_privileged_cache_key)
 def is_privileged() -> Response:
     return IsPrivilegedHandler.handle()
 

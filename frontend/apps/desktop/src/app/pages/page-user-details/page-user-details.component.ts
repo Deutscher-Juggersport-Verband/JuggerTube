@@ -18,6 +18,7 @@ import {
   UiInputComponent,
   UiInputTypeEnum,
 } from '../../ui-shared';
+import { markAllFieldsAsTouched } from '../../utils/form-utils';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { SingletonGetter } from '@frontend/cache';
 import { userDetailsSelector } from '@frontend/user';
@@ -26,6 +27,7 @@ import {
   UpdateResponse,
   User,
   UserApiClient,
+  UserDataClient,
 } from '@frontend/user-data';
 
 export const userForm = new FormGroup<{
@@ -61,13 +63,15 @@ export const userForm = new FormGroup<{
   styleUrl: './page-user-details.component.less',
 })
 export class PageUserDetailsComponent {
-  private readonly authService: UserApiClient = inject(UserApiClient);
+  private readonly userApiClient: UserApiClient = inject(UserApiClient);
+  private readonly userDataClient: UserDataClient = inject(UserDataClient);
   private readonly router: Router = inject(Router);
   private readonly store$: Store = inject(Store);
 
   protected readonly form = userForm;
   protected error: string = '';
-  protected readonly isAdmin: Promise<boolean> = this.authService.isAdmin();
+  protected readonly isAdmin: Promise<boolean> = this.userApiClient.isAdmin();
+  protected pictureUrl?: string;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
@@ -79,16 +83,16 @@ export class PageUserDetailsComponent {
 
   public async onSubmit(): Promise<void> {
     if (!this.form.valid) {
-      this.markAllFieldsAsTouched();
+      markAllFieldsAsTouched(this.form);
       return;
     }
 
-    const response: UpdateResponse = await this.authService.update(
+    const response: UpdateResponse = await this.userApiClient.update(
       this.form.value as UpdateRequestBody
     );
 
     if (response.error) {
-      this.markAllFieldsAsTouched();
+      markAllFieldsAsTouched(this.form);
       this.error = response.error;
       return;
     }
@@ -99,17 +103,20 @@ export class PageUserDetailsComponent {
   }
 
   public onDelete(): void {
-    this.authService.delete();
+    this.userApiClient.delete();
 
     this.router.navigate(['/']);
   }
 
-  private markAllFieldsAsTouched(): void {
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (control instanceof FormControl) {
-        control.markAsTouched({ onlySelf: true });
-      }
-    });
+  public async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length <= 0) {
+      return;
+    }
+
+    const selectedFile: File = input.files[0];
+
+    this.pictureUrl = await this.userDataClient.updatePicture$(selectedFile);
   }
 }

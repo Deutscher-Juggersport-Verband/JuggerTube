@@ -30,8 +30,6 @@ class UpdateUserPictureHandler:
         clear_user_cache(user_id=user.id)
 
         return Response(
-            response={
-                'picture': filepath
-            },
+            response=filepath,
             status=200
         )

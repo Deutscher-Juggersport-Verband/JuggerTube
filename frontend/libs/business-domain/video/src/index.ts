@@ -1,3 +1,4 @@
+export * from './lib/rules/determineAdditionalFields.rule';
 export * from './lib/rules/get-embedded-url.rule';
 export * from './lib/rules/is-youtube-url.rule';
 
@@ -14,5 +15,3 @@ export * from './lib/store/reducers/index';
 
 export * from './lib/store/actions/videos.actions';
 export * from './lib/store/models/videos-state.model';
-
-export * from './lib/validators/different-teams.validator';

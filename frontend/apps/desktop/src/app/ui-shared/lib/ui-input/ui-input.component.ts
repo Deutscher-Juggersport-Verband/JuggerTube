@@ -1,12 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { UiInfoButtonComponent } from '../ui-info-button/ui-info-button.component';
 
 export enum UiInputTypeEnum {
   TEXT = 'text',
@@ -25,28 +21,26 @@ export enum UiInputDirectionEnum {
 
 @Component({
   selector: 'ui-input',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, UiInfoButtonComponent],
   standalone: true,
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.less',
 })
 export class UiInputComponent {
-  @Input() public labelText!: string;
+  @Input() public formControlElement!: FormControl;
   @Input() public type: UiInputTypeEnum = UiInputTypeEnum.TEXT;
   @Input() public placeholder: string = '';
+
+  @Input() public labelText!: string;
   @Input() public direction: UiInputDirectionEnum = UiInputDirectionEnum.COLUMN;
-  @Input() public formControlElement!: FormControl;
+
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() public dropdownOptions?: any[];
   @Input() public flexibleLabel: boolean = false;
   @Output() public valueChange = new EventEmitter<boolean>();
-
-  @HostBinding('class')
-  private get hostClass(): UiInputDirectionEnum {
-    return this.direction;
-  }
 
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
 

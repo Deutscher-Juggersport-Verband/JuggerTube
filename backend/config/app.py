@@ -16,7 +16,7 @@ from ExternalApi.UserFrontend.config import user_frontend
 from ExternalApi.VideoFrontend.config import video_frontend
 
 
-def createApp() -> Flask:
+def create_app() -> Flask:
     """Creates the Flask app"""
 
     app = Flask(__name__)
@@ -59,7 +59,7 @@ def createApp() -> Flask:
     return app
 
 
-app = createApp()
+app = create_app()
 
 jwt = JWTManager(app)
 

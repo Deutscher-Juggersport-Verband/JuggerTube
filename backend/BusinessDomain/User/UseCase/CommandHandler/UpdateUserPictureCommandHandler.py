@@ -18,7 +18,9 @@ class UpdateUserPictureCommandHandler:
             decoded_data = base64.b64decode(command.picture_data)
 
             user.picture = PictureService.savePicture(
-                decoded_data, PictureTypeEnum.USER)
+                decoded_data=decoded_data,
+                picture_type=PictureTypeEnum.USER
+            )
 
             user.save()
 
