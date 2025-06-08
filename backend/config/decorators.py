@@ -70,7 +70,7 @@ def jwt_guest_required(
         return decorator
     return wrapper
 
-# TODO
+# TODO: implement jwt_privileged_required correctly
 
 
 def jwt_privileged_required(

@@ -1,10 +1,10 @@
 from flask_jwt_extended import get_jwt_identity
 
-from BusinessDomain.User.Rule import IsCurrentUserAdminRule
+from BusinessDomain.User.Rule import IsCurrentUserPrivilegedRule
 from DataDomain.Model import Response
 
 
-class IsAdminHandler:
+class IsPrivilegedHandler:
 
     @staticmethod
     def handle() -> Response:
@@ -16,6 +16,6 @@ class IsAdminHandler:
             )
 
         return Response(
-            response=IsCurrentUserAdminRule.applies(),
+            response=IsCurrentUserPrivilegedRule.applies(),
             status=200,
         )

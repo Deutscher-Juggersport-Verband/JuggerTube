@@ -18,7 +18,7 @@ class DeleteUserHandler:
         try:
             DeleteUserCommandHandler.execute(
                 DeleteUserCommand(
-                    userId=current_user.id
+                    user_id=current_user.id
                 )
             )
 

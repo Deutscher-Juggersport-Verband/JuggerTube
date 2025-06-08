@@ -4,5 +4,6 @@ from .extensions import (
     clear_user_overview_cache,
     create_user_admin_cache_key,
     create_user_cache_key,
+    create_user_privileged_cache_key,
 )
 from .routes import user_frontend

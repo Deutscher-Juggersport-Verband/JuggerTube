@@ -1,6 +1,7 @@
 from flask import request
 
 from BusinessDomain.User.Repository import UserRepository
+from BusinessDomain.User.Rule.tools import getJwtIdentity
 from config import cache
 
 
@@ -18,14 +19,22 @@ def create_user_cache_key() -> str | None:
 
 def create_user_admin_cache_key() -> str | None:
 
-    escaped_username = request.view_args.get('escaped_username')
-
-    user = UserRepository.getUserByUsername(escaped_username)
+    user = getJwtIdentity()
 
     if user is None:
         return None
 
     return f"user-admin-{user.id}"
+
+
+def create_user_privileged_cache_key() -> str | None:
+
+    user = getJwtIdentity()
+
+    if user is None:
+        return None
+
+    return f"user-privileged-{user.id}"
 
 
 def clear_user_cache(user_id: int) -> None:

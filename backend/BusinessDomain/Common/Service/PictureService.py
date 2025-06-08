@@ -13,76 +13,76 @@ class PictureService:
     """Service for image manipulation"""
 
     @staticmethod
-    def savePicture(decodedData: bytes, pictureType: PictureTypeEnum) -> str:
+    def savePicture(decoded_data: bytes, picture_type: PictureTypeEnum) -> str:
         """Saves a picture to the file system"""
 
-        image, originalFormat = PictureService.resizePicture(decodedData)
-        filename = PictureService.createPictureName(originalFormat)
-        savePath = PictureService.createPicturePath(filename, pictureType)
+        image, original_format = PictureService.resizePicture(decoded_data)
+        filename = PictureService.createPictureName(original_format)
+        save_path = PictureService.createPicturePath(filename, picture_type)
 
-        isAnimated = getattr(image, 'is_animated', False)
+        is_animated = getattr(image, 'is_animated', False)
 
-        if isAnimated:
-            with open(savePath, 'wb') as outFile:
-                outFile.write(decodedData)
+        if is_animated:
+            with open(save_path, 'wb') as outFile:
+                outFile.write(decoded_data)
         else:
-            image.save(savePath, format=originalFormat)
+            image.save(save_path, format=original_format)
 
         return filename
 
     @staticmethod
-    def resizePicture(decodedPicture: bytes) -> tuple[Image, str]:
+    def resizePicture(decoded_picture: bytes) -> tuple[Image, str]:
         """Resizes a picture if it is too large based on its base 4 representation"""
 
-        image = Image.open(io.BytesIO(decodedPicture))
-        isAnimated = getattr(image, 'is_animated', False)
+        image = Image.open(io.BytesIO(decoded_picture))
+        is_animated = getattr(image, 'is_animated', False)
 
-        originalFormat = image.format
+        original_format = image.format
 
-        if not isAnimated and image.mode in ('RGBA', 'P'):
+        if not is_animated and image.mode in ('RGBA', 'P'):
             image = image.convert('RGB')
 
-        maxSize = current_app.config['MAX_CONTENT_LENGTH']
+        max_size = current_app.config['MAX_CONTENT_LENGTH']
 
-        if len(decodedPicture) > maxSize:
-            if not isAnimated:
-                scaleFactor = (maxSize / len(decodedPicture)) ** 0.5
-                newWidth = int(image.width * scaleFactor)
-                newHeight = int(image.height * scaleFactor)
-                image = image.resize((newWidth, newHeight), Image.ANTIALIAS)
+        if len(decoded_picture) > max_size:
+            if not is_animated:
+                scale_factor = (max_size / len(decoded_picture)) ** 0.5
+                new_width = int(image.width * scale_factor)
+                new_height = int(image.height * scale_factor)
+                image = image.resize((new_width, new_height), Image.ANTIALIAS)
 
             else:
                 raise ValueError(
                     'Das GIF ist zu groß, kann aber nicht automatisch skaliert werden.')
 
-        return image, originalFormat
+        return image, original_format
 
     @staticmethod
-    def createPictureName(originalFormat: str) -> str:
+    def createPictureName(original_format: str) -> str:
         """Creates the path to a picture"""
 
-        fileExtension = originalFormat.lower()
-        randomHash = uuid.uuid4().hex
+        file_extension = original_format.lower()
+        random_hash = uuid.uuid4().hex
 
-        filename = secure_filename(f'{randomHash}.{fileExtension}')
+        filename = secure_filename(f'{random_hash}.{file_extension}')
 
         return filename
 
     @staticmethod
-    def createPicturePath(filename: str, pictureType: PictureTypeEnum) -> str:
+    def createPicturePath(filename: str, picture_type: PictureTypeEnum) -> str:
         """Creates the path to a user picture"""
 
-        if pictureType == PictureTypeEnum.USER:
+        if picture_type == PictureTypeEnum.USER:
             folder = PicturePathEnum.USER_PICTURES_FOLDER.value
-        elif pictureType == PictureTypeEnum.TEAM:
+        elif picture_type == PictureTypeEnum.TEAM:
             folder = PicturePathEnum.TEAM_PICTURES_FOLDER.value
         else:
             raise ValueError('Invalid picture type')
 
-        uploadFolder = os.path.join(
+        upload_folder = os.path.join(
             current_app.config['UPLOAD_FOLDER'],
             folder)
 
-        savePath = os.path.join(uploadFolder, filename)
+        save_path = os.path.join(upload_folder, filename)
 
-        return savePath
+        return save_path

@@ -7,6 +7,7 @@ from .GetPrivilegedUserShortOverviewHandler import GetPrivilegedUserShortOvervie
 from .GetUserDetailsHandler import GetUserDetailsHandler
 from .GetUserShortOverviewHandler import GetUserShortOverviewHandler
 from .IsAdminHandler import IsAdminHandler
+from .IsPrivilegedHandler import IsPrivilegedHandler
 from .UpdateUserHandler import UpdateUserHandler
 from .UpdateUserPictureHandler import UpdateUserPictureHandler
 from .UpdateUserRoleHandler import UpdateUserRoleHandler

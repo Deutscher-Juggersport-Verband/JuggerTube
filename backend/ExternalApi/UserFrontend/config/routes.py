@@ -17,6 +17,7 @@ from ExternalApi.UserFrontend.Handler import (
     GetUserDetailsHandler,
     GetUserShortOverviewHandler,
     IsAdminHandler,
+    IsPrivilegedHandler,
     UpdateUserHandler,
     UpdateUserPictureHandler,
     UpdateUserRoleHandler,
@@ -27,7 +28,6 @@ from ExternalApi.UserFrontend.InputFilter import (
     CreatePasswordResetInputFilter,
     CreateUserInputFilter,
     GetUserDetailsInputFilter,
-    IsAdminInputFilter,
     UpdateUserInputFilter,
     UpdateUserPictureInputFilter,
     UpdateUserRoleInputFilter,
@@ -66,13 +66,17 @@ def get_privileged_user_short_overview() -> Response:
 
 @user_frontend.route('/is-admin',
                      methods=['GET'], endpoint='is-admin')
-@user_frontend.route('/is-admin/<userId>',
-                     methods=['GET'], endpoint='is-admin')
 @cache.cached(key_prefix=create_user_admin_cache_key)
 @jwt_required()
-@IsAdminInputFilter.validate()
-def is_admin(user_id=None) -> Response:
+def is_admin() -> Response:
     return IsAdminHandler.handle()
+
+
+@user_frontend.route('/is-privileged',
+                     methods=['GET'], endpoint='is-privileged')
+@jwt_required()
+def is_privileged() -> Response:
+    return IsPrivilegedHandler.handle()
 
 
 @user_frontend.route('/update-user',

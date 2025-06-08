@@ -29,10 +29,10 @@ class CreateChannelHandler:
                 )
 
             try:
-                channelId = ChannelRepository.create(channel)
-                logging.info(f"Successfully created channel with ID: {channelId}")
+                channel_id = channel.create()
+                logging.info(f"Successfully created channel with ID: {channel_id}")
                 return Response(
-                    response=channelId,
+                    response=channel_id,
                     status=200
                 )
             except Exception as e:

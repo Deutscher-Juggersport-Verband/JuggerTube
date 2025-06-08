@@ -18,7 +18,7 @@ class LogHandler(logging.Handler):
     def emit(self, record: logging.LogRecord) -> None:
         """Emit the log record to the database"""
 
-        extraData = {
+        extra_data = {
             k: v for k,
             v in record.__dict__.items() if k not in vars(
                 logging.LogRecord(
@@ -30,15 +30,15 @@ class LogHandler(logging.Handler):
                     None,
                     None))}
 
-        logEntry = Logs(
+        log_entry = Logs(
             logger_name=record.name,
             level=record.levelname,
             message=self.format(record),
-            data=extraData or None
+            data=extra_data or None
         )
 
         try:
-            self.session.add(logEntry)
+            self.session.add(log_entry)
             self.session.commit()
 
         except Exception as e:
