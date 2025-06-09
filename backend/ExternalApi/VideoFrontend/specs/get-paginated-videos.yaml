@@ -5,7 +5,7 @@ info:
 paths:
   /api/video-frontend/get-paginated-videos:
     get:
-      summary: Get paginated video overview
+      summary: Get paginated video overview with sorting and filtering
       parameters:
         - in: query
           name: start
@@ -21,7 +21,87 @@ paths:
             type: integer
             minimum: 1
           description: The number of videos to return
-      description: Returns a paginated list of all registered videos.
+        - in: query
+          name: sort
+          required: false
+          schema:
+            type: string
+            enum:
+              - name_asc
+              - name_desc
+              - recording_date_asc
+              - recording_date_desc
+              - upload_date_desc
+              - created_at_desc
+          description: Sort order for the videos (default is upload_date ascending)
+        - in: query
+          name: name_filter
+          required: false
+          schema:
+            type: string
+          description: Filter videos by name (case-insensitive partial match)
+        - in: query
+          name: category
+          required: false
+          schema:
+            type: string
+            enum:
+              - reports
+              - highlights
+              - match
+              - song
+              - podcast
+              - awards
+              - training
+              - other
+          description: Filter by video category
+        - in: query
+          name: channel_name
+          required: false
+          schema:
+            type: string
+          description: Filter by channel name (case-insensitive partial match)
+        - in: query
+          name: team_name
+          required: false
+          schema:
+            type: string
+          description: Filter by team name (searches both team_one and team_two, case-insensitive partial match)
+        - in: query
+          name: tournament_name
+          required: false
+          schema:
+            type: string
+          description: Filter by tournament name (case-insensitive partial match)
+        - in: query
+          name: recording_date_from
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter videos recorded from this date (YYYY-MM-DD)
+        - in: query
+          name: recording_date_to
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter videos recorded until this date (YYYY-MM-DD)
+        - in: query
+          name: upload_date_from
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter videos uploaded from this date (YYYY-MM-DD)
+        - in: query
+          name: upload_date_to
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter videos uploaded until this date (YYYY-MM-DD)
+      description: Returns a paginated list of all registered videos with optional sorting and filtering.
       responses:
         '200':
           description: A paginated list of videos
