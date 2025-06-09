@@ -1,23 +1,22 @@
+from api_client import ApiClient
+from data_fetcher import DataFetcher
+from date_utils import format_date
+from cache_manager import load_cache, save_cache
+from TournamentTeamsParser import TournamentTeamsParser
+from TournamentOverviewParser import parser as overview_parser
+from TournamentDetailsParser import parser as tournament_parser
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
+from pathlib import Path
+import json
+from datetime import datetime
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import requests
 import os
 import sys
 
 # Add the root directory to Python path
 sys.path.append('/app')
 
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from datetime import datetime
-import json
-from pathlib import Path
-from scripts.telegram_bot.send_messages.telegram_notifier import notify
-
-from TournamentDetailsParser import parser as tournament_parser
-from TournamentOverviewParser import parser as overview_parser
-from TournamentTeamsParser import TournamentTeamsParser
-from cache_manager import load_cache, save_cache
-from date_utils import format_date
-from data_fetcher import DataFetcher
-from api_client import ApiClient
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -32,53 +31,57 @@ previous_suffix = 'index.event.php#previous'
 tournament_suffix = 'tournament.php?id='
 results_suffix = 'tournament.result.php?id='
 
-#change url depending on the environment
+# change url depending on the environment
 base_host = os.getenv('BASE_URL', 'localhost:8080')
 
 add_tournaments_url = f'https://{base_host}/api/tournament-frontend/create-multiple-tournaments'
 add_teams_url = f'https://{base_host}/api/team-frontend/create-multiple-teams'
 
+
 def ensure_cache_dir():
     """Ensure the cache directory exists"""
     CACHE_DIR.mkdir(exist_ok=True)
+
 
 def load_cache():
     """Load cached tournament and team data"""
     ensure_cache_dir()
     tournaments_cache = {}
     teams_cache = {}
-    
+
     try:
         if TOURNAMENTS_CACHE_FILE.exists():
             with open(TOURNAMENTS_CACHE_FILE, 'r') as f:
                 tournaments_cache = json.load(f)
     except Exception as e:
         print(f"Error loading tournaments cache: {e}")
-    
+
     try:
         if TEAMS_CACHE_FILE.exists():
             with open(TEAMS_CACHE_FILE, 'r') as f:
                 teams_cache = json.load(f)
     except Exception as e:
         print(f"Error loading teams cache: {e}")
-    
+
     return tournaments_cache, teams_cache
+
 
 def save_cache(tournaments_data, teams_data):
     """Save tournament and team data to cache files"""
     ensure_cache_dir()
-    
+
     try:
         with open(TOURNAMENTS_CACHE_FILE, 'w') as f:
             json.dump(tournaments_data, f, indent=2)
     except Exception as e:
         print(f"Error saving tournaments cache: {e}")
-    
+
     try:
         with open(TEAMS_CACHE_FILE, 'w') as f:
             json.dump(teams_data, f, indent=2)
     except Exception as e:
         print(f"Error saving teams cache: {e}")
+
 
 def format_date(date_str):
     """Format date string to ISO format with time"""
@@ -98,6 +101,7 @@ def format_date(date_str):
         print(f"Error parsing date '{date_str}': {e}")
         return None
 
+
 def get_teams_from_tournament(tournament_id):
     """Fetch and parse teams from a tournament's results page"""
     results_url = tournament_url + results_suffix + tournament_id
@@ -110,10 +114,11 @@ def get_teams_from_tournament(tournament_id):
         print(f"Error fetching teams for tournament {tournament_id}: {str(e)}")
         return []
 
+
 def process_tournament(data_fetcher, tournament, cached_tournaments):
     """Process a single tournament and return its data"""
     tournament_id = tournament.tournament_id
-    
+
     # Get the start date from overview
     start_date = format_date(tournament.start_date)
     if not start_date:
@@ -123,22 +128,22 @@ def process_tournament(data_fetcher, tournament, cached_tournaments):
     # Fetch and parse the tournament details page to get end date and teams
     try:
         details_html, details_url = data_fetcher.fetch_tournament_details(tournament_id)
-        
+
         # Parse tournament details
         tournament_parser.feed(details_html)
         dates = tournament_parser.get_dates()
         tournament_name = tournament_parser.get_name()
         tournament_parser.__init__()
-        
+
         # Use end date from details if available, otherwise use start date
         end_date = format_date(dates['end_date']) if dates['end_date'] else start_date
 
         details_name = tournament_name
         overview_name = tournament.name
-        
+
         # Use name from details page if available, otherwise use overview name
         final_name = details_name if details_name else overview_name
-        
+
         return {
             "name": final_name,
             "city": tournament.city,
@@ -150,14 +155,15 @@ def process_tournament(data_fetcher, tournament, cached_tournaments):
         print(f"Error processing tournament {tournament.name}: {str(e)}")
         return None
 
+
 def main():
     # Initialize components
     data_fetcher = DataFetcher()
     api_client = ApiClient()
-    
+
     # Load cached data
     cached_tournaments, cached_teams = load_cache()
-    
+
     # Dictionary to store unique teams by name and city
     unique_teams = cached_teams.copy() if cached_teams else {}
     tournaments_data = []
@@ -173,13 +179,13 @@ def main():
     # Process each tournament
     for tournament in overview_parser.tournament_array:
         tournament_id = tournament.tournament_id
-        
+
         # Check if tournament is already in cache
         if tournament_id in cached_tournaments:
             found_cached_tournament = True
             tournaments_data.append(cached_tournaments[tournament_id])
             continue
-        
+
         if found_cached_tournament:
             continue
 
@@ -209,7 +215,9 @@ def main():
     teams_response = api_client.send_teams(unique_teams)
 
     # Send status message
-    notify("Turniere und Teams wurden importiert", f"Turniere: {tournaments_response}, Teams: {teams_response}")
+    notify("Turniere und Teams wurden importiert",
+           f"Turniere: {tournaments_response}, Teams: {teams_response}")
+
 
 if __name__ == '__main__':
     main()

@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from flask import g
 
+from config import cache
 from DataDomain.Database.Model import Tournaments
 from DataDomain.Database.Repository import (
     TournamentRepository,
@@ -68,6 +69,8 @@ class CreateMultipleTournamentsHandler:
                 response=response_data,
                 status=400
             )
+
+        cache.delete("tournament-overview")
 
         # If some tournaments failed but others succeeded, return 207 (Multi-Status)
         if failed_tournaments:

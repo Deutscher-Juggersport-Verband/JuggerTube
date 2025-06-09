@@ -6,10 +6,10 @@ class IncreaseFailedAttemptsRule:
     @staticmethod
     def applies(username: str) -> int:
 
-        loginAttempt = LoginAttemptRepository.getByUsername(username=username)
+        login_attempt = LoginAttemptRepository.getByUsername(username=username)
 
-        loginAttempt.attempts += 1
+        login_attempt.attempts += 1
 
-        loginAttempt.save()
+        login_attempt.save()
 
-        return loginAttempt.attempts
+        return login_attempt.attempts

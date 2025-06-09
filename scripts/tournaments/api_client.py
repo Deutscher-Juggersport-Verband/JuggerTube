@@ -4,6 +4,7 @@ import requests
 
 base_host = os.getenv('BASE_URL', 'localhost:8080')
 
+
 class ApiClient:
     def __init__(self):
         self.base_url = f'https://{base_host}'
@@ -17,10 +18,10 @@ class ApiClient:
         """Send tournaments data to the API"""
         if not tournaments_data:
             return
-            
+
         url = f"{self.base_url}/api/tournament-frontend/create-multiple-tournaments"
         payload = {"tournaments": tournaments_data}
-        
+
         try:
             response = requests.post(
                 url,
@@ -38,7 +39,9 @@ class ApiClient:
                     print(f"Raw response: {response.text}")
             return response
         except requests.exceptions.ConnectionError as e:
-            print(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+            print(
+                f"Connection Error: Could not connect to the server. Is it running? Error: {
+                    str(e)}")
         except Exception as e:
             print(f"Error sending tournament data to API: {str(e)}")
 
@@ -46,11 +49,11 @@ class ApiClient:
         """Send teams data to the API"""
         if not teams_data:
             return
-            
+
         url = f"{self.base_url}/api/team-frontend/create-multiple-teams"
         teams_list = list(teams_data.values())
         payload = {"teams": teams_list}
-        
+
         try:
             print(f"\nSending {len(teams_list)} unique teams to API")
             response = requests.post(
@@ -69,6 +72,8 @@ class ApiClient:
                     print(f"Raw response: {response.text}")
             return response
         except requests.exceptions.ConnectionError as e:
-            print(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+            print(
+                f"Connection Error: Could not connect to the server. Is it running? Error: {
+                    str(e)}")
         except Exception as e:
-            print(f"Error sending teams data to API: {str(e)}") 
+            print(f"Error sending teams data to API: {str(e)}")

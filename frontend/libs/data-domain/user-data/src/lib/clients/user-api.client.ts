@@ -90,4 +90,10 @@ export class UserApiClient {
       this.http.get<boolean>('/api/user-frontend/is-admin')
     );
   }
+
+  public async isPrivileged(): Promise<boolean> {
+    return await firstValueFrom(
+      this.http.get<boolean>('/api/user-frontend/is-privileged')
+    );
+  }
 }

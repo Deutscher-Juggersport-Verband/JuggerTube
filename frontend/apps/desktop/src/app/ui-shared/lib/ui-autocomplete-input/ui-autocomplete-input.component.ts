@@ -1,9 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
+import { UiInfoButtonComponent } from '../ui-info-button/ui-info-button.component';
+import {
+  UiInputComponent,
+  UiInputDirectionEnum,
+} from '../ui-input/ui-input.component';
+import { NewOptionConfig, NewOptionFieldConfig } from './new-option-config';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
@@ -17,22 +23,33 @@ type ValueFieldType = keyof Pick<OptionType, 'id'>;
 
 @Component({
   selector: 'ui-autocomplete-input',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    UiInfoButtonComponent,
+    UiInputComponent,
+  ],
   standalone: true,
   templateUrl: './ui-autocomplete-input.component.html',
   styleUrl: './ui-autocomplete-input.component.less',
 })
 export class UiAutocompleteInputComponent {
-  @Input() public labelText!: string;
+  private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   @Input() public formControlElement!: FormControl;
   @Input() public options: OptionType[] = [];
   @Input() public displayField: DisplayFieldType = 'name';
   @Input() public valueField: ValueFieldType = 'id';
   @Input() public placeholder: string = 'Suchen...';
+
+  @Input() public labelText!: string;
+  @Input() public direction: UiInputDirectionEnum = UiInputDirectionEnum.COLUMN;
+
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
-  @Output() public newOption = new EventEmitter<string>();
-  @Output() public existingOptionSelected = new EventEmitter<void>();
+
+  @Input() public newOptionConfig?: NewOptionConfig;
+  public showNewFields: boolean = false;
 
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
@@ -83,7 +100,10 @@ export class UiAutocompleteInputComponent {
     this.formControlElement.setValue(option[this.valueField]);
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
-    this.existingOptionSelected.emit();
+    this.showNewFields = false;
+    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
+      field.formControlElement.reset()
+    );
   }
 
   public onInputFocus(): void {
@@ -98,9 +118,14 @@ export class UiAutocompleteInputComponent {
   }
 
   public onAddNewOption(): void {
-    const newValue = this.searchControl.value;
-    if (newValue) {
-      this.newOption.emit(newValue);
-    }
+    this.formControlElement.setErrors([]);
+    this.formControlElement.markAsPristine();
+    this.formControlElement.markAsUntouched();
+    this.showNewFields = true;
+    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
+      field.formControlElement.reset()
+    );
+    this.newOptionConfig?.prefillField?.setValue(this.searchControl.value);
+    this.cdr.detectChanges();
   }
 }

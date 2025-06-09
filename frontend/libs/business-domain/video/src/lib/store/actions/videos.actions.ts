@@ -3,8 +3,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 
 import { LoadedRange } from '../models/videos-state.model';
-import { VideoApiResponseModel } from '@frontend/video-data';
-import { CreateVideoRequest } from '@frontend/video-data';
+import {
+  CreateVideoRequest,
+  VideoApiResponseModel,
+} from '@frontend/video-data';
 
 export enum VideosActionNamesEnum {
   LoadPaginatedVideos = '[Videos] Load Paginated Videos',

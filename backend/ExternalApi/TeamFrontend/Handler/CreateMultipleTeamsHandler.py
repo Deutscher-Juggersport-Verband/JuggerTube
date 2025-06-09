@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from flask import g
 
+from config import cache
 from DataDomain.Database.Model import Teams
 from DataDomain.Database.Repository import TeamRepository
 from DataDomain.Model import Response
@@ -50,6 +51,8 @@ class CreateMultipleTeamsHandler:
                 response=response_data,
                 status=400
             )
+
+        cache.delete("team-overview")
 
         # If some teams failed but others succeeded, return 207 (Multi-Status)
         if failed_teams:

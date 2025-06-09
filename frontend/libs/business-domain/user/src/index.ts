@@ -1,3 +1,5 @@
+export * from './lib/rules/convert-file-to-base64.rule';
+
 export * from './lib/store/actions/user-details.action';
 
 export * from './lib/store/effects/get-user-details-data.effect';

@@ -16,12 +16,12 @@ channel_frontend = Blueprint('channel-frontend', __name__)
 @channel_frontend.route('/get-channel-overview',
                         methods=['GET'], endpoint='get-channel-overview')
 @cache.cached(key_prefix='channel-overview')
-def getChannelOverview() -> Response:
+def get_channel_overview() -> Response:
     return GetChannelOverviewHandler.handle()
 
 
 @channel_frontend.route('/create-multiple-channels',
                         methods=['POST'], endpoint='create-multiple-channels')
 @CreateMultipleChannelsInputFilter.validate()
-def createMultipleChannels() -> Response:
+def create_multiple_channels() -> Response:
     return CreateMultipleChannelsHandler.handle()

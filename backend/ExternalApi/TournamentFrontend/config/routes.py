@@ -18,12 +18,13 @@ tournament_frontend = Blueprint('tournament-frontend', __name__)
 @tournament_frontend.route('/get-tournament-overview',
                            methods=['GET'], endpoint='get-tournament-overview')
 @cache.cached(key_prefix='tournament-overview')
-def getTournamentOverview() -> Response:
+def get_tournament_overview() -> Response:
     return GetTournamentOverviewHandler.handle()
 
 
 @tournament_frontend.route('/create-multiple-tournaments',
                            methods=['POST'], endpoint='create-multiple-tournaments')
+# TODO: Extra authentication für die skripte
 @CreateMultipleTournamentsInputFilter.validate()
-def createMultipleTournaments() -> Response:
+def create_multiple_tournaments() -> Response:
     return CreateMultipleTournamentsHandler.handle()

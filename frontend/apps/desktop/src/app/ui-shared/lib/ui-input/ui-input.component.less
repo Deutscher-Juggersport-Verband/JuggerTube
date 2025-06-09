@@ -1,6 +1,6 @@
 @import 'colors-desktop';
 
-:host {
+.input-container {
   display: flex;
 
   &.column {
@@ -55,8 +55,11 @@
       align-items: center;
     }
   }
+}
 
-  .error-message {
-    margin-top: 8px !important;
-  }
+.error-message {
+  align-self: flex-end;
+  display: block;
+  margin-top: 8px;
+  margin-left: 140px;
 }

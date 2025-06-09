@@ -12,6 +12,7 @@ from DataDomain.Database.Repository import (
     VideoRepository,
 )
 from DataDomain.Model import Response
+from ExternalApi.VideoFrontend.config import clear_video_overview_cache
 
 
 class CreateMultipleVideosHandler:
@@ -167,6 +168,8 @@ class CreateMultipleVideosHandler:
                     'name': video.name,
                     'reason': str(e)
                 })
+
+        clear_video_overview_cache()
 
         return Response(
             response={

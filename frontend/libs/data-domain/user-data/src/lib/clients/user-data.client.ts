@@ -5,6 +5,7 @@ import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 
 import { UserRoleEnum } from '../enums/role-type.enum';
 import { User, UserShort } from '../models/user-data.model';
+import { convertFileToBase64Rule } from '@frontend/user';
 
 @Injectable({
   providedIn: 'root',
@@ -46,6 +47,16 @@ export class UserDataClient {
       this.http.put<void>('/api/user-frontend/update-user-role', {
         userId,
         role,
+      })
+    );
+  }
+
+  public async updatePicture$(file: File): Promise<string> {
+    const base64 = await convertFileToBase64Rule(file);
+
+    return await firstValueFrom(
+      this.http.put<string>('/api/user-frontend/update-user-picture', {
+        picture: base64,
       })
     );
   }

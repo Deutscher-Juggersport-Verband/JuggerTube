@@ -1,9 +1,13 @@
 from flask import Blueprint
 from flask_jwt_extended import jwt_required
 
-from config import cache, jwt_guest_required, limiter
+from config import cache, jwt_guest_required, jwt_privileged_required, limiter
 from DataDomain.Model import Response
-from ExternalApi.UserFrontend.config.extensions import create_user_cache_key
+from ExternalApi.UserFrontend.config import (
+    create_user_admin_cache_key,
+    create_user_cache_key,
+    create_user_privileged_cache_key,
+)
 from ExternalApi.UserFrontend.Handler import (
     AuthenticateUserHandler,
     CreateNewPasswordHandler,
@@ -14,6 +18,7 @@ from ExternalApi.UserFrontend.Handler import (
     GetUserDetailsHandler,
     GetUserShortOverviewHandler,
     IsAdminHandler,
+    IsPrivilegedHandler,
     UpdateUserHandler,
     UpdateUserPictureHandler,
     UpdateUserRoleHandler,
@@ -24,7 +29,6 @@ from ExternalApi.UserFrontend.InputFilter import (
     CreatePasswordResetInputFilter,
     CreateUserInputFilter,
     GetUserDetailsInputFilter,
-    IsAdminInputFilter,
     UpdateUserInputFilter,
     UpdateUserPictureInputFilter,
     UpdateUserRoleInputFilter,
@@ -63,12 +67,18 @@ def get_privileged_user_short_overview() -> Response:
 
 @user_frontend.route('/is-admin',
                      methods=['GET'], endpoint='is-admin')
-@user_frontend.route('/is-admin/<userId>',
-                     methods=['GET'], endpoint='is-admin')
 @jwt_required()
-@IsAdminInputFilter.validate()
-def is_admin(user_id=None) -> Response:
+@cache.cached(key_prefix=create_user_admin_cache_key)
+def is_admin() -> Response:
     return IsAdminHandler.handle()
+
+
+@user_frontend.route('/is-privileged',
+                     methods=['GET'], endpoint='is-privileged')
+@jwt_required()
+@cache.cached(key_prefix=create_user_privileged_cache_key)
+def is_privileged() -> Response:
+    return IsPrivilegedHandler.handle()
 
 
 @user_frontend.route('/update-user',
@@ -91,7 +101,7 @@ def update_user_picture() -> Response:
 
 @user_frontend.route('/update-user-role',
                      methods=['PUT'], endpoint='update-user-role')
-@jwt_required()
+@jwt_privileged_required()
 @UpdateUserRoleInputFilter.validate()
 def update_user_role() -> Response:
     return UpdateUserRoleHandler.handle()
@@ -106,7 +116,7 @@ def authenticate_user() -> Response:
 
 
 @user_frontend.route('/create-user', methods=['POST'], endpoint='create-user')
-@limiter.limit('15 per day, 7 per hour, 2 per minute')
+@limiter.limit('5 per day')
 @jwt_guest_required()
 @CreateUserInputFilter.validate()
 def create_user() -> Response:
@@ -116,7 +126,7 @@ def create_user() -> Response:
 @user_frontend.route('/create-password-reset',
                      methods=['POST'],
                      endpoint='create-password-reset')
-@limiter.limit('10 per day, 7 per hour, 2 per minute')
+@limiter.limit('6 per day, 3 per hour')
 @jwt_guest_required()
 @CreatePasswordResetInputFilter.validate()
 def create_password_reset() -> Response:
@@ -126,7 +136,7 @@ def create_password_reset() -> Response:
 @user_frontend.route('/create-new-password',
                      methods=['PUT'],
                      endpoint='create-new-password')
-@limiter.limit('30 per day, 10 per hour, 2 per minute')
+@limiter.limit('10 per day, 4 per hour, 2 per minute')
 @jwt_guest_required()
 @CreateNewPasswordInputFilter.validate()
 def create_new_password() -> Response:

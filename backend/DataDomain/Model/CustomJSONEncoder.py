@@ -35,4 +35,6 @@ class CustomJSONEncoder(json.JSONEncoder):
         elif isinstance(obj, Enum):
             return obj.value
 
+        # TODO: snake to camel case for object keys
+
         return super().default(obj)

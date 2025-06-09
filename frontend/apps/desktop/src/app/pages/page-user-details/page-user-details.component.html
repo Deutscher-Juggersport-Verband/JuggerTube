@@ -1,6 +1,17 @@
 @let user = user$ | async; @if (user) {
 <div class="details-row">
-  <img [src]="user.pictureUrl" alt="Profil von {{ user.username }}" />
+  <img
+    [src]="pictureUrl ?? user.pictureUrl"
+    alt="Profil von {{ user.username }}"
+    (click)="fileInput.click()"
+  />
+
+  <input
+    type="file"
+    #fileInput
+    style="display: none"
+    (change)="onFileSelected($event)"
+  />
 
   <div class="names-column">
     <h1>{{ user.name }}</h1>

@@ -13,6 +13,7 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+
 def log_validation_error(message, data=None):
     """
     Log validation errors with optional data context
