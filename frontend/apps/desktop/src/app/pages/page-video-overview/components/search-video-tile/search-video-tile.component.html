@@ -8,10 +8,12 @@
       class="name-filter" />
 
     <ui-button
+      [type]="UiButtonTypeEnum.BUTTON"
       [color]="UiButtonColorEnum.NONE"
-      [type]="UiButtonTypeEnum.ICON"
       (click)="toggleExpandedFilters()"
-      [class.expanded]="isExpandedFiltersVisible" />
+      [class.expanded]="isExpandedFiltersVisible">
+      <span class="material-icons-outlined">keyboard_arrow_down</span>
+    </ui-button>
   </div>
 
   <div class="basic-filters-row">

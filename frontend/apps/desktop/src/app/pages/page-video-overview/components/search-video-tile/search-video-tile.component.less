@@ -60,3 +60,16 @@ ui-button {
   color: @color-green;
   align-self: center;
 }
+
+ui-button {
+  .material-icons-outlined {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  &.expanded {
+    .material-icons-outlined {
+      transform: rotate(180deg);
+    }
+  }
+}
