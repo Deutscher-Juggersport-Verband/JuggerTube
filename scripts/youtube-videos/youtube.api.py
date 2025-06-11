@@ -6,7 +6,7 @@ from api_client import send_videos_to_api
 from error_logger import log_video_error, load_error_log
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from telegram_bot.telegram_notifier import notify
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
