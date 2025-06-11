@@ -6,11 +6,12 @@ from enums import CATEGORY_MAPPING
 from validation_logger import log_validation_error
 import re
 
+
 def convert_date_to_iso(date_value) -> str:
     """Convert date to ISO format string."""
     if pd.isna(date_value):
         return None
-    
+
     if isinstance(date_value, str):
         try:
             # Try German format (DD.MM.YYYY)
@@ -19,9 +20,10 @@ def convert_date_to_iso(date_value) -> str:
             return date_obj.isoformat()
         except (ValueError, AttributeError):
             return None
-    
+
     # If it's already a datetime object (from pandas)
     return date_value.isoformat()
+
 
 class DataProcessor:
     def __init__(self, excel_file: str):
@@ -36,7 +38,7 @@ class DataProcessor:
         for _, row in df.iterrows():
             if pd.isna(row['Link']):
                 continue
-            
+
             self.channels_dict[row['name']] = {
                 'channelLink': row['Link'],
                 'name': row['name']
@@ -53,13 +55,14 @@ class DataProcessor:
     def process_videos(self, df: pd.DataFrame) -> Dict:
         """Process videos data from DataFrame."""
         for idx, row in df.iterrows():
-            excel_category = row['Category'] if pd.notna(row['Category']) else 'Other // Diverse'
+            excel_category = row['Category'] if pd.notna(
+                row['Category']) else 'Other // Diverse'
             category = CATEGORY_MAPPING.get(excel_category, 'other')
-            
+
             video_obj = self._create_base_video_object(row, category)
             self._add_category_specific_fields(video_obj, row, category)
             self.videos_dict[idx] = video_obj
-            
+
         return self.videos_dict
 
     def _create_base_video_object(self, row: pd.Series, category: str) -> Dict:
@@ -70,23 +73,43 @@ class DataProcessor:
             'videoLink': row['Link'],
             'uploadDate': row['Date of Upload'],
             'channel': row['Channel'],
-            'comment': row['Comment'] if pd.notna(row['Comment']) else None,
-            'dateOfRecording': row['Date of Recording'] if pd.notna(row['Date of Recording']) else None
-        }
+            'comment': row['Comment'] if pd.notna(
+                row['Comment']) else None,
+            'dateOfRecording': row['Date of Recording'] if pd.notna(
+                row['Date of Recording']) else None}
 
-    def _add_category_specific_fields(self, video_obj: Dict, row: pd.Series, category: str):
+    def _add_category_specific_fields(
+            self,
+            video_obj: Dict,
+            row: pd.Series,
+            category: str):
         """Add category-specific fields to video object."""
         # Topic field
-        if category == 'reports' or (category in ['sparbuilding', 'training', 'other', 'podcast', 'highlights'] and pd.notna(row.get('Topic'))):
+        if category == 'reports' or (
+            category in [
+                'sparbuilding',
+                'training',
+                'other',
+                'podcast',
+                'highlights'] and pd.notna(
+                row.get('Topic'))):
             video_obj['topic'] = row['Topic'] if pd.notna(row.get('Topic')) else None
 
         # Guests field
-        if category in ['sparbuilding', 'other', 'podcast', 'highlights'] and pd.notna(row.get('Guests')):
+        if category in [
+                'sparbuilding',
+                'other',
+                'podcast',
+                'highlights'] and pd.notna(
+                row.get('Guests')):
             video_obj['guests'] = row['Guests']
 
         # Weapon Type field
-        if category == 'sparbuilding' or (category == 'training' and pd.notna(row.get('Type of weapon'))):
-            video_obj['weaponType'] = row['Type of weapon'] if pd.notna(row.get('Type of weapon')) else None
+        if category == 'sparbuilding' or (
+            category == 'training' and pd.notna(
+                row.get('Type of weapon'))):
+            video_obj['weaponType'] = row['Type of weapon'] if pd.notna(
+                row.get('Type of weapon')) else None
 
         # Game System and Tournament fields for matches
         if category == 'match':
@@ -165,9 +188,9 @@ class DataProcessor:
         """Validate required fields for video data."""
         required_fields = ["name", "category", "videoLink", "uploadDate", "channelName"]
         missing_fields = [field for field in required_fields if not video_data.get(field)]
-        
+
         if missing_fields:
             log_validation_error(video_data, missing_fields)
             return False
-            
-        return True 
+
+        return True

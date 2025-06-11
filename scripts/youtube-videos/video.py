@@ -1,6 +1,15 @@
 class Video:
-    def __init__(self, name, channel_name, category, link, upload_date, tournament, team_one, team_two,
-                 game_system):
+    def __init__(
+            self,
+            name,
+            channel_name,
+            category,
+            link,
+            upload_date,
+            tournament,
+            team_one,
+            team_two,
+            game_system):
         self.name = name
         self.channel_name = channel_name
         self.category = category

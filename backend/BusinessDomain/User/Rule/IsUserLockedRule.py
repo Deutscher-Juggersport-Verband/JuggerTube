@@ -9,17 +9,17 @@ class IsUserLockedRule:
     @staticmethod
     def applies(username: str) -> tuple[bool, LockType | None, datetime | None]:
 
-        loginAttempt = LoginAttemptRepository.getByUsername(username)
+        login_attempt = LoginAttemptRepository.getByUsername(username)
 
-        if not loginAttempt:
+        if not login_attempt:
             return False, None, None
 
-        lockTime = timedelta(minutes=15)
+        lock_time = timedelta(minutes=15)
 
-        if loginAttempt.attempts >= 8:
+        if login_attempt.attempts >= 8:
             return True, LockType.PERMANENTLY.value, None
 
-        elif loginAttempt.attempts >= 6 and datetime.now() - loginAttempt.last_attempt < lockTime:
-            return True, LockType.TEMPORARILY.value, loginAttempt.locked_until
+        elif login_attempt.attempts >= 6 and datetime.now() - login_attempt.last_attempt < lock_time:
+            return True, LockType.TEMPORARILY.value, login_attempt.locked_until
 
         return False, None, None

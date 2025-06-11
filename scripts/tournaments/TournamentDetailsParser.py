@@ -16,7 +16,8 @@ class TournamentDetailsParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         self.current_tag = tag
         # Look for date fields in the tournament details
-        if tag == 'div' and any(attr for attr in attrs if attr[0] == 'class' and 'tournament-details' in attr[1]):
+        if tag == 'div' and any(
+                attr for attr in attrs if attr[0] == 'class' and 'tournament-details' in attr[1]):
             self.in_date_field = True
         # Look for title tag which contains the tournament name
         elif tag == 'title':

@@ -7,4 +7,4 @@ system = Blueprint('system', __name__)
 
 
 @system.route('/get-swagger-file', methods=['GET'])
-def getSwagger() -> Response: return GetSwaggerFileHandler().handle()
+def get_swagger() -> Response: return GetSwaggerFileHandler().handle()

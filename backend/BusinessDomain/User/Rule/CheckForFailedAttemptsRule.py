@@ -12,31 +12,31 @@ class CheckForFailedAttemptsRule:
     @staticmethod
     def applies(username: str) -> LoginAttemptResponse | bool:
 
-        loginAttempt = LoginAttemptRepository.getByUsername(username)
+        login_attempt = LoginAttemptRepository.getByUsername(username)
 
-        if not loginAttempt:
+        if not login_attempt:
             return False
 
-        isLocked, lockType = IsUserLockedRule.applies(loginAttempt.username)
+        is_locked, lock_type = IsUserLockedRule.applies(login_attempt.username)
 
-        if not isLocked:
+        if not is_locked:
             return False
 
-        if lockType == LockType.PERMANENTLY.value:
+        if lock_type == LockType.PERMANENTLY.value:
             logger.warning(f'CheckForFailedAttemptsRule | applies | User {
                 username} is permanently locked.')
             return LoginAttemptResponse(
-                lockType=lockType,
+                lockType=lock_type,
                 lockedUntil=None
             )
 
-        elif lockType == LockType.TEMPORARILY.value:
+        elif lock_type == LockType.TEMPORARILY.value:
             logger.warning(f'CheckForFailedAttemptsRule | applies | User {
                 username} is temporarily locked.')
             return LoginAttemptResponse(
-                lockType=lockType,
+                lockType=lock_type,
                 lockedUntil=str(
-                    loginAttempt.last_attempt +
+                    login_attempt.last_attempt +
                     timedelta(minutes=15)
                 )
             )

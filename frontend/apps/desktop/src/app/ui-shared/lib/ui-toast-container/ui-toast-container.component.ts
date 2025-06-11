@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { UiToastComponent } from '../ui-toast/ui-toast.component';
 import { ToastService } from '@frontend/video';
@@ -12,9 +12,6 @@ import { ToastService } from '@frontend/video';
   styleUrls: ['./ui-toast-container.component.less'],
 })
 export class UiToastContainerComponent {
-  public toasts$;
-
-  constructor(private toastService: ToastService) {
-    this.toasts$ = this.toastService.toasts$;
-  }
+  private readonly toastService: ToastService = inject(ToastService);
+  public toasts$ = this.toastService.toasts$;
 }

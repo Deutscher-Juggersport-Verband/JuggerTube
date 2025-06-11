@@ -49,7 +49,13 @@ class TournamentsOverviewParser(HTMLParser):
         if tag == 'tr':
             self.in_tournament = False
             if self.temp_name != '' and self.temp_id != '' and self.temp_country != '' and self.temp_city != '':
-                tournament = Tournament(self.temp_id, self.temp_name, self.temp_date, self.temp_date, self.temp_city, self.temp_country)
+                tournament = Tournament(
+                    self.temp_id,
+                    self.temp_name,
+                    self.temp_date,
+                    self.temp_date,
+                    self.temp_city,
+                    self.temp_country)
                 self.tournament_array.append(tournament)
                 self.temp_name = ''
                 self.temp_id = ''

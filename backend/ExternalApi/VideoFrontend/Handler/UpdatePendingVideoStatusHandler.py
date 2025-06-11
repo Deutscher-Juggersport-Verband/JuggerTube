@@ -3,7 +3,7 @@ from flask import g
 from BusinessDomain.User.Rule import IsCurrentUserPrivilegedRule
 from DataDomain.Database.Model import Videos
 from DataDomain.Model import Response
-from ExternalApi.VideoFrontend.config.extensions import clearCompleteVideoCache
+from ExternalApi.VideoFrontend.config import clear_video_overview_cache
 
 
 class UpdatePendingVideoStatusHandler:
@@ -31,7 +31,7 @@ class UpdatePendingVideoStatusHandler:
 
             video.save()
 
-            clearCompleteVideoCache()
+            clear_video_overview_cache()
 
         except Exception:
             return Response(status=500)

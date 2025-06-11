@@ -4,6 +4,7 @@ from BusinessDomain.User.Rule import DoesEmailExistsRule, DoesUsernameExistsRule
 from BusinessDomain.User.UseCase.CommandHandler import CreateUserCommandHandler
 from BusinessDomain.User.UseCase.CommandHandler.Command import CreateUserCommand
 from DataDomain.Model import Response
+from ExternalApi.UserFrontend.config import clear_user_overview_cache
 
 
 class CreateUserHandler:
@@ -40,6 +41,8 @@ class CreateUserHandler:
 
         except Exception:
             return Response(status=500)
+
+        clear_user_overview_cache()
 
         return Response(
             response={

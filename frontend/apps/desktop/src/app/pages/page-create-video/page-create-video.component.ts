@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Signal } from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -9,21 +8,30 @@ import {
 } from '@angular/forms';
 
 import {
+  initConfig,
   UiAutocompleteInputComponent,
   UiButtonColorEnum,
   UiButtonComponent,
   UiInputComponent,
+  UiInputDirectionEnum,
   UiInputTypeEnum,
-  UiLabelRowComponent,
 } from '../../ui-shared';
+import { markAllFieldsAsTouched } from '../../utils/form-utils';
+import {
+  channelNewOptionConfig,
+  teamOneNewOptionConfig,
+  teamTwoNewOptionConfig,
+  tournamentNewOptionConfig,
+} from './form-configs';
 import { ChannelsDataService } from '@frontend/channel';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
-import { TeamsDataService } from '@frontend/team';
+import { differentTeamsValidator, TeamsDataService } from '@frontend/team';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentsDataService } from '@frontend/tournament';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
 import {
   AdditionalFieldsEnum,
+  determineAdditionalFieldsRule,
   ToastService,
   VideoFormModel,
   VideoFormService,
@@ -43,7 +51,6 @@ import {
     UiButtonComponent,
     UiInputComponent,
     UiAutocompleteInputComponent,
-    UiLabelRowComponent,
     ReactiveFormsModule,
   ],
   standalone: true,
@@ -57,20 +64,22 @@ export class PageCreateVideoComponent implements OnInit {
 
   protected readonly form: FormGroup<VideoFormModel>;
   protected additionalFields: AdditionalFieldsEnum[] = [];
-  protected showNewTournamentFields = false;
-  protected showNewTeamOneFields = false;
-  protected showNewTeamTwoFields = false;
-  protected showNewChannelFields = false;
-  protected isTeamOneMix = false;
-  protected isTeamTwoMix = false;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
+  protected readonly UiInputDirectionEnum = UiInputDirectionEnum;
+
   protected readonly Object = Object;
   protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
   protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
   protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
+
+  protected readonly channelNewOptionConfig = channelNewOptionConfig;
+  protected readonly tournamentNewOptionConfig = tournamentNewOptionConfig;
+  protected readonly teamOneNewOptionConfig = teamOneNewOptionConfig;
+  protected readonly teamTwoNewOptionConfig = teamTwoNewOptionConfig;
+  protected readonly initConfig = initConfig;
 
   constructor(
     private readonly tournamentService: TournamentsDataService,
@@ -95,51 +104,8 @@ export class PageCreateVideoComponent implements OnInit {
           return;
         }
 
-        switch (value) {
-          case VideoCategoriesEnum.REPORTS:
-            this.additionalFields = [AdditionalFieldsEnum.TOPIC];
-            break;
-          case VideoCategoriesEnum.HIGHLIGHTS:
-            this.additionalFields = [
-              AdditionalFieldsEnum.TOPIC,
-              AdditionalFieldsEnum.GUESTS,
-              AdditionalFieldsEnum.TOURNAMENT,
-            ];
-            break;
-          case VideoCategoriesEnum.SPARBUILDING:
-            this.additionalFields = [
-              AdditionalFieldsEnum.WEAPON_TYPE,
-              AdditionalFieldsEnum.TOPIC,
-              AdditionalFieldsEnum.GUESTS,
-            ];
-            break;
-          case VideoCategoriesEnum.MATCH:
-            this.additionalFields = [
-              AdditionalFieldsEnum.TOURNAMENT,
-              AdditionalFieldsEnum.GAME_SYSTEM,
-              AdditionalFieldsEnum.TEAMS,
-            ];
-            break;
-          case VideoCategoriesEnum.OTHER:
-          case VideoCategoriesEnum.PODCAST:
-            this.additionalFields = [
-              AdditionalFieldsEnum.TOPIC,
-              AdditionalFieldsEnum.GUESTS,
-            ];
-            break;
-          case VideoCategoriesEnum.TRAINING:
-            this.additionalFields = [
-              AdditionalFieldsEnum.GAME_SYSTEM,
-              AdditionalFieldsEnum.WEAPON_TYPE,
-              AdditionalFieldsEnum.TOPIC,
-            ];
-            break;
-          case VideoCategoriesEnum.AWARDS:
-            this.additionalFields = [AdditionalFieldsEnum.TOURNAMENT];
-            break;
-          default:
-            this.additionalFields = [];
-        }
+        this.additionalFields = determineAdditionalFieldsRule(value);
+
         this.updateFormValidation();
       }
     );
@@ -178,7 +144,7 @@ export class PageCreateVideoComponent implements OnInit {
           break;
         case AdditionalFieldsEnum.TOURNAMENT:
           this.form.controls.tournamentId.addValidators(Validators.required);
-          if (this.showNewTournamentFields) {
+          if (this.form.controls.teamOneCity.value !== '') {
             this.form.controls.tournamentCity.addValidators(
               Validators.required
             );
@@ -196,10 +162,11 @@ export class PageCreateVideoComponent implements OnInit {
         case AdditionalFieldsEnum.TEAMS:
           this.form.controls.teamOneId.addValidators([Validators.required]);
           this.form.controls.teamTwoId.addValidators([Validators.required]);
-          if (this.showNewTeamOneFields) {
+          this.form.addValidators(differentTeamsValidator());
+          if (this.form.controls.teamOneCity.value !== '') {
             this.form.controls.teamOneCity.addValidators(Validators.required);
           }
-          if (this.showNewTeamTwoFields) {
+          if (this.form.controls.teamTwoCity.value !== '') {
             this.form.controls.teamTwoCity.addValidators(Validators.required);
           }
           break;
@@ -217,7 +184,7 @@ export class PageCreateVideoComponent implements OnInit {
 
   public onSubmit(): void {
     if (!this.form.valid) {
-      this.markAllFieldsAsTouched();
+      markAllFieldsAsTouched(this.form);
       this.toastService.showError(
         'Bitte fülle alle erforderlichen Felder aus.'
       );
@@ -238,82 +205,6 @@ export class PageCreateVideoComponent implements OnInit {
     };
 
     this.videosDataService.create(videoData);
-  }
-
-  private markAllFieldsAsTouched(): void {
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (control instanceof FormControl) {
-        control.markAsTouched({ onlySelf: true });
-      }
-    });
-  }
-
-  public onNewChannel(): void {
-    this.showNewChannelFields = true;
-  }
-
-  public onExistingChannelSelected(): void {
-    this.showNewChannelFields = false;
-  }
-
-  public onNewTournament(): void {
-    this.showNewTournamentFields = true;
-  }
-
-  public onExistingTournamentSelected(): void {
-    this.showNewTournamentFields = false;
-  }
-
-  public onNewTeam(name: string, teamNumber: 'one' | 'two'): void {
-    const existingTeam = this.teams()?.find(
-      (team) => team.name.toLowerCase() === name.toLowerCase()
-    );
-    if (existingTeam) {
-      const teamOneId = this.form.controls.teamOneId.value;
-      const teamTwoId = this.form.controls.teamTwoId.value;
-
-      if (teamOneId === existingTeam.id || teamTwoId === existingTeam.id) {
-        return;
-      }
-    }
-
-    if (teamNumber === 'one') {
-      this.showNewTeamOneFields = true;
-    } else {
-      this.showNewTeamTwoFields = true;
-    }
-  }
-
-  public onExistingTeamSelected(teamNumber: 'one' | 'two'): void {
-    if (teamNumber === 'one') {
-      this.showNewTeamOneFields = false;
-    } else {
-      this.showNewTeamTwoFields = false;
-    }
-    this.form.updateValueAndValidity();
-  }
-
-  public onMixTeamToggle(isMix: boolean, teamNumber: 'one' | 'two'): void {
-    if (teamNumber === 'one') {
-      this.isTeamOneMix = isMix;
-      if (isMix) {
-        this.form.controls.teamOneCity.setValue('Mixteam');
-        this.form.controls.teamOneCity.disable();
-      } else {
-        this.form.controls.teamOneCity.setValue('');
-        this.form.controls.teamOneCity.enable();
-      }
-    } else {
-      this.isTeamTwoMix = isMix;
-      if (isMix) {
-        this.form.controls.teamTwoCity.setValue('Mixteam');
-        this.form.controls.teamTwoCity.disable();
-      } else {
-        this.form.controls.teamTwoCity.setValue('');
-        this.form.controls.teamTwoCity.enable();
-      }
-    }
   }
 
   public hasTeamValidationError(): boolean {

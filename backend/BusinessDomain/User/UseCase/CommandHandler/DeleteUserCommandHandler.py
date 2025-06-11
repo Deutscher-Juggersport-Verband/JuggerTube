@@ -7,6 +7,6 @@ class DeleteUserCommandHandler:
     @staticmethod
     def execute(command: DeleteUserCommand) -> None:
 
-        user = Users.query.get(command.userId)
+        user = Users.query.get(command.user_id)
 
         user.shadow()

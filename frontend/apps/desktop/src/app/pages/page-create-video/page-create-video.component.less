@@ -6,140 +6,25 @@
   justify-self: center;
 }
 
-.video-form {
+form {
   width: 100%;
-  margin-top: 24px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  grid-template-rows: auto;
+  display: flex;
   gap: 24px;
-  align-items: center;
+  margin-top: 24px;
+  flex-direction: column;
 
-  .new-tournament-fields {
-    grid-column: 2 / -1;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: auto 1fr auto 1fr;
-    grid-template-areas:
-      'info info info info'
-      'city-label city-input city-input city-input'
-      'start-date-label start-date-input end-date-label end-date-input'
-      'address-label address-input address-input address-input';
-
-    .info {
-      grid-area: info;
+  ::ng-deep {
+    label {
+      width: 140px;
     }
 
-    .city-label {
-      grid-area: city-label;
+    input {
+      width: 100%;
     }
-
-    .city-input {
-      grid-area: city-input;
-    }
-
-    .start-date-label {
-      grid-area: start-date-label;
-    }
-
-    .start-date-input {
-      grid-area: start-date-input;
-    }
-
-    .end-date-label {
-      grid-area: end-date-label;
-    }
-
-    .end-date-input {
-      grid-area: end-date-input;
-    }
-
-    .address-label {
-      grid-area: address-label;
-    }
-
-    .address-input {
-      grid-area: address-input;
-    }
-  }
-
-  .new-team-fields {
-    grid-column: 2 / -1;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: auto 1fr auto auto;
-    grid-template-areas:
-      'info info info info'
-      'city-label city-input mixteam-label mixteam-input';
-
-    .info {
-      grid-area: info;
-    }
-
-    .city-label {
-      grid-area: city-label;
-    }
-
-    .city-input {
-      grid-area: city-input;
-    }
-
-    .mixteam-label {
-      grid-area: mixteam-label;
-    }
-
-    .mixteam-input {
-      grid-area: mixteam-input;
-    }
-  }
-
-  .new-channel-fields {
-    grid-column: 2 / -1;
-    display: grid;
-    gap: 24px;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      'info info'
-      'channel-link-label channel-link-input';
-
-    .info {
-      grid-area: info;
-    }
-
-    .channel-link-label {
-      grid-area: channel-link-label;
-    }
-
-    .channel-link-input {
-      grid-area: channel-link-input;
-    }
-  }
-
-  .error-message {
-    color: @color-red;
-    margin-top: 8px;
   }
 }
 
 ui-button {
   width: 110px;
-  margin-top: 24px;
-  margin-left: auto;
-  display: block;
-}
-
-.team-input {
-  width: 100%;
-}
-
-.team-fields {
-  display: flex;
-  gap: 24px;
-}
-
-.team-two-label {
-  width: min-content;
+  align-self: end;
 }

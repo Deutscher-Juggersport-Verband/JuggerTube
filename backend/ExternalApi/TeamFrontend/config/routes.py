@@ -16,12 +16,13 @@ team_frontend = Blueprint('team-frontend', __name__)
 @team_frontend.route('/get-team-overview',
                      methods=['GET'], endpoint='get-team-overview')
 @cache.cached(key_prefix='team-overview')
-def getTeamOverview() -> Response:
+def get_team_overview() -> Response:
     return GetTeamOverviewHandler.handle()
 
 
 @team_frontend.route('/create-multiple-teams',
                      methods=['POST'], endpoint='create-multiple-teams')
+# TODO: Extra authentication für die skripte
 @CreateMultipleTeamsInputFilter.validate()
-def createMultipleTeams() -> Response:
+def create_multiple_teams() -> Response:
     return CreateMultipleTeamsHandler.handle()

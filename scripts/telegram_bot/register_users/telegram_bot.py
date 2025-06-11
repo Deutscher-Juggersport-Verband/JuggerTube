@@ -8,7 +8,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_name = update.effective_chat.username
     save_users_to_json(user_id, user_name)
     await context.bot.send_message(chat_id=update.effective_chat.id, text=f"Hello {user_name}! you have been registered "
-                                                                          f"to the juggertube error log")
+                                   f"to the juggertube error log")
 
 
 async def unsubscribe(update: Update, context: ContextTypes.DEFAULT_TYPE):
