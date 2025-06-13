@@ -18,8 +18,11 @@ dependencies = [
     "flask_migrate",
     "flask_sqlalchemy",
     "flask_talisman",
+    "google-api-python-client",
     "gunicorn",
     "isort",
+    "openpyxl",
+    "pandas",
     "pillow",
     "pymysql",
     "pyOpenSSL",
@@ -28,6 +31,7 @@ dependencies = [
     "pytest_env",
     "pyyaml",
     "python-telegram-bot>=20.7",
+
     "redis",
     "requests",
 ]
