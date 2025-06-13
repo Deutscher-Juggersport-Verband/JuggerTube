@@ -2,7 +2,9 @@
   (click)="overlay.toggle($event)"
   [color]="UiButtonColorEnum.NONE"
   [type]="UiButtonTypeEnum.ICON"
-/>
+>
+  <span class="material-icons-outlined">info_i</span>
+</ui-button>
 
 <p-popover #overlay>
   <ng-content />

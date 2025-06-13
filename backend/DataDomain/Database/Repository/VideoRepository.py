@@ -1,10 +1,12 @@
 from typing import List
+from datetime import datetime
 
 from sqlalchemy.orm import aliased
+from sqlalchemy import or_, func
 
 from BusinessDomain.User.Model import UserShort
 from DataDomain.Database import db
-from DataDomain.Database.Enum import VideoStatusEnum
+from DataDomain.Database.Enum import VideoStatusEnum, VideoCategoriesEnum
 from DataDomain.Database.Model import Channels, Teams, Tournaments, Users, Videos
 
 
@@ -138,11 +140,24 @@ class VideoRepository:
         return video
 
     @staticmethod
-    def getPaginatedVideos(start: int, limit: int) -> list:
+    def getPaginatedVideos(
+        start: int, 
+        limit: int,
+        sort: str = None,
+        name_filter: str = None,
+        category: str = None,
+        channel_name: str = None,
+        team_name: str = None,
+        tournament_name: str = None,
+        recording_date_from: str = None,
+        recording_date_to: str = None,
+        upload_date_from: str = None,
+        upload_date_to: str = None
+    ) -> list:
         team_one = aliased(Teams)
         team_two = aliased(Teams)
 
-        videos = (db.session.query(
+        query = (db.session.query(
             Videos.id,
             Videos.name,
             Videos.category,
@@ -154,6 +169,7 @@ class VideoRepository:
             Videos.weapon_type,
             Videos.topic,
             Videos.guests,
+            Videos.created_at,
             Channels.name.label('channel_name'),
             Channels.channel_link.label('channel_link'),
             Tournaments.name.label('tournament_name'),
@@ -180,9 +196,65 @@ class VideoRepository:
         ).filter(
             Videos.is_deleted != True,
             Videos.status == VideoStatusEnum.APPROVED.value
-        ).order_by(
-            Videos.upload_date
-        ).offset(start).limit(limit).all())
+        ))
+
+        # Apply filters
+        if name_filter:
+            query = query.filter(Videos.name.ilike(f'%{name_filter}%'))
+        
+        if category:
+            query = query.filter(Videos.category == VideoCategoriesEnum(category))
+        
+        if channel_name:
+            query = query.filter(Channels.name.ilike(f'%{channel_name}%'))
+        
+        if team_name:
+            query = query.filter(
+                or_(
+                    team_one.name.ilike(f'%{team_name}%'),
+                    team_two.name.ilike(f'%{team_name}%')
+                )
+            )
+        
+        if tournament_name:
+            query = query.filter(Tournaments.name.ilike(f'%{tournament_name}%'))
+        
+        if recording_date_from:
+            recording_from = datetime.strptime(recording_date_from, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.date_of_recording) >= recording_from)
+        
+        if recording_date_to:
+            recording_to = datetime.strptime(recording_date_to, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.date_of_recording) <= recording_to)
+        
+        if upload_date_from:
+            upload_from = datetime.strptime(upload_date_from, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.upload_date) >= upload_from)
+        
+        if upload_date_to:
+            upload_to = datetime.strptime(upload_date_to, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.upload_date) <= upload_to)
+
+        # Apply sorting
+        if sort == 'name_asc':
+            query = query.order_by(Videos.name.asc())
+        elif sort == 'name_desc':
+            query = query.order_by(Videos.name.desc())
+        elif sort == 'recording_date_asc':
+            query = query.order_by(Videos.date_of_recording.asc())
+        elif sort == 'recording_date_desc':
+            query = query.order_by(Videos.date_of_recording.desc())
+        elif sort == 'upload_date_desc':
+            query = query.order_by(Videos.upload_date.desc())
+        elif sort == 'created_at_desc':
+            query = query.order_by(Videos.created_at.desc())
+        else:
+            # Default sorting (maintain current behavior)
+            query = query.order_by(Videos.upload_date.asc())
+
+        # Convert 1-based start to 0-based offset
+        offset = max(0, start - 1)
+        videos = query.offset(offset).limit(limit).all()
 
         return [
             {
@@ -217,6 +289,77 @@ class VideoRepository:
                     'city': video.team_two_city,
                 } if video.team_two_name else None,
             } for video in videos]
+
+    @staticmethod
+    def getFilteredVideoCount(
+        name_filter: str = None,
+        category: str = None,
+        channel_name: str = None,
+        team_name: str = None,
+        tournament_name: str = None,
+        recording_date_from: str = None,
+        recording_date_to: str = None,
+        upload_date_from: str = None,
+        upload_date_to: str = None
+    ) -> int:
+        team_one = aliased(Teams)
+        team_two = aliased(Teams)
+
+        query = (db.session.query(Videos.id).join(
+            Channels,
+            Videos.channel_id == Channels.id
+        ).outerjoin(
+            Tournaments,
+            Videos.tournament_id == Tournaments.id
+        ).outerjoin(
+            team_one,
+            Videos.team_one_id == team_one.id
+        ).outerjoin(
+            team_two,
+            Videos.team_two_id == team_two.id
+        ).filter(
+            Videos.is_deleted != True,
+            Videos.status == VideoStatusEnum.APPROVED.value
+        ))
+
+        # Apply the same filters as in getPaginatedVideos
+        if name_filter:
+            query = query.filter(Videos.name.ilike(f'%{name_filter}%'))
+        
+        if category:
+            query = query.filter(Videos.category == VideoCategoriesEnum(category))
+        
+        if channel_name:
+            query = query.filter(Channels.name.ilike(f'%{channel_name}%'))
+        
+        if team_name:
+            query = query.filter(
+                or_(
+                    team_one.name.ilike(f'%{team_name}%'),
+                    team_two.name.ilike(f'%{team_name}%')
+                )
+            )
+        
+        if tournament_name:
+            query = query.filter(Tournaments.name.ilike(f'%{tournament_name}%'))
+        
+        if recording_date_from:
+            recording_from = datetime.strptime(recording_date_from, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.date_of_recording) >= recording_from)
+        
+        if recording_date_to:
+            recording_to = datetime.strptime(recording_date_to, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.date_of_recording) <= recording_to)
+        
+        if upload_date_from:
+            upload_from = datetime.strptime(upload_date_from, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.upload_date) >= upload_from)
+        
+        if upload_date_to:
+            upload_to = datetime.strptime(upload_date_to, '%Y-%m-%d').date()
+            query = query.filter(func.date(Videos.upload_date) <= upload_to)
+
+        return query.count()
 
     @staticmethod
     def getPendingVideoOverview() -> list:

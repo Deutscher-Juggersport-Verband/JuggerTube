@@ -1,32 +1,70 @@
-<div class="search-input">
-  <svg width="24" height="24" fill="currentColor">
-    <use href="assets/icons/sprite.svg#icon-search" />
-  </svg>
-  <input type="text" placeholder="suchen..." />
-</div>
+<div class="filter-container" [formGroup]="filterForm">
+  <div class="basic-filters">
+    <ui-input
+      labelText="Videoname"
+      [type]="UiInputTypeEnum.TEXT"
+      placeholder="Video suchen..."
+      [formControlElement]="getFormControl('nameFilter')"
+      class="name-filter" />
 
-<div class="sorting-categories">
-  <div class="sorting-category">
-    Kategorie
-
-    <svg width="16" height="16" fill="currentColor">
-      <use href="assets/icons/sprite.svg#icon-arrow" />
-    </svg>
+    <ui-button
+      [type]="UiButtonTypeEnum.BUTTON"
+      [color]="UiButtonColorEnum.NONE"
+      (click)="toggleExpandedFilters()"
+      [class.expanded]="isExpandedFiltersVisible">
+      <span class="material-icons-outlined">keyboard_arrow_down</span>
+    </ui-button>
   </div>
 
-  <div class="sorting-category">
-    Channel
+  <div class="basic-filters-row">
+    <ui-input
+      labelText="Kategorie"
+      [type]="UiInputTypeEnum.DROPDOWN"
+      [formControlElement]="getFormControl('category')"
+      [dropdownOptions]="categoryDropdownOptions" />
 
-    <svg width="16" height="16" fill="currentColor">
-      <use href="assets/icons/sprite.svg#icon-arrow" />
-    </svg>
+    <ui-button
+      [text]="'Filter zurücksetzen'"
+      [color]="UiButtonColorEnum.PRIMARY"
+      [type]="UiButtonTypeEnum.BUTTON"
+      (click)="clearFilters()" />
   </div>
 
-  <div class="sorting-category">
-    Upload-Datum
+  <div class="expanded-filters" [class.visible]="isExpandedFiltersVisible">
+    <ui-input
+      labelText="Channel"
+      [type]="UiInputTypeEnum.TEXT"
+      placeholder="Channel Name"
+      [formControlElement]="getFormControl('channelName')" />
+    <ui-input
+      labelText="Team"
+      [type]="UiInputTypeEnum.TEXT"
+      placeholder="Team Name"
+      [formControlElement]="getFormControl('teamName')" />
+    <ui-input
+      labelText="Turnier"
+      [type]="UiInputTypeEnum.TEXT"
+      placeholder="Turnier Name"
+      [formControlElement]="getFormControl('tournamentName')" />
 
-    <svg width="16" height="16" fill="currentColor">
-      <use href="assets/icons/sprite.svg#icon-arrow" />
-    </svg>
+    <span class="date-label">Aufnahmedatum:</span>
+    <ui-input
+      labelText="Von"
+      [type]="UiInputTypeEnum.DATE"
+      [formControlElement]="getFormControl('recordingDateFrom')" />
+    <ui-input
+      labelText="Bis"
+      [type]="UiInputTypeEnum.DATE"
+      [formControlElement]="getFormControl('recordingDateTo')" />
+
+    <span class="date-label">Upload-Datum:</span>
+    <ui-input
+      labelText="Von"
+      [type]="UiInputTypeEnum.DATE"
+      [formControlElement]="getFormControl('uploadDateFrom')" />
+    <ui-input
+      labelText="Bis"
+      [type]="UiInputTypeEnum.DATE"
+      [formControlElement]="getFormControl('uploadDateTo')" />
   </div>
 </div>
