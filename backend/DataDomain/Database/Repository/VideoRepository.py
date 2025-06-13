@@ -140,6 +140,25 @@ class VideoRepository:
         return video
 
     @staticmethod
+    def videoAlreadyExists(video_name: str, video_url: str) -> dict | None:
+        video = Videos.session.query(
+            Videos.name,
+            Videos.url,
+            Videos.status,
+            Videos.is_deleted
+        ).filter(
+            Videos.is_deleted != True,
+            Videos.name == video_name,
+            Videos.video_link == video_url,
+            Videos.status != VideoStatusEnum.DECLINED
+        )
+
+        if not video:
+            return None
+
+        return video
+
+    @staticmethod
     def getPaginatedVideos(
         start: int, 
         limit: int,

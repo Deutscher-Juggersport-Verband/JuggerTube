@@ -51,8 +51,9 @@ class CreateMultipleVideosHandler:
 
         for video_data in videos_data:
             video_name = video_data.get('name')
+            video_url = video_data.get('videoLink')
 
-            if VideoRepository.getVideoByName(video_name):
+            if VideoRepository.videoAlreadyExists(video_name, video_url):
                 continue
 
             video = Videos()
