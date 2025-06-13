@@ -36,9 +36,7 @@ async def send_telegram_status(status_message, error_message=None):
 
         except Exception as e:
             logger.error(
-                f"Error sending Telegram message to user_id {
-                    user.get('userId')}: {
-                    str(e)}")
+                f"Error sending Telegram message to user_id {user.get('userId')}: {str(e)}")
 
 
 def notify(status_message, error_message=None):

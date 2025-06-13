@@ -2,7 +2,7 @@ import os
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from error_logger import log_video_error
+from .error_logger import log_video_error
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -40,16 +40,14 @@ def send_videos_to_api(videos_data):
             error_msg = f"Error: Server returned status code {response.status_code}"
             print(error_msg)
             _log_error_for_all_videos(
-                videos_data, f"{error_msg}. Response: {
-                    response.text}")
+                videos_data, f"{error_msg}. Response: {response.text}")
             return
 
         if response.text:
             _handle_api_response(response, videos_data)
 
     except requests.exceptions.ConnectionError as e:
-        error_msg = f"Connection Error: Could not connect to the server. Is it running? Error: {
-            str(e)}"
+        error_msg = f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}"
         print(error_msg)
         _log_error_for_all_videos(videos_data, error_msg)
     except Exception as e:
@@ -106,8 +104,7 @@ def _handle_api_response(response, videos_data):
         print(f"Raw response: {response.text}")
         _log_error_for_all_videos(
             videos_data,
-            f"Failed to parse API response: {
-                response.text}")
+            f"Failed to parse API response: {response.text}")
 
 
 def _log_error_for_video(video_data, error_msg):

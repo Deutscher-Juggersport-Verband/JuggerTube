@@ -1,9 +1,9 @@
 import os
 from googleapiclient.discovery import build
-from cache_manager import load_cache, save_cache
-from video_processor import process_video_data
-from api_client import send_videos_to_api
-from error_logger import log_video_error, load_error_log
+from .cache_manager import load_cache, save_cache
+from .video_processor import process_video_data
+from .api_client import send_videos_to_api
+from .error_logger import load_error_log
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from scripts.telegram_bot.send_messages.telegram_notifier import notify
