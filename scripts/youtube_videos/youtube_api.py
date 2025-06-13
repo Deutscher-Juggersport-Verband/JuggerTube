@@ -114,7 +114,7 @@ def main(channel_id):
 
     # Send status message
     error_log = load_error_log()
-    if response.status_code == 200 or not error_log:
+    if response.status_code and response.status_code == 200 or not error_log:
         notify("Videos wurden importiert")
     else:
         error_message = "\n".join(
