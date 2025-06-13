@@ -54,6 +54,27 @@ export interface CreateVideoRequest {
   comment?: string;
 }
 
+export type SortOption =
+  | 'name_asc'
+  | 'name_desc'
+  | 'recording_date_asc'
+  | 'recording_date_desc'
+  | 'upload_date_desc'
+  | 'created_at_desc';
+
+export interface VideoFilterOptions {
+  sort?: SortOption;
+  nameFilter?: string;
+  category?: VideoCategoriesEnum;
+  channelName?: string;
+  teamName?: string;
+  tournamentName?: string;
+  recordingDateFrom?: string;
+  recordingDateTo?: string;
+  uploadDateFrom?: string;
+  uploadDateTo?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -68,9 +89,46 @@ export class VideosApiClient {
 
   public getPaginatedVideos$(
     start: number,
-    limit: number
+    limit: number,
+    filters?: VideoFilterOptions
   ): Observable<PaginatedVideosApiResponseModel> {
-    const params = new HttpParams().set('start', start).set('limit', limit);
+    let params = new HttpParams()
+      .set('start', start)
+      .set('limit', limit);
+
+    if (filters) {
+      if (filters.sort) {
+        params = params.set('sort', filters.sort);
+      }
+      if (filters.nameFilter) {
+        params = params.set('name_filter', filters.nameFilter);
+      }
+      if (filters.category) {
+        params = params.set('category', filters.category);
+      }
+      if (filters.channelName) {
+        params = params.set('channel_name', filters.channelName);
+      }
+      if (filters.teamName) {
+        params = params.set('team_name', filters.teamName);
+      }
+      if (filters.tournamentName) {
+        params = params.set('tournament_name', filters.tournamentName);
+      }
+      if (filters.recordingDateFrom) {
+        params = params.set('recording_date_from', filters.recordingDateFrom);
+      }
+      if (filters.recordingDateTo) {
+        params = params.set('recording_date_to', filters.recordingDateTo);
+      }
+      if (filters.uploadDateFrom) {
+        params = params.set('upload_date_from', filters.uploadDateFrom);
+      }
+      if (filters.uploadDateTo) {
+        params = params.set('upload_date_to', filters.uploadDateTo);
+      }
+    }
+
     return this.httpClient.get<PaginatedVideosApiResponseModel>(
       '/api/video-frontend/get-paginated-videos',
       { params }

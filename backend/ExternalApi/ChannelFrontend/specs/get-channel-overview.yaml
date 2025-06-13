@@ -3,7 +3,7 @@ info:
   title: Customer Frontend API
   version: 1.0.0
 paths:
-  /api/video-frontend/get-channel-overview:
+  /api/channel-frontend/get-channel-overview:
     get:
       summary: Get channel overview
       description: Returns a list of all registered channels.

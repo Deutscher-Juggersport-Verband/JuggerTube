@@ -1,16 +1,19 @@
 @let paginatedVideosSnapshot = paginatedVideos();
 
 <div class="search-banner">
-  <search-video-tile />
+  <search-video-tile
+    (filtersChanged)="onFiltersChanged($event)" />
 </div>
 
 <div class="controls-row">
   <div class="sorting">
-    <svg width="20" height="20" fill="currentColor">
-      <use href="assets/icons/sprite.svg#icon-arrow" />
-    </svg>
-
-    Alphabetisch
+    <p>sortieren:</p>
+    <ui-input
+      labelText="Sortierung"
+      [type]="UiInputTypeEnum.DROPDOWN"
+      [formControlElement]="sortFormControl"
+      [dropdownOptions]="sortDropdownOptions"
+      class="sort-dropdown" />
   </div>
   <div [routerLink]="['/create-video']" class="create">
     neu
