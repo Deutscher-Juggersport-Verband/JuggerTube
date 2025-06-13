@@ -1,10 +1,10 @@
-from api_client import ApiClient
-from data_fetcher import DataFetcher
-from date_utils import format_date
-from cache_manager import load_cache, save_cache
-from TournamentTeamsParser import TournamentTeamsParser
-from TournamentOverviewParser import parser as overview_parser
-from TournamentDetailsParser import parser as tournament_parser
+from .api_client import ApiClient
+from .data_fetcher import DataFetcher
+from .date_utils import format_date
+from .cache_manager import load_cache, save_cache
+from .tournament_teams_parser import TournamentTeamsParser
+from .tournament_overview_parser import parser as overview_parser
+from .tournament_details_parser import parser as tournament_parser
 from scripts.telegram_bot.send_messages.telegram_notifier import notify
 from pathlib import Path
 import json

@@ -1,6 +1,6 @@
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from TournamentTeamsParser import TournamentTeamsParser
+from .tournament_teams_parser import TournamentTeamsParser
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
