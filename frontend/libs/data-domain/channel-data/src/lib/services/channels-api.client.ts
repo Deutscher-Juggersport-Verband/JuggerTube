@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { ChannelApiResponseModel } from '../models/channel-api-response.model';
   providedIn: 'root',
 })
 export class ChannelsApiClient {
-  constructor(private httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient = inject(HttpClient);
 
   public get(): Observable<ChannelApiResponseModel[]> {
     return this.httpClient.get<ChannelApiResponseModel[]>(

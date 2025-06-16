@@ -1,14 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import {
@@ -18,51 +10,12 @@ import {
   UiInputTypeEnum,
 } from '../../ui-shared';
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
+import { registerForm } from '@frontend/user';
 import {
   RegisterRequestBody,
   RegisterResponse,
   UserApiClient,
 } from '@frontend/user-data';
-
-export const PasswordsMatchValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  const password = control.get('password');
-  const confirmPassword = control.get('confirmPassword');
-
-  return password && confirmPassword && password.value !== confirmPassword.value
-    ? { passwordsMismatch: true }
-    : null;
-};
-
-export const registerForm = new FormGroup<{
-  confirmPassword: FormControl<string>;
-  email: FormControl<string>;
-  name: FormControl<string>;
-  password: FormControl<string>;
-  username: FormControl<string>;
-}>(
-  {
-    confirmPassword: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    email: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.email],
-    }),
-    name: new FormControl('', { nonNullable: true }),
-    password: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(8)],
-    }),
-    username: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
-    }),
-  },
-  { validators: PasswordsMatchValidator }
-);
 
 @Component({
   imports: [

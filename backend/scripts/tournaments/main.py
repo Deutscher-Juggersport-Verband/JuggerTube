@@ -115,7 +115,7 @@ def get_teams_from_tournament(tournament_id):
         return []
 
 
-def process_tournament(data_fetcher, tournament, cached_tournaments):
+def process_tournament(data_fetcher, tournament):
     """Process a single tournament and return its data"""
     tournament_id = tournament.tournament_id
 
@@ -190,7 +190,7 @@ def main():
             continue
 
         # Process tournament
-        tournament_dict = process_tournament(data_fetcher, tournament, cached_tournaments)
+        tournament_dict = process_tournament(data_fetcher, tournament)
         if tournament_dict:
             tournaments_data.append(tournament_dict)
             new_tournaments.append((tournament_id, tournament_dict))

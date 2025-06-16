@@ -1,3 +1,8 @@
+export * from './lib/form/login-form';
+export * from './lib/form/passworts-match.validator';
+export * from './lib/form/register-form';
+export * from './lib/form/update-user-form';
+
 export * from './lib/rules/convert-file-to-base64.rule';
 
 export * from './lib/store/actions/user-details.action';

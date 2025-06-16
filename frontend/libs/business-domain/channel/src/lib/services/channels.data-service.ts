@@ -1,4 +1,4 @@
-import { Injectable, Signal } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
@@ -8,9 +8,10 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ChannelsDataService {
-  constructor(private readonly channelsApiClient: ChannelsApiClient) {}
+  private readonly channelsApiClient: ChannelsApiClient =
+    inject(ChannelsApiClient);
 
-  public getChannels(): Signal<ChannelApiResponseModel[] | undefined> {
-    return toSignal(this.channelsApiClient.get());
+  public getChannels(): Signal<ChannelApiResponseModel[]> {
+    return toSignal(this.channelsApiClient.get(), { initialValue: [] });
   }
 }

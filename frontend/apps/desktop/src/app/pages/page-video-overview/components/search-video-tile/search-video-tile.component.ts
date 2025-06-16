@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormControl,FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import {
-  UiButtonComponent,
-  UiInputComponent,
-  UiButtonTypeEnum,
   UiButtonColorEnum,
-  UiInputTypeEnum
+  UiButtonComponent,
+  UiButtonTypeEnum,
+  UiInputComponent,
+  UiInputTypeEnum,
 } from '../../../../ui-shared';
-import { VideoCategoriesEnum,VideoFilterOptions } from '@frontend/video-data';
+import { VideoCategoriesEnum, VideoFilterOptions } from '@frontend/video-data';
 
 @Component({
   selector: 'search-video-tile',

@@ -18,7 +18,7 @@
   <ui-autocomplete-input
     [labelText]="'Channel:'"
     [formControlElement]="form.controls.channelId"
-    [options]="channels() || []"
+    [options]="channels()"
     [displayField]="'name'"
     [valueField]="'id'"
     [placeholder]="'Channel suchen...'"
@@ -48,7 +48,7 @@
     [direction]="UiInputDirectionEnum.ROW"
   />
 
-  @for (field of additionalFields; track field) { @switch (field) { @case
+  @for (field of additionalFields$(); track field) { @switch (field) { @case
   (AdditionalFieldsEnum.TOPIC) {
   <ui-input
     [labelText]="'Thema:'"
@@ -67,7 +67,7 @@
   <ui-autocomplete-input
     [labelText]="'Turnier: '"
     [formControlElement]="form.controls.tournamentId"
-    [options]="tournaments() || []"
+    [options]="tournaments()"
     [displayField]="'name'"
     [valueField]="'id'"
     [placeholder]="'Turnier suchen...'"
@@ -79,7 +79,7 @@
   <ui-autocomplete-input
     [labelText]="'Team 1:'"
     [formControlElement]="form.controls.teamOneId"
-    [options]="teams() || []"
+    [options]="teams()"
     [displayField]="'name'"
     [valueField]="'id'"
     [placeholder]="'Team 1 suchen...'"
@@ -91,7 +91,7 @@
     <ui-autocomplete-input
       [labelText]="'Team 2:'"
       [formControlElement]="form.controls.teamTwoId"
-      [options]="teams() || []"
+      [options]="teams()"
       [displayField]="'name'"
       [valueField]="'id'"
       [placeholder]="'Team 2 suchen...'"
@@ -99,7 +99,7 @@
       [newOptionConfig]="initConfig(teamTwoNewOptionConfig, form.controls)"
     />
 
-    @if (hasTeamValidationError()) {
+    @if (sameTeamValidationError()) {
     <div class="error-message">
       Ein Team kann nicht gegen sich selbst antreten.
     </div>
