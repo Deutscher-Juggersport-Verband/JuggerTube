@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Dict, List
 
 from flask import g
 
@@ -46,8 +45,8 @@ class CreateMultipleVideosHandler:
                 status=400
             )
 
-        created_videos: List[Dict] = []
-        failed_videos: List[Dict] = []
+        created_videos: list[dict] = []
+        failed_videos: list[dict] = []
 
         for video_data in videos_data:
             video_name = video_data.get('name')

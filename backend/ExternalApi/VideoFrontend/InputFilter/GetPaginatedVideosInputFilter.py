@@ -1,8 +1,9 @@
 from flask_inputfilter import InputFilter
-from flask_inputfilter.filters import ToIntegerFilter, StringTrimFilter
-from flask_inputfilter.validators import IsIntegerValidator, IsStringValidator, InEnumValidator
-
-from DataDomain.Database.Enum import VideoCategoriesEnum
+from flask_inputfilter.filters import StringTrimFilter, ToIntegerFilter
+from flask_inputfilter.validators import (
+    IsIntegerValidator,
+    IsStringValidator,
+)
 
 
 class GetPaginatedVideosInputFilter(InputFilter):

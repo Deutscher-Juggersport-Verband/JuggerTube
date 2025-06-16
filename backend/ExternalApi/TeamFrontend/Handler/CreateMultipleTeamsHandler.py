@@ -1,4 +1,3 @@
-from typing import Dict, List
 
 from flask import g
 
@@ -15,8 +14,8 @@ class CreateMultipleTeamsHandler:
         data = g.validated_data
         teams_data = data.get('teams')
 
-        created_teams: List[Dict] = []
-        failed_teams: List[Dict] = []
+        created_teams: list[dict] = []
+        failed_teams: list[dict] = []
 
         for team_data in teams_data:
             try:

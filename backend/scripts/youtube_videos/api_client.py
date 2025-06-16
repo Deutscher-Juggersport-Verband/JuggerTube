@@ -2,6 +2,7 @@ import os
 
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
 from .error_logger import log_video_error
 
 # Disable SSL verification warnings
@@ -47,7 +48,8 @@ def send_videos_to_api(videos_data):
             _handle_api_response(response, videos_data)
 
     except requests.exceptions.ConnectionError as e:
-        error_msg = f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}"
+        error_msg = f"Connection Error: Could not connect to the server. Is it running? Error: {
+            str(e)}"
         print(error_msg)
         _log_error_for_all_videos(videos_data, error_msg)
     except Exception as e:

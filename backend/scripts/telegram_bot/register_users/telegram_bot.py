@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from user_controller import save_users_to_json, delete_user_from_json
+from user_controller import delete_user_from_json, save_users_to_json
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):

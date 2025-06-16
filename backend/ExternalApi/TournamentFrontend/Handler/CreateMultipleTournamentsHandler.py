@@ -1,4 +1,3 @@
-from typing import Dict, List
 
 from flask import g
 
@@ -25,8 +24,8 @@ class CreateMultipleTournamentsHandler:
                 status=400
             )
 
-        created_tournaments: List[Dict] = []
-        failed_tournaments: List[Dict] = []
+        created_tournaments: list[dict] = []
+        failed_tournaments: list[dict] = []
 
         for tournament_data in tournaments_data:
             try:

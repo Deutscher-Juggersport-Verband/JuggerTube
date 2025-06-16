@@ -3,16 +3,16 @@ info:
   title: Customer Frontend API
   version: 1.0.0
 paths:
-  /api/user-frontend/update-user-picture:
+  /api/user-frontend/update-user-role:
     put:
-      summary: Update user picture
-      operationId: updateUserPicture
+      summary: Update user role
+      operationId: updateUserRole
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUserPictureRequestBody'
+              $ref: '#/components/schemas/UpdateUserRoleRequestBody'
 
       responses:
         '200':
@@ -35,8 +35,14 @@ paths:
 
 components:
   schemas:
-    UpdateUserPictureRequestBody:
+    UpdateUserRoleRequestBody:
       type: object
       properties:
-        picture:
+        userId:
+          type: integer
+        role:
           type: string
+          enum:
+            - user
+            - moderator
+            - admin

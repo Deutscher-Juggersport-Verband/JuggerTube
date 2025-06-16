@@ -10,6 +10,7 @@ from redis import Redis
 from config import Config, cache, limiter
 from DataDomain.Database import db
 from ExternalApi.ChannelFrontend.config import channel_frontend
+from ExternalApi.System.config import system
 from ExternalApi.TeamFrontend.config import team_frontend
 from ExternalApi.TournamentFrontend.config import tournament_frontend
 from ExternalApi.UserFrontend.config import user_frontend
@@ -32,7 +33,7 @@ def create_app() -> Flask:
                            url_prefix='/api/team-frontend')
     app.register_blueprint(user_frontend,
                            url_prefix='/api/user-frontend')
-    # app.register_blueprint(system, url_prefix='/api/system')
+    app.register_blueprint(system, url_prefix='/api/system')
 
     cache.init_app(app)
 

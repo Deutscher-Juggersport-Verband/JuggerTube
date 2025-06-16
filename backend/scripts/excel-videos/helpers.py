@@ -1,11 +1,11 @@
+import math
 import os
+import warnings
+from typing import Any, Optional
 
 import pandas as pd
-import math
 import requests
-import warnings
 from urllib3.exceptions import NotOpenSSLWarning
-from typing import Any, Dict, Optional
 
 base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
@@ -23,7 +23,7 @@ def clean_value(value: Any) -> Optional[str]:
     return str(value) if value else None
 
 
-def send_data_to_backend(endpoint: str, data: Dict, entity_name: str) -> bool:
+def send_data_to_backend(endpoint: str, data: dict, entity_name: str) -> bool:
     """Send data to the backend API."""
     try:
         response = requests.post(

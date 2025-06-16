@@ -1,10 +1,10 @@
-import pandas as pd
-from typing import Dict, List
-from datetime import datetime
-from helpers import clean_value
-from enums import CATEGORY_MAPPING
-from validation_logger import log_validation_error
 import re
+from datetime import datetime
+
+import pandas as pd
+from enums import CATEGORY_MAPPING
+from helpers import clean_value
+from validation_logger import log_validation_error
 
 
 def convert_date_to_iso(date_value) -> str:
@@ -33,7 +33,7 @@ class DataProcessor:
         self.teams_dict = {}
         self.videos_dict = {}
 
-    def process_channels(self, df: pd.DataFrame) -> Dict:
+    def process_channels(self, df: pd.DataFrame) -> dict:
         """Process channels data from DataFrame."""
         for _, row in df.iterrows():
             if pd.isna(row['Link']):
@@ -45,14 +45,14 @@ class DataProcessor:
             }
         return self.channels_dict
 
-    def process_teams(self, df: pd.DataFrame) -> Dict:
+    def process_teams(self, df: pd.DataFrame) -> dict:
         """Process teams data from DataFrame."""
         for _, row in df.iterrows():
             city = row['City/Ort'] if pd.notna(row['City/Ort']) else "Mixteam"
             self.teams_dict[row['Teamname']] = {'city': city}
         return self.teams_dict
 
-    def process_videos(self, df: pd.DataFrame) -> Dict:
+    def process_videos(self, df: pd.DataFrame) -> dict:
         """Process videos data from DataFrame."""
         for idx, row in df.iterrows():
             excel_category = row['Category'] if pd.notna(
@@ -65,7 +65,7 @@ class DataProcessor:
 
         return self.videos_dict
 
-    def _create_base_video_object(self, row: pd.Series, category: str) -> Dict:
+    def _create_base_video_object(self, row: pd.Series, category: str) -> dict:
         """Create base video object with common fields."""
         return {
             'name': row['Videoname'],
@@ -80,7 +80,7 @@ class DataProcessor:
 
     def _add_category_specific_fields(
             self,
-            video_obj: Dict,
+            video_obj: dict,
             row: pd.Series,
             category: str):
         """Add category-specific fields to video object."""
@@ -130,7 +130,7 @@ class DataProcessor:
         youtube_pattern = r'\s*(?:https?://)?(?:(?:www\.)?youtube\.com/\S+|youtu\.be/\S+)\s*$'
         return re.sub(youtube_pattern, '', name).strip()
 
-    def prepare_data_for_api(self) -> tuple[List[Dict], List[Dict], List[Dict]]:
+    def prepare_data_for_api(self) -> tuple[list[dict], list[dict], list[dict]]:
         """Prepare processed data for API submission."""
         teams_list = [
             {"name": clean_value(name), "city": clean_value(data["city"])}
@@ -152,7 +152,7 @@ class DataProcessor:
 
         return teams_list, channels_list, videos_list
 
-    def _prepare_video_for_api(self, video: Dict) -> Dict:
+    def _prepare_video_for_api(self, video: dict) -> dict:
         """Prepare a single video for API submission."""
         video_data = {
             "name": clean_value(self._clean_youtube_url_from_name(video["name"])),
@@ -184,7 +184,7 @@ class DataProcessor:
 
         return video_data
 
-    def _validate_video_data(self, video_data: Dict) -> bool:
+    def _validate_video_data(self, video_data: dict) -> bool:
         """Validate required fields for video data."""
         required_fields = ["name", "category", "videoLink", "uploadDate", "channelName"]
         missing_fields = [field for field in required_fields if not video_data.get(field)]

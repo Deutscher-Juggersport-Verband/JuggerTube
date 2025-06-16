@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from flask import g
 
 from config import cache
@@ -17,8 +15,8 @@ class CreateMultipleChannelsHandler:
         data = g.validated_data
         channels_data = data.get('channels')
 
-        created_channels: List[Dict] = []
-        failed_channels: List[Dict] = []
+        created_channels: list[dict] = []
+        failed_channels: list[dict] = []
 
         for channel_data in channels_data:
             try:

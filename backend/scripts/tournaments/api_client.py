@@ -40,7 +40,8 @@ class ApiClient:
             return response
         except requests.exceptions.ConnectionError as e:
             print(
-                f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+                f"Connection Error: Could not connect to the server. Is it running? Error: {
+                    str(e)}")
         except Exception as e:
             print(f"Error sending tournament data to API: {str(e)}")
 
@@ -72,6 +73,7 @@ class ApiClient:
             return response
         except requests.exceptions.ConnectionError as e:
             print(
-                f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+                f"Connection Error: Could not connect to the server. Is it running? Error: {
+                    str(e)}")
         except Exception as e:
             print(f"Error sending teams data to API: {str(e)}")

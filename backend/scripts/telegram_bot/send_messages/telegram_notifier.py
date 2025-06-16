@@ -1,7 +1,8 @@
-import os
-import logging
-from telegram import Bot
 import asyncio
+import logging
+import os
+
+from telegram import Bot
 
 from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
 
@@ -36,7 +37,9 @@ async def send_telegram_status(status_message, error_message=None):
 
         except Exception as e:
             logger.error(
-                f"Error sending Telegram message to user_id {user.get('userId')}: {str(e)}")
+                f"Error sending Telegram message to user_id {
+                    user.get('userId')}: {
+                    str(e)}")
 
 
 def notify(status_message, error_message=None):

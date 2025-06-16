@@ -1,14 +1,14 @@
+import math
 import os
+import time
+from collections import defaultdict
 
 import pandas as pd
 import requests
-from urllib3.exceptions import InsecureRequestWarning
-import time
-import math
-from enums import TARGET_SHEETS, VideoCategoriesEnum
 from data_processor import DataProcessor
+from enums import TARGET_SHEETS, VideoCategoriesEnum
 from helpers import send_data_to_backend
-from collections import defaultdict
+from urllib3.exceptions import InsecureRequestWarning
 
 base_host = os.getenv('BASE_URL', 'juggertube.de')
 

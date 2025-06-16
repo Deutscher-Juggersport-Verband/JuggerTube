@@ -80,10 +80,15 @@ class BaseModel(db.Model):
         filters = [getattr(self.__class__, key) == value for key,
                    value in kwargs.items() if value is not None]
 
-        return self.__class__.query(db.exists()).filter(
-            or_(*filters),
+        if not filters:
+            return False
+
+        filter_expr = or_(*filters) if len(filters) > 1 else filters[0]
+
+        return self.__class__.query.filter(
+            filter_expr,
             self.__class__.is_deleted == False
-        ).scalar()
+        ).first() is not None
 
     def count(self) -> int:
         """Count the number of records in the database"""
