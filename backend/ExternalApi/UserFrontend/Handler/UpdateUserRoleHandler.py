@@ -1,9 +1,9 @@
 from flask import g
 
 from BusinessDomain.User.Rule import DoesUserExistsRule, IsCurrentUserAdminRule
-from config import cache
 from DataDomain.Database.Model import Users
 from DataDomain.Model import Response
+from ExternalApi.UserFrontend.config import clear_user_cache
 
 
 class UpdateUserRoleHandler:
@@ -33,8 +33,7 @@ class UpdateUserRoleHandler:
 
             user.save()
 
-            cache.delete('get-user-short-overview')
-            cache.delete('get-privileged-user-short-overview')
+            clear_user_cache(user_id=user_id)
 
         except Exception:
             return Response(status=500)

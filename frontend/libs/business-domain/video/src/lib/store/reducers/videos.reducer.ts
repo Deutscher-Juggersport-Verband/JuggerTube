@@ -7,6 +7,7 @@ import {
 } from '../../utils/range-utils';
 import {
   cacheVideos,
+  clearVideoCache,
   loadNextVideos,
   loadNextVideosError,
   loadNextVideosSuccess,
@@ -22,6 +23,12 @@ import { RequestStateEnum } from '@frontend/api';
 
 export const videosReducer = createReducer(
   initialState,
+  on(clearVideoCache, (state: VideosState): VideosState => {
+    return {
+      ...initialState,
+      requestState: state.requestState,
+    };
+  }),
   on(
     loadPaginatedVideosAction,
     (state: VideosState, { start, limit }): VideosState => {

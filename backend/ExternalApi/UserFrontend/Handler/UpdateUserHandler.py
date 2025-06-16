@@ -5,7 +5,7 @@ from BusinessDomain.User.Rule import DoesEmailExistsRule, DoesUsernameExistsRule
 from BusinessDomain.User.UseCase.CommandHandler import UpdateUserCommandHandler
 from BusinessDomain.User.UseCase.CommandHandler.Command import UpdateUserCommand
 from DataDomain.Model import Response
-from ExternalApi.UserFrontend.config.extensions import clear_user_cache
+from ExternalApi.UserFrontend.config import clear_user_cache
 
 
 class UpdateUserHandler:

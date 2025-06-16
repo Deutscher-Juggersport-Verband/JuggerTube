@@ -13,8 +13,8 @@ import {
   UiButtonComponent,
   UiInputComponent,
   UiInputTypeEnum,
-  UiLabelRowComponent,
 } from '../../ui-shared';
+import { markAllFieldsAsTouched } from '../../utils/form-utils';
 import {
   AuthResponse,
   LoginRequestBody,
@@ -41,7 +41,6 @@ export const loginForm = new FormGroup<{
     ReactiveFormsModule,
     UiButtonComponent,
     UiInputComponent,
-    UiLabelRowComponent,
     RouterLink,
   ],
   standalone: true,
@@ -60,7 +59,7 @@ export class PageLoginComponent {
 
   public async onSubmit(): Promise<void> {
     if (!this.form.valid) {
-      this.markAllFieldsAsTouched();
+      markAllFieldsAsTouched(this.form);
       return;
     }
 
@@ -76,7 +75,7 @@ export class PageLoginComponent {
     }
 
     if (response.error) {
-      this.markAllFieldsAsTouched();
+      markAllFieldsAsTouched(this.form);
       this.error = response.error;
       return;
     }
@@ -84,14 +83,5 @@ export class PageLoginComponent {
     this.form.reset();
 
     await this.router.navigate(['/']);
-  }
-
-  private markAllFieldsAsTouched(): void {
-    Object.keys(this.form.controls).forEach((field) => {
-      const control = this.form.get(field);
-      if (control instanceof FormControl) {
-        control.markAsTouched({ onlySelf: true });
-      }
-    });
   }
 }

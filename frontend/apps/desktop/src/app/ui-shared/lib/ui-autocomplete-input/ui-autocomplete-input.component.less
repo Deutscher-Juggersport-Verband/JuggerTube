@@ -1,6 +1,6 @@
 @import 'colors-desktop';
 
-:host {
+.input-container {
   display: flex;
 
   &.column {
@@ -16,9 +16,7 @@
   }
 }
 
-.input-container {
-  display: flex;
-  flex-direction: column;
+.input-field {
   width: 100%;
   position: relative;
 }
@@ -36,6 +34,10 @@ input {
   &:focus {
     outline: none;
     border-color: darken(@color-green, 10%);
+  }
+
+  &.invalid {
+    border: 2px solid @color-red;
   }
 }
 
@@ -81,5 +83,45 @@ input {
         }
       }
     }
+  }
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  label {
+    color: @color-green;
+  }
+
+  .i-headline {
+    margin-bottom: 8px;
+  }
+
+  .headline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.error-message {
+  align-self: flex-end;
+  display: block;
+  margin-top: 8px;
+  margin-left: 140px;
+}
+
+.new-fields {
+  margin-top: 24px;
+  display: flex;
+  margin-left: 140px;
+  flex-direction: column;
+  gap: 24px;
+
+  p {
+    height: auto;
   }
 }

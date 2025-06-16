@@ -19,3 +19,7 @@ export interface UserShort {
   role: UserRoleEnum;
   username: string;
 }
+
+export interface UpdateUserPictureResponse {
+  pictureUrl: string;
+}

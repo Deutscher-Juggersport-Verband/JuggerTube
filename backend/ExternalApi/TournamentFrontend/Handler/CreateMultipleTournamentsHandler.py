@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from flask import g
 
+from config import cache
 from DataDomain.Database.Model import Tournaments
 from DataDomain.Database.Repository import (
     TournamentRepository,
@@ -40,10 +41,6 @@ class CreateMultipleTournamentsHandler:
                 # Check if tournament already exists
                 if TournamentRepository.checkIfTournamentAlreadyExists(
                         tournament.name, tournament.start_date):
-                    failed_tournaments.append({
-                        'name': tournament.name,
-                        'reason': 'Tournament with this name and start date already exists'
-                    })
                     continue
 
                 tournament_id = tournament.create()
@@ -68,6 +65,8 @@ class CreateMultipleTournamentsHandler:
                 response=response_data,
                 status=400
             )
+
+        cache.delete("tournament-overview")
 
         # If some tournaments failed but others succeeded, return 207 (Multi-Status)
         if failed_tournaments:

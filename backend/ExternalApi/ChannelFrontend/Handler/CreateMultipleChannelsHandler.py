@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from flask import g
 
+from config import cache
 from DataDomain.Database.Model import Channels
 from DataDomain.Database.Repository import ChannelRepository
 from DataDomain.Model import Response
@@ -52,6 +53,8 @@ class CreateMultipleChannelsHandler:
                 response=response_data,
                 status=400
             )
+
+        cache.delete('channel-overview')
 
         # If some channels failed but others succeeded, return 207 (Multi-Status)
         if failed_channels:

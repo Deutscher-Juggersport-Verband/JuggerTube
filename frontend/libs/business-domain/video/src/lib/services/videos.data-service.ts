@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import {
+  clearVideoCache,
   createVideo,
   loadNextVideos,
   loadPaginatedVideosAction,
@@ -24,6 +25,7 @@ import { SingletonGetter } from '@frontend/cache';
 import {
   CreateVideoRequest,
   VideoApiResponseModel,
+  VideoFilterOptions,
 } from '@frontend/video-data';
 
 @Injectable({ providedIn: 'root' })
@@ -45,12 +47,12 @@ export class VideosDataService {
 
   private readonly store$: Store<VideosStateAware> = inject(Store);
 
-  public loadPaginatedVideos(start: number, limit: number): void {
-    this.store$.dispatch(loadPaginatedVideosAction({ start, limit }));
+  public loadPaginatedVideos(start: number, limit: number, filters?: VideoFilterOptions): void {
+    this.store$.dispatch(loadPaginatedVideosAction({ start, limit, filters }));
   }
 
-  public loadNextVideos(start: number, limit: number): void {
-    this.store$.dispatch(loadNextVideos({ start, limit }));
+  public loadNextVideos(start: number, limit: number, filters?: VideoFilterOptions): void {
+    this.store$.dispatch(loadNextVideos({ start, limit, filters }));
   }
 
   public updateCurrentView(start: number, limit: number): void {
@@ -58,7 +60,11 @@ export class VideosDataService {
     this.store$.dispatch(updateCurrentView({ start, limit, displayedVideos }));
   }
 
-  public isRangeCached(start: number, limit: number): boolean {
+  public isRangeCached(start: number, limit: number, filters?: VideoFilterOptions): boolean {
+    if (filters && Object.keys(filters).length > 0) {
+      return false;
+    }
+
     let loadedRanges: VideosState['loadedRanges'] = [];
     this.store$
       .select(videosStateFeatureSelector)
@@ -73,5 +79,9 @@ export class VideosDataService {
 
   public create(videoData: CreateVideoRequest): void {
     this.store$.dispatch(createVideo({ videoData }));
+  }
+
+  public clearVideoCache(): void {
+    this.store$.dispatch(clearVideoCache());
   }
 }

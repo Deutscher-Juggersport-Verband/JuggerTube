@@ -8,7 +8,6 @@
 
 <form [formGroup]="form">
   <div>
-    <ui-label-row [labelText]="'Email (einzigartig) *'" />
     <ui-input
       [labelText]="'Email (einzigartig) *'"
       [type]="UiInputTypeEnum.EMAIL"
@@ -17,7 +16,6 @@
   </div>
 
   <div>
-    <ui-label-row [labelText]="'Benutzername (einzigartig) *'" />
     <ui-input
       [labelText]="'Benutzername (einzigartig) *'"
       [formControlElement]="form.controls.username"
@@ -29,7 +27,6 @@
   </div>
 
   <div>
-    <ui-label-row [labelText]="'Passwort *'" />
     <ui-input
       [labelText]="'Passwort *'"
       [type]="UiInputTypeEnum.PASSWORD"
@@ -38,7 +35,6 @@
   </div>
 
   <div>
-    <ui-label-row [labelText]="'Passwort wiederholen *'" />
     <ui-input
       [labelText]="'Passwort wiederholen *'"
       [type]="UiInputTypeEnum.PASSWORD"
@@ -47,7 +43,6 @@
   </div>
 
   <div>
-    <ui-label-row [labelText]="'Name'" />
     <ui-input
       [labelText]="'Name'"
       [formControlElement]="form.controls.name"

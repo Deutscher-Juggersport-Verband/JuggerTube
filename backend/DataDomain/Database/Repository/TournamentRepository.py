@@ -33,7 +33,7 @@ class TournamentRepository:
                 'city': tournament.city,
                 'start_date': tournament.start_date,
                 'end_date': tournament.end_date,
-                'jtr_link': tournament.jtr_link | ''
+                'jtr_link': tournament.jtr_link or ''
             }
             result.append(tournament_dict)
 

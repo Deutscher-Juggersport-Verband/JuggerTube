@@ -5,7 +5,7 @@ info:
   description: API endpoint for creating channels
 
 paths:
-  /api/team-frontend/create-multiple-teams:
+  /api/channel-frontend/create-multiple-teams:
     post:
       summary: Create channel
       description: Creates channel in a single request

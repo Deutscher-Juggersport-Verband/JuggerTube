@@ -3,7 +3,6 @@ from .CreateNewPasswordInputFilter import CreateNewPasswordInputFilter
 from .CreatePasswordResetInputFilter import CreatePasswordResetInputFilter
 from .CreateUserInputFilter import CreateUserInputFilter
 from .GetUserDetailsInputFilter import GetUserDetailsInputFilter
-from .IsAdminInputFilter import IsAdminInputFilter
 from .UpdateUserInputFilter import UpdateUserInputFilter
 from .UpdateUserPictureInputFilter import UpdateUserPictureInputFilter
 from .UpdateUserRoleInputFilter import UpdateUserRoleInputFilter

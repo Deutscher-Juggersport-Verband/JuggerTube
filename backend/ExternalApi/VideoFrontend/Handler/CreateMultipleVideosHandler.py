@@ -12,6 +12,7 @@ from DataDomain.Database.Repository import (
     VideoRepository,
 )
 from DataDomain.Model import Response
+from ExternalApi.VideoFrontend.config import clear_video_overview_cache
 
 
 class CreateMultipleVideosHandler:
@@ -50,8 +51,9 @@ class CreateMultipleVideosHandler:
 
         for video_data in videos_data:
             video_name = video_data.get('name')
+            video_url = video_data.get('videoLink')
 
-            if VideoRepository.getVideoByName(video_name):
+            if VideoRepository.videoAlreadyExists(video_name, video_url):
                 continue
 
             video = Videos()
@@ -167,6 +169,8 @@ class CreateMultipleVideosHandler:
                     'name': video.name,
                     'reason': str(e)
                 })
+
+        clear_video_overview_cache()
 
         return Response(
             response={

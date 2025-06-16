@@ -3,8 +3,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 
 import { LoadedRange } from '../models/videos-state.model';
-import { VideoApiResponseModel } from '@frontend/video-data';
-import { CreateVideoRequest } from '@frontend/video-data';
+import {
+  CreateVideoRequest,
+  VideoApiResponseModel,
+  VideoFilterOptions
+} from '@frontend/video-data';
 
 export enum VideosActionNamesEnum {
   LoadPaginatedVideos = '[Videos] Load Paginated Videos',
@@ -20,6 +23,7 @@ export enum VideosActionNamesEnum {
   CreateVideo = '[Videos] Create Video',
   CreateVideoSuccess = '[Videos] Create Video Success',
   CreateVideoFailure = '[Videos] Create Video Failure',
+  ClearVideoCache = '[Videos] Clear Video Cache',
 }
 
 export const loadPaginatedVideosAction = createAction(
@@ -27,6 +31,7 @@ export const loadPaginatedVideosAction = createAction(
   props<{
     start: number;
     limit: number;
+    filters?: VideoFilterOptions;
   }>()
 );
 
@@ -50,6 +55,7 @@ export const loadNextVideos = createAction(
   props<{
     start: number;
     limit: number;
+    filters?: VideoFilterOptions;
   }>()
 );
 
@@ -113,4 +119,8 @@ export const createVideoSuccess = createAction(
 export const createVideoFailure = createAction(
   VideosActionNamesEnum.CreateVideoFailure,
   props<{ error: string }>()
+);
+
+export const clearVideoCache = createAction(
+  VideosActionNamesEnum.ClearVideoCache
 );

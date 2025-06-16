@@ -51,4 +51,4 @@ class TournamentTeamsParser(HTMLParser):
                 self.current_cell_data.append(data)
 
     def get_teams(self):
-        return self.teams 
+        return self.teams

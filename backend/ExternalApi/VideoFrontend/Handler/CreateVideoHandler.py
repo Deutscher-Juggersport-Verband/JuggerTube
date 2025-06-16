@@ -1,12 +1,12 @@
 import logging
 from datetime import datetime
 
+from amqp import channel
 from flask import g
 from flask_jwt_extended import get_jwt_identity
 
 from BusinessDomain.User.Rule import IsCurrentUserPrivilegedRule
 from BusinessDomain.User.Rule.tools import getJwtIdentity
-from config import cache
 from DataDomain.Database.Enum import VideoCategoriesEnum, VideoStatusEnum
 from DataDomain.Database.Model import Channels, Teams, Tournaments, Videos
 from DataDomain.Database.Repository import (
@@ -16,7 +16,7 @@ from DataDomain.Database.Repository import (
     VideoRepository,
 )
 from DataDomain.Model import Response
-from ExternalApi.VideoFrontend.config.extensions import clearVideoCache
+from ExternalApi.VideoFrontend.config import clear_video_overview_cache
 
 
 class CreateVideoHandler:
@@ -63,7 +63,7 @@ class CreateVideoHandler:
                 video_id = video.create()
                 logging.info(f"Successfully created video with ID: {video_id}")
 
-                clearVideoCache(video_id)
+                clear_video_overview_cache()
 
                 return Response(
                     response=video_id,
@@ -85,8 +85,8 @@ class CreateVideoHandler:
         video.channel_id = CreateVideoHandler._handle_channel_data(data.get('channel'))
 
         if not video.channel_id:
-            logging.error(f"Channel not found")
-            raise ValueError(f"Channel not found")
+            logging.error(f"Channel not found: {channel}")
+            raise ValueError("Channel not found")
 
         # Set required fields
         video.name = data.get('name')
@@ -99,14 +99,19 @@ class CreateVideoHandler:
         video.date_of_recording = datetime.fromisoformat(
             data.get('dateOfRecording')) if data.get('dateOfRecording') else None
 
-        if get_jwt_identity():
-            if IsCurrentUserPrivilegedRule.applies():
-                video.status = VideoStatusEnum.APPROVED
-            else:
-                video.uploader_id = getJwtIdentity().id
-                cache.delete('pending-video-overview')
-        else:
-            video.status = VideoStatusEnum.APPROVED  # TODO
+        # TODO: Check if bot
+        if not get_jwt_identity():
+            video.status = VideoStatusEnum.APPROVED
+
+            return video
+
+        if IsCurrentUserPrivilegedRule():
+            video.status = VideoStatusEnum.APPROVED
+            video.uploader_id = getJwtIdentity().id
+
+            return video
+
+        video.status = VideoStatusEnum.PENDING
 
         return video
 
@@ -119,17 +124,10 @@ class CreateVideoHandler:
         video.topic = data.get('topic') or ''
         video.guests = data.get('guests') or ''
 
-        if category == VideoCategoriesEnum.SPARBUILDING:
+        if category == VideoCategoriesEnum.SPARBUILDING or category == VideoCategoriesEnum.TRAINING:
             video.weapon_type = data.get('weaponType')
 
-        elif category == VideoCategoriesEnum.HIGHLIGHTS:
-            video.tournament_id = CreateVideoHandler._handle_tournament_data(
-                data.get('tournament'))
-
-        elif category == VideoCategoriesEnum.TRAINING:
-            video.weapon_type = data.get('weaponType')
-
-        elif category == VideoCategoriesEnum.AWARDS:
+        elif category == VideoCategoriesEnum.HIGHLIGHTS or category == VideoCategoriesEnum.AWARDS:
             video.tournament_id = CreateVideoHandler._handle_tournament_data(
                 data.get('tournament'))
 

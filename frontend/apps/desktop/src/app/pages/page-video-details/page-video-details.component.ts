@@ -39,7 +39,7 @@ export class PageVideoDetailsComponent {
   public video: VideoApiResponseModel | undefined =
     this.videosDataService.getVideoById(
       Number(this.route.snapshot.paramMap.get('id'))
-    ); // TODO
+    );
   public isYoutubeUrl = isYoutubeUrl(this.video?.videoLink ?? '');
   public embeddedUrl: SafeResourceUrl = getEmbeddedUrlRule(
     this.video?.videoLink ?? ''
