@@ -10,11 +10,10 @@ from DataDomain.Model import Response
 
 
 class CreateMultipleTournamentsHandler:
-    """Handler for creating multiple tournaments"""
 
     @staticmethod
     def handle() -> Response:
-        """Create multiple tournaments from an array of tournament data"""
+
         data = g.validated_data
         tournaments_data = data.get('tournaments', [])
 

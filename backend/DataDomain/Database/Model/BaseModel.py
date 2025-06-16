@@ -1,4 +1,4 @@
-from operator import or_
+import functools
 from typing import Any
 
 from DataDomain.Database import db
@@ -83,7 +83,11 @@ class BaseModel(db.Model):
         if not filters:
             return False
 
-        filter_expr = or_(*filters) if len(filters) > 1 else filters[0]
+        if len(filters) > 1:
+            from sqlalchemy import or_
+            filter_expr = functools.reduce(or_, filters)
+        else:
+            filter_expr = filters[0]
 
         return self.__class__.query.filter(
             filter_expr,

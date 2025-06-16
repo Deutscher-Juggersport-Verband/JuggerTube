@@ -17,7 +17,6 @@ class Tournaments(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique=True,
     )
 
     name: str = db.Column(

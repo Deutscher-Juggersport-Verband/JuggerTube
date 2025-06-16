@@ -7,7 +7,6 @@ from DataDomain.Model import Response
 
 
 class CreateMultipleChannelsHandler:
-    """Handler for creating multiple channels"""
 
     @staticmethod
     def handle() -> Response:

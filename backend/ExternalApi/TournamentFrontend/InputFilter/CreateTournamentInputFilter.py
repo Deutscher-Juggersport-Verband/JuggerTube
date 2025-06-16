@@ -13,12 +13,8 @@ from flask_inputfilter.validators import (
 
 
 class CreateTournamentInputFilter(InputFilter):
-    """The input filter for the create-tournament route"""
 
-    def __init__(self):
-        """Initializes the CreateTournamentInputFilter"""
-
-        super().__init__()
+    def __init__(self) -> None:
 
         self.add(
             'name',
@@ -65,11 +61,8 @@ class CreateTournamentInputFilter(InputFilter):
 
 
 class CreateMultipleTournamentsInputFilter(InputFilter):
-    """The input filter for the create-multiple-tournaments route"""
 
-    def __init__(self):
-        """Initializes the CreateMultipleTournamentsInputFilter"""
-        super().__init__()
+    def __init__(self) -> None:
 
         self.add(
             'tournaments',

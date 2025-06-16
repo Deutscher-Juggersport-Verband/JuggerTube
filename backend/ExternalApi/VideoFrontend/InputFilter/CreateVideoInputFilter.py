@@ -1,15 +1,15 @@
 from flask_inputfilter import InputFilter
-from flask_inputfilter.enums import RegexEnum
 from flask_inputfilter.filters import (
     StringTrimFilter,
+    ToDateTimeFilter,
     ToIntegerFilter,
     ToNullFilter,
 )
 from flask_inputfilter.validators import (
     InEnumValidator,
+    IsDateTimeValidator,
     IsIntegerValidator,
     IsStringValidator,
-    RegexValidator,
 )
 
 from DataDomain.Database.Enum import (
@@ -20,12 +20,8 @@ from DataDomain.Database.Enum import (
 
 
 class CreateVideoInputFilter(InputFilter):
-    """The input filter for the create-video route"""
 
-    def __init__(self):
-        """Initializes the CreateVideoInputFilter"""
-
-        super().__init__()
+    def __init__(self) -> None:
 
         self.add(
             'name',
@@ -55,12 +51,12 @@ class CreateVideoInputFilter(InputFilter):
         self.add(
             'uploadDate',
             required=True,
+            filters=[
+                ToDateTimeFilter()
+            ],
             validators=[
-                RegexValidator(
-                    RegexEnum.ISO_DATE.value,
-                    'Das Anmeldedatum muss im iso format sein.'
-                )
-            ]
+                IsDateTimeValidator()
+            ],
         )
 
         self.add(
@@ -94,12 +90,12 @@ class CreateVideoInputFilter(InputFilter):
         self.add(
             'dateOfRecording',
             required=False,
+            filters=[
+                ToDateTimeFilter()
+            ],
             validators=[
-                RegexValidator(
-                    RegexEnum.ISO_DATE.value,
-                    'Das Aufnahmedatum muss im iso format sein.'
-                )
-            ]
+                IsDateTimeValidator()
+            ],
         )
 
         self.add(
@@ -157,23 +153,23 @@ class CreateVideoInputFilter(InputFilter):
         self.add(
             'tournament.startDate',
             required=False,
+            filters=[
+                ToDateTimeFilter()
+            ],
             validators=[
-                RegexValidator(
-                    RegexEnum.ISO_DATE.value,
-                    'Das Turnier-Startdatum muss im iso format sein.'
-                )
-            ]
+                IsDateTimeValidator()
+            ],
         )
 
         self.add(
             'tournament.endDate',
             required=False,
+            filters=[
+                ToDateTimeFilter()
+            ],
             validators=[
-                RegexValidator(
-                    RegexEnum.ISO_DATE.value,
-                    'Das Turnier-Enddatum muss im iso format sein.'
-                )
-            ]
+                IsDateTimeValidator()
+            ],
         )
 
         # Team One object validation

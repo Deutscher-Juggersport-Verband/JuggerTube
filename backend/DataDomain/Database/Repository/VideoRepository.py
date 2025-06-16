@@ -140,9 +140,9 @@ class VideoRepository:
 
     @staticmethod
     def videoAlreadyExists(video_name: str, video_url: str) -> dict | None:
-        video = Videos.session.query(
+        video = db.session.query(
             Videos.name,
-            Videos.url,
+            Videos.video_link,
             Videos.status,
             Videos.is_deleted
         ).filter(
@@ -150,7 +150,7 @@ class VideoRepository:
             Videos.name == video_name,
             Videos.video_link == video_url,
             Videos.status != VideoStatusEnum.DECLINED
-        )
+        ).first()
 
         if not video:
             return None

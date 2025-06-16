@@ -30,7 +30,7 @@ class Logs(BaseModel):
         nullable=False
     )
 
-    data: str = db.Column(
+    data: str | None = db.Column(
         db.JSON,
         nullable=True
     )

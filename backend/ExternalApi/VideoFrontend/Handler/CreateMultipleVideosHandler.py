@@ -18,22 +18,6 @@ class CreateMultipleVideosHandler:
     """Handler for creating multiple videos"""
 
     @staticmethod
-    def _map_category_to_enum(category_str: str) -> VideoCategoriesEnum:
-        """Maps API category string to VideoCategoriesEnum value"""
-        category_mapping = {
-            'reports': VideoCategoriesEnum.REPORTS,
-            'highlights': VideoCategoriesEnum.HIGHLIGHTS,
-            'match': VideoCategoriesEnum.MATCH,
-            'song': VideoCategoriesEnum.SONG,
-            'podcast': VideoCategoriesEnum.PODCAST,
-            'awards': VideoCategoriesEnum.AWARDS,
-            'training': VideoCategoriesEnum.TRAINING,
-            'sparbuilding': VideoCategoriesEnum.SPARBUILDING,
-            'other': VideoCategoriesEnum.OTHER
-        }
-        return category_mapping.get(category_str.lower(), VideoCategoriesEnum.OTHER)
-
-    @staticmethod
     def handle() -> Response:
         """Create Video"""
         data = g.validated_data
@@ -55,7 +39,6 @@ class CreateMultipleVideosHandler:
             if VideoRepository.videoAlreadyExists(video_name, video_url):
                 continue
 
-            video = Videos()
             channel_name = video_data.get('channelName')
 
             if not channel_name:
@@ -75,14 +58,14 @@ class CreateMultipleVideosHandler:
                 continue
 
             # Set required fields
-            video.name = video_data.get('name')
-            category_str = video_data.get('category')
-            video.category = CreateMultipleVideosHandler._map_category_to_enum(
-                category_str)
-            video.video_link = video_data.get('videoLink')
-            video.channel_id = channel_id
-            video.topic = ''
-            video.guests = ''
+            video = Videos(
+                name=video_name,
+                category=video_data.get('category'),
+                video_link=video_data.get('videoLink'),
+                channel_id=channel_id,
+                topic='',
+                guests='',
+            )
 
             # Handle category-specific fields
             if video.category == VideoCategoriesEnum.MATCH:

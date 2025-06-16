@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: Customer Frontend API
+  version: 1.0.0
+paths:
+  /api/user-frontend/get-privileged-user-short-overview:
+    get:
+      summary: Get privileged user short overview
+      description: Returns a short overview of privileged users.
+      responses:
+        '200':
+          description: A list of privileged users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      description: The unique ID of the user
+                      example: 123
+                      nullable: false
+                    name:
+                      type: string
+                      description: The name of the user
+                      example: "John Doe"
+                      nullable: false
+
+        '500':
+          description: Internal server error

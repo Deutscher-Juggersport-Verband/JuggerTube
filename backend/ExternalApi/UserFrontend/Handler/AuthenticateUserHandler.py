@@ -13,7 +13,7 @@ class AuthenticateUserHandler:
 
         data = g.validated_data
 
-        email: str | None = data.get('email')
+        email: str = data.get('email')
 
         user = UserRepository.getUserByEmail(email)
 

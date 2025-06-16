@@ -1,4 +1,4 @@
-### Get videos overview
+### Get video overview
 GET https://{{host}}/api/video-frontend/get-video-overview
 
 > {%

@@ -115,7 +115,6 @@ paths:
                       example: Jugger Basilisken Basel
                       nullable: true
 
-
         '500':
           description: Internal server error
           content:

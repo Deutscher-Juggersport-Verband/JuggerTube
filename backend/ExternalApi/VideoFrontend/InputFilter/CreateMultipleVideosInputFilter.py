@@ -1,16 +1,68 @@
 from flask_inputfilter import InputFilter
+from flask_inputfilter.filters import ToDateTimeFilter
 from flask_inputfilter.validators import (
+    ArrayElementValidator,
     ArrayLengthValidator,
+    InEnumValidator,
     IsArrayValidator,
+    IsDateTimeValidator,
+    IsStringValidator,
 )
+
+from DataDomain.Database.Enum import VideoCategoriesEnum
+
+
+class CreateMultipleVideosVideoElementInputFilter(InputFilter):
+
+    def __init__(self) -> None:
+
+        self.add(
+            'name',
+            required=True,
+            validators=[
+                IsStringValidator()
+            ],
+        )
+
+        self.add(
+            'channelName',
+            required=True,
+            validators=[
+                IsStringValidator()
+            ],
+        )
+
+        self.add(
+            'category',
+            required=True,
+            validators=[
+                InEnumValidator(VideoCategoriesEnum)
+            ],
+        )
+
+        self.add(
+            'videoLink',
+            required=True,
+            validators=[
+                IsStringValidator()
+            ],
+        )
+
+        self.add(
+            'uploadDate',
+            required=True,
+            filters=[
+                ToDateTimeFilter()
+            ],
+            validators=[
+                IsDateTimeValidator()
+            ],
+        )
 
 
 class CreateMultipleVideosInputFilter(InputFilter):
-    """The input filter for the create-multiple-videos route"""
 
-    def __init__(self):
-        """Initializes the CreateMultipleVideosInputFilter"""
-        super().__init__()
+    def __init__(self) -> None:
 
         self.add(
             'videos',
@@ -18,5 +70,8 @@ class CreateMultipleVideosInputFilter(InputFilter):
             validators=[
                 IsArrayValidator(),
                 ArrayLengthValidator(min_length=1),
+                ArrayElementValidator(
+                    element_filter=CreateMultipleVideosVideoElementInputFilter()
+                )
             ],
         )
