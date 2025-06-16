@@ -5,10 +5,13 @@ import requests
 from urllib3.exceptions import InsecureRequestWarning
 import time
 import math
-from enums import TARGET_SHEETS, VideoCategoriesEnum
-from data_processor import DataProcessor
-from helpers import send_data_to_backend
+from .enums import TARGET_SHEETS, VideoCategoriesEnum
+from .data_processor import DataProcessor
+from .helpers import send_data_to_backend
 from collections import defaultdict
+
+# Get the directory where the script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 base_host = os.getenv('BASE_URL', 'juggertube.de')
 
@@ -16,7 +19,7 @@ base_host = os.getenv('BASE_URL', 'juggertube.de')
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # Path to the Excel file
-excel_file = 'Liste aller Juggervideos _ JuggerTube.xlsx'
+excel_file = os.path.join(script_dir, 'Liste aller Juggervideos _ JuggerTube.xlsx')
 
 # Specify the sheets we want to analyze
 target_sheets = ['DATA-Videos', 'DATA-Teams', 'DATA-Channels', 'Output-Tournaments']
