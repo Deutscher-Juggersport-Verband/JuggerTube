@@ -1,5 +1,33 @@
 from flask_inputfilter import InputFilter
-from flask_inputfilter.validators import ArrayLengthValidator, IsArrayValidator
+from flask_inputfilter.validators import (
+    ArrayLengthValidator,
+    IsArrayValidator,
+    IsStringValidator,
+    ArrayElementValidator
+)
+
+
+class CreateTeamInputFilter(InputFilter):
+    """Input filter for single team element"""
+
+    def __init__(self):
+        super().__init__()
+
+        self.add(
+            'name',
+            required=True,
+            validators=[
+                IsStringValidator(),
+            ]
+        )
+
+        self.add(
+            'city',
+            required=True,
+            validators=[
+                IsStringValidator(),
+            ]
+        )
 
 
 class CreateMultipleTeamsInputFilter(InputFilter):
@@ -15,5 +43,6 @@ class CreateMultipleTeamsInputFilter(InputFilter):
             validators=[
                 IsArrayValidator(),
                 ArrayLengthValidator(min_length=1),
+                ArrayElementValidator(CreateTeamInputFilter)
             ],
         )
