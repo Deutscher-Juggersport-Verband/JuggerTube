@@ -9,6 +9,7 @@ from DataDomain.Database.Model import BaseModel
 
 class Tournaments(BaseModel):
     __tablename__ = 'tournaments'
+
     __table_args__ = (
         db.UniqueConstraint('name', 'start_date', name='uix_tournament_name_date'),
     )

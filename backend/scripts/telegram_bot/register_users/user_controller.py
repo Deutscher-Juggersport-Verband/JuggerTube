@@ -1,63 +1,51 @@
 import json
 import os
 
-from user_model import User
-
-filename = "telegramIds.json"
+from scripts.telegram_bot.register_users.main import path
 
 
-def get_parent(levels=1):
-    current_directory = os.path.dirname(__file__)
-    parent_directory = current_directory
-    for i in range(0, levels):
-        parent_directory = os.path.split(parent_directory)[0]
-    file_path = os.path.join(parent_directory, filename)
-    return file_path
+def check_if_user_already_exists(user_to_search_id: int, all_users: list[dict]) -> bool:
+    return any(user["userId"] == user_to_search_id for user in all_users)
 
 
-def check_if_user_already_exists(user_to_search, all_users):
-    for user in all_users:
-        if user["userId"] != user_to_search.user_id:
-            continue
-        else:
-            return True
-    return False
-
-
-def serialize_user(user):
-    return {
-        "userId": user.user_id,
-        "userName": user.user_name
+def save_users_to_json(user_id: int, user_name: str) -> str:
+    new_user = {
+        "userId": user_id,
+        "userName": user_name
     }
 
+    users = []
+    if os.path.isfile(path):
+        try:
+            with open(path, 'r') as file:
+                users = json.load(file)
+        except (json.JSONDecodeError, OSError):
+            return "error reading user file"
 
-def save_users_to_json(user_id, user_name):
-    new_users = []
-    new_user = User(user_id=user_id, user_name=user_name)
-    if not os.path.isfile(get_parent()):
-        with open(get_parent(), 'w') as file:
-            new_users.append(serialize_user(new_user))
-            file.write(json.dumps(new_users, indent=2))
-    else:
-        with open(get_parent()) as file:
-            file_users = json.load(file)
-            if check_if_user_already_exists(new_user, file_users):
-                return "user already subscribed to newsletter"
-            else:
-                file_users.append(serialize_user(new_user))
-        with open(get_parent(), 'w') as file:
-            file.write(json.dumps(file_users, indent=2))
+        if check_if_user_already_exists(user_id, users):
+            return "user already subscribed to newsletter"
+
+    users.append(new_user)
+    try:
+        with open(path, 'w') as file:
+            json.dump(users, file, indent=2)
+    except OSError:
+        return "error writing user file"
+
+    return "user successfully added"
 
 
 def delete_user_from_json(user_id):
-    if not os.path.isfile(get_parent()):
+    if not os.path.isfile(path):
         return "user does not exist on database"
-    with open(get_parent()) as file:
+
+    with open(path) as file:
         file_users = json.load(file)
+
         for user in file_users:
-            if user['userId'] == user_id:
-                index = list(file_users).index(user)
-                del file_users[index]
-                return f"user {user['userName']} unsubscribed"
-            else:
+            if user['userId'] != user_id:
                 return f"user {user['userName']} not found"
+
+            index = list(file_users).index(user)
+            del file_users[index]
+            return f"user {user['userName']} unsubscribed"

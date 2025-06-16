@@ -76,7 +76,7 @@ class Videos(BaseModel):
         nullable=False
     )
 
-    status = db.Column(
+    status: VideoStatusEnum = db.Column(
         db.Enum(VideoStatusEnum),
         nullable=False,
         default=VideoStatusEnum.PENDING

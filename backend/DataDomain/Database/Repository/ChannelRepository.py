@@ -10,7 +10,7 @@ class ChannelRepository:
     def getChannelOverview() -> list[dict]:
         """Get Channel Overview"""
 
-        channels = (db.session.query(
+        return db.session.query(
             Channels.id,
             Channels.name,
             Channels.channel_link
@@ -18,24 +18,13 @@ class ChannelRepository:
             Channels.is_deleted != True
         ).order_by(
             Channels.name.asc()
-        ).all())
-
-        result = []
-        for channel in channels:
-            channel_dict = {
-                'id': channel.id,
-                'name': channel.name,
-                'channelLink': channel.channel_link,
-            }
-            result.append(channel_dict)
-
-        return result
+        ).all()
 
     @staticmethod
     def getChannelById(channel_id: int) -> dict | None:
         """Get Channel by id"""
 
-        channel = db.session.query(
+        return db.session.query(
             Channels.id,
             Channels.name,
             Channels.channel_link
@@ -44,15 +33,6 @@ class ChannelRepository:
         ).group_by(
             Channels.id
         ).first()
-
-        if not channel:
-            return None
-
-        return {
-            'id': channel.id,
-            'name': channel.name,
-            'channelLink': channel.channel_link
-        }
 
     @staticmethod
     def getChannelIdByLink(channel_link: str) -> int | None:

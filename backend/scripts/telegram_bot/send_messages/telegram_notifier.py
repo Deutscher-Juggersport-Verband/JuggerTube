@@ -17,17 +17,18 @@ if not telegram_bot_token:
 bot = Bot(token=telegram_bot_token)
 
 
-async def send_telegram_status(status_message, error_message=None):
+async def send_telegram_status(status_message: str, error_message: str | None = None):
 
     message = f"Statusmeldung: {status_message}"
     if error_message:
         message += f"\nFehlermeldung: {error_message}"
 
-    users = read_users_from_json()
+    users: list[dict] = read_users_from_json()
 
     for user in users:
         try:
-            user_id = user['userId']
+            user_id = user.get('userId')
+
             chat = await bot.get_chat(chat_id=user_id)
             if not chat:
                 logger.warning(f"Chat not found for user_id: {user_id}")
@@ -42,6 +43,6 @@ async def send_telegram_status(status_message, error_message=None):
                     str(e)}")
 
 
-def notify(status_message, error_message=None):
+def notify(status_message: str, error_message: str | None = None):
     """Synchronous wrapper for send_telegram_status"""
     asyncio.run(send_telegram_status(status_message, error_message))
