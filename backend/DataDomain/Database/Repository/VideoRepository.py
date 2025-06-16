@@ -140,23 +140,18 @@ class VideoRepository:
         return video
 
     @staticmethod
-    def videoAlreadyExists(video_name: str, video_url: str) -> dict | None:
-        video = Videos.session.query(
-            Videos.name,
-            Videos.url,
-            Videos.status,
-            Videos.is_deleted
+    def videoAlreadyExists(video_name: str, video_url: str) -> bool:
+        """Check if a video already exists"""
+        video = db.session.query(
+            Videos
         ).filter(
             Videos.is_deleted != True,
             Videos.name == video_name,
             Videos.video_link == video_url,
             Videos.status != VideoStatusEnum.DECLINED
-        )
+        ).first()
 
-        if not video:
-            return None
-
-        return video
+        return video is not None
 
     @staticmethod
     def getPaginatedVideos(
