@@ -52,6 +52,17 @@ class TournamentRepository:
         return tournament
 
     @staticmethod
+    def checkIfJtrLinkAlreadyExists(jtr_link: str) -> bool:
+        tournament = (db.session.query(
+            Tournaments.id,
+            Tournaments.jtr_link
+        ).filter(
+            Tournaments.jtr_link == jtr_link
+        ).first())
+
+        return tournament is not None
+
+    @staticmethod
     def checkIfTournamentAlreadyExists(name: str, start_date) -> bool:
         tournament = (db.session.query(
             Tournaments.id,

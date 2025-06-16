@@ -43,6 +43,10 @@ class CreateMultipleTournamentsHandler:
                         tournament.name, tournament.start_date):
                     continue
 
+                if tournament.jtr_link:
+                    if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                        continue
+
                 tournament_id = tournament.create()
                 created_tournaments.append({
                     'name': tournament.name,

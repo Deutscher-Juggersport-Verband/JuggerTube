@@ -23,6 +23,13 @@ class CreateTournamentHandler:
             jtr_link=data.get('jtrLink')
         )
 
+        if tournament.jtr_link:
+            if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                return Response(
+                    response='Tournament with this jtr link already exists',
+                    status=400
+                )
+
         if TournamentRepository.checkIfTournamentAlreadyExists(
                 tournament.name, tournament.start_date):
             return Response(
