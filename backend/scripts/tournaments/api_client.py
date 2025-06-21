@@ -41,7 +41,7 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100) -> dic
 def send_chunk_to_backend(endpoint: str, data: dict, entity_name: str) -> dict:
     """Send a single chunk of data to the backend API with enhanced logging and error handling."""
 
-    response = []
+    response_message = []
 
     try:
         url = f'https://{base_host}{endpoint}'
@@ -60,42 +60,42 @@ def send_chunk_to_backend(endpoint: str, data: dict, entity_name: str) -> dict:
             timeout=60
         )
 
-        response.append(entity_name)
+        response_message.append(entity_name)
 
         if response.status_code in [200, 207]:
-            response.append(f"Successfully sent {entity_name} data to backend")
+            response_message.append(f"Successfully sent {entity_name} data to backend")
             if response.text:
                 try:
                     response_data = response.json()
-                    response.append(f"Response content: {response_data}")
+                    response_message.append(f"Response content: {response_data}")
                 except ValueError:
-                    response.append(f"Raw response: {response.text[:500]}...")
-            return response
+                    response_message.append(f"Raw response: {response.text[:500]}...")
+            return response_message
         elif response.status_code == 413:
-            response.append(f"Request too large for {entity_name}. Consider reducing chunk size.")
-            return response
+            response_message.append(f"Request too large for {entity_name}. Consider reducing chunk size.")
+            return response_message
         elif response.status_code == 400:
-            response.append(f"Bad request for {entity_name}: {response.text}")
-            return response
+            response_message.append(f"Bad request for {entity_name}: {response.text}")
+            return response_message
         else:
-            response.append(f"Unexpected status code {response.status_code} for {entity_name}")
-            response.append(f"Response content: {response.text[:500]}...")
-            return response
+            response_message.append(f"Unexpected status code {response.status_code} for {entity_name}")
+            response_message.append(f"Response content: {response.text[:500]}...")
+            return response_message
 
     except requests.exceptions.Timeout:
-        response.append(f"Timeout error sending {entity_name} data to backend")
-        return response
+        response_message.append(f"Timeout error sending {entity_name} data to backend")
+        return response_message
     except requests.exceptions.ConnectionError as e:
-        response.append(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
-        return response
+        response_message.append(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+        return response_message
     except requests.exceptions.RequestException as e:
-        response.append(f"Request error sending {entity_name} data to backend: {str(e)}")
+        response_message.append(f"Request error sending {entity_name} data to backend: {str(e)}")
         if hasattr(e, 'response') and hasattr(e.response, 'text'):
-            response.append(f"Response content: {e.response.text[:500]}...")
-        return response
+            response_message.append(f"Response content: {e.response.text[:500]}...")
+        return response_message
     except Exception as e:
-        response.append(f"Unexpected error sending {entity_name} data to backend: {str(e)}")
-        return response
+        response_message.append(f"Unexpected error sending {entity_name} data to backend: {str(e)}")
+        return response_message
 
 
 def send_teams(teams_data) -> dict:

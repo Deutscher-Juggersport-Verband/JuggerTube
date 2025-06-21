@@ -3,30 +3,30 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+# Add the backend directory to Python path for local development
+current_dir = Path(__file__).parent
+backend_dir = current_dir.parent.parent  # Go up to backend directory
+sys.path.insert(0, str(backend_dir))
+
+# Now we can import from scripts
 from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
-from .api_client import ApiClient
-from .cache_manager import load_cache, save_cache
-from .api_client import send_tournaments, send_teams
-from .data_fetcher import DataFetcher
-from .date_utils import format_date
-from .tournament_details_parser import parser as tournament_parser
-from .tournament_overview_parser import parser as overview_parser
-from .tournament_teams_parser import TournamentTeamsParser
-
-# Add the root directory to Python path
-sys.path.append('/app')
-
+from cache_manager import load_cache, save_cache
+from api_client import send_tournaments, send_teams
+from data_fetcher import DataFetcher
+from date_utils import format_date
+from tournament_details_parser import parser as tournament_parser
+from tournament_overview_parser import parser as overview_parser
+from tournament_teams_parser import TournamentTeamsParser
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-# Cache file paths
-CACHE_DIR = Path("cache")
+# Cache file paths - use relative to script location
+CACHE_DIR = current_dir.parent.parent.parent / "cache"
 TOURNAMENTS_CACHE_FILE = CACHE_DIR / "tournaments_cache.json"
 TEAMS_CACHE_FILE = CACHE_DIR / "teams_cache.json"
 
