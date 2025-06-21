@@ -4,6 +4,7 @@ import os
 from flask import Flask
 from flask_migrate import current, upgrade
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 db = SQLAlchemy()
 
@@ -45,12 +46,28 @@ def executeSqlCommandsToInitDatabase(app: Flask) -> None:
             executeSqlFile(fullPath)
 
 
+def tablesExist() -> bool:
+    """Check if tables already exist in the database"""
+    try:
+        # Try to query a table that should exist
+        result = db.session.execute(text("SHOW TABLES LIKE 'users'"))
+        return result.fetchone() is not None
+    except Exception as e:
+        logging.warning(f'Database | db | Could not check if tables exist: {e}')
+        return False
+
+
 def initDatabase(app: Flask) -> None:
     """Initializes the database with the given SQL commands"""
 
     with app.app_context():
-        if current() != 'head':
-            upgrade()
+        # Check if tables already exist (MySQL init script may have created them)
+        if tablesExist():
+            logging.info('Database | db | Tables already exist, skipping table creation')
+        else:
+            logging.info('Database | db | No tables found, running migrations')
+            if current() != 'head':
+                upgrade()
 
         if bool(os.getenv('GENERATE_TEST_DATA')):
             executeSqlCommandsToInitDatabase(app)
