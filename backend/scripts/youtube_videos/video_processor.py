@@ -1,3 +1,5 @@
+import sys
+from pathlib import Path
 def clean_tournament_name(tournament_name):
     """Clean tournament name by removing the year if present"""
     if not tournament_name or len(tournament_name) <= 5:
@@ -62,7 +64,7 @@ def extract_video_details(video_name):
     return team_one, team_two, tournament
 
 
-def process_video_data(youtube_video):
+def process_video_data(youtube_video, channel_name):
     """Process a single YouTube video and extract relevant information"""
     video_id = youtube_video['snippet']['resourceId']['videoId']
     video_title = youtube_video['snippet']['title']
@@ -73,7 +75,7 @@ def process_video_data(youtube_video):
         "category": "match",  # Default category for matches
         "videoLink": f"https://www.youtube.com/watch?v={video_id}",
         "uploadDate": youtube_video['snippet']['publishedAt'],
-        "channelName": youtube_video['snippet']['title'],
+        "channelName": channel_name,
         "gameSystem": "sets",  # Default to sets system
     }
 

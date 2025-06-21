@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import os
 
 import requests
@@ -6,10 +10,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
-from .api_client import send_videos_to_api
-from .cache_manager import load_cache, save_cache
-from .error_logger import load_error_log
-from .video_processor import process_video_data
+from scripts.youtube_videos.api_client import send_videos_to_api
+from scripts.youtube_videos.cache_manager import load_cache, save_cache
+from scripts.youtube_videos.video_processor import process_video_data
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -46,9 +49,6 @@ def fetch_youtube_videos(youtube, channel_id, videos_cache):
         for item in playlist_items_response['items']:
             video_id = item['snippet']['resourceId']['videoId']
 
-            # Add channel custom URL to each video item
-            item['snippet']['title'] = channel_name
-
             # Check cache
             if video_id in videos_cache:
                 print(f"Using cached data for video {video_id}")
@@ -62,16 +62,16 @@ def fetch_youtube_videos(youtube, channel_id, videos_cache):
         if not next_page_token:
             break
 
-    return youtube_videos
+    return youtube_videos, channel_name
 
 
-def process_youtube_videos(youtube_videos):
+def process_youtube_videos(youtube_videos, channel_name):
     """Process YouTube videos and separate them into valid and other videos"""
     videos_data = []
     videos_other_naming = []
 
     for youtube_video in youtube_videos:
-        video_data, is_valid = process_video_data(youtube_video)
+        video_data, is_valid = process_video_data(youtube_video, channel_name)
 
         if is_valid:
             videos_data.append(video_data)
@@ -84,46 +84,68 @@ def process_youtube_videos(youtube_videos):
     return videos_data, videos_other_naming
 
 
-def save_other_naming(channel_id, videos_other_naming):
-    """Save unmatched videos to a file"""
-    with open(f"{channel_id}OtherNaming.txt", "w", encoding="utf-8") as out_file:
-        for video in videos_other_naming:
-            line = f"{video}\n"
-            out_file.write(line)
+def send_other_naming_notification(channel_name, videos_other_naming):
+    """Send Telegram notification for unmatched videos"""
+    if not videos_other_naming:
+        return
+    
+    # Create message with all unmatched videos
+    message_lines = [f"Channel: {channel_name}"]
+    message_lines.append("Videos mit anderem Naming:")
+    
+    for video in videos_other_naming:
+        # Extract video name and link from the set
+        video_name = None
+        video_link = None
+        for item in video:
+            if item.startswith('https://'):
+                video_link = item
+            else:
+                video_name = item
+        
+        if video_name and video_link:
+            message_lines.append(f"• {video_name}: {video_link}")
+    
+    message = "\n".join(message_lines)
+    notify(f"Videos mit anderem Naming - {channel_name}", message)
 
 
 def main(channel_id):
     # Load cached data
     videos_cache = load_cache()
+    print(f"Loaded {len(videos_cache)} cached videos")
 
     # Initialize YouTube API
     api_key = 'AIzaSyCd4irgsASp6cb393tAgYBTXacjGq2YG3E'
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     # Fetch videos from YouTube
-    youtube_videos = fetch_youtube_videos(youtube, channel_id, videos_cache)
+    youtube_videos, channel_name = fetch_youtube_videos(youtube, channel_id, videos_cache)
+    print(f"Fetched {len(youtube_videos)} videos from channel: {channel_name}")
 
     # Save updated cache
     save_cache(videos_cache)
 
     # Process videos
-    videos_data, videos_other_naming = process_youtube_videos(youtube_videos)
+    videos_data, videos_other_naming = process_youtube_videos(youtube_videos, channel_name)
+    print(f"Processed {len(videos_data)} valid videos and {len(videos_other_naming)} unmatched videos")
 
     # Send valid videos to API
-    response = send_videos_to_api(videos_data)
+    if videos_data:
+        print(f"Sending {len(videos_data)} videos to API...")
+        response = send_videos_to_api(videos_data)
+    else:
+        print("No valid videos to send to API")
+        response = None
 
-    # Save unmatched videos
-    save_other_naming(channel_id, videos_other_naming)
+    # Send notification for unmatched videos
+    send_other_naming_notification(channel_name, videos_other_naming)
 
-    # Send status message
-    error_log = load_error_log()
     if response:
-        if response.status_code == 200 or not error_log:
+        if response.status_code == 200:
             notify("Videos wurden importiert")
         else:
-            error_message = "\n".join(
-                [f"{entry['videoName']}: {entry['errorMessage']}" for entry in error_log])
-            notify("Fehler beim Import", error_message)
+            notify("Fehler beim Import", response.text)
 
 
 if __name__ == "__main__":

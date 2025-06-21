@@ -1,7 +1,7 @@
 import json
 import os
 
-from scripts.telegram_bot.register_users.main import path
+from scripts.telegram_bot.config import TELEGRAM_IDS_PATH
 
 
 def check_if_user_already_exists(user_to_search_id: int, all_users: list[dict]) -> bool:
@@ -15,9 +15,9 @@ def save_users_to_json(user_id: int, user_name: str) -> str:
     }
 
     users = []
-    if os.path.isfile(path):
+    if os.path.isfile(TELEGRAM_IDS_PATH):
         try:
-            with open(path, 'r') as file:
+            with open(TELEGRAM_IDS_PATH, 'r') as file:
                 users = json.load(file)
         except (json.JSONDecodeError, OSError):
             return "error reading user file"
@@ -27,7 +27,7 @@ def save_users_to_json(user_id: int, user_name: str) -> str:
 
     users.append(new_user)
     try:
-        with open(path, 'w') as file:
+        with open(TELEGRAM_IDS_PATH, 'w') as file:
             json.dump(users, file, indent=2)
     except OSError:
         return "error writing user file"
@@ -36,10 +36,10 @@ def save_users_to_json(user_id: int, user_name: str) -> str:
 
 
 def delete_user_from_json(user_id):
-    if not os.path.isfile(path):
+    if not os.path.isfile(TELEGRAM_IDS_PATH):
         return "user does not exist on database"
 
-    with open(path) as file:
+    with open(TELEGRAM_IDS_PATH) as file:
         file_users = json.load(file)
 
         for user in file_users:

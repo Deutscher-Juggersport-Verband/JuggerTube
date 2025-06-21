@@ -38,3 +38,16 @@ class TeamRepository:
             return None
 
         return team.id
+
+    @staticmethod
+    def checkIfTeamAlreadyExists(name: str) -> bool:
+        team = (db.session.query(
+            Teams.id,
+            Teams.name,
+        ).filter(
+            Teams.is_deleted != True,
+            func.lower(Teams.name) == func.lower(name),
+        ).first())
+
+        return team is not None
+

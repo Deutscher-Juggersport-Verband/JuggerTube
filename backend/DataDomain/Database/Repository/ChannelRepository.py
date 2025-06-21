@@ -1,6 +1,7 @@
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels
+from sqlalchemy import func
 
 
 class ChannelRepository:
@@ -70,3 +71,27 @@ class ChannelRepository:
             return None
 
         return channel.id
+
+    @staticmethod
+    def checkIfChannelNameAlreadyExists(name: str) -> bool:
+        channel = (db.session.query(
+            Channels.id,
+            Channels.name
+        ).filter(
+            Channels.is_deleted != True,
+            func.lower(Channels.name) == func.lower(name),
+        ).first())
+
+        return channel is not None
+
+    @staticmethod
+    def checkIfChannelLinkAlreadyExists(link: str) -> bool:
+        channel = (db.session.query(
+            Channels.id,
+            Channels.channel_link
+        ).filter(
+            Channels.is_deleted != True,
+            Channels.channel_link == link
+        ).first())
+
+        return channel is not None
