@@ -27,6 +27,7 @@ class CreateMultipleTournamentsHandler:
 
         created_tournaments: List[Dict] = []
         failed_tournaments: List[Dict] = []
+        existing_tournaments: List[Dict] = []
 
         for tournament_data in tournaments_data:
             try:
@@ -41,10 +42,18 @@ class CreateMultipleTournamentsHandler:
                 # Check if tournament already exists
                 if TournamentRepository.checkIfTournamentAlreadyExists(
                         tournament.name, tournament.start_date):
+                    existing_tournaments.append({
+                        'name': tournament.name,
+                        'start_date': tournament.start_date
+                    })
                     continue
 
                 if tournament.jtr_link:
                     if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                        existing_tournaments.append({
+                            'name': tournament.name,
+                            'jtr_link': tournament.jtr_link
+                        })
                         continue
 
                 tournament_id = tournament.create()
@@ -60,11 +69,19 @@ class CreateMultipleTournamentsHandler:
 
         response_data = {
             'created_tournaments': created_tournaments,
-            'failed_tournaments': failed_tournaments
+            'failed_tournaments': failed_tournaments,
+            'existing_tournaments': existing_tournaments
         }
 
-        # If no tournaments were created successfully, return 400
-        if not created_tournaments:
+        # If there are actual failures, return 400
+        if failed_tournaments:
+            return Response(
+                response=response_data,
+                status=400
+            )
+
+        # If no tournaments were created and none exist, return 400 (no valid tournaments provided)
+        if not created_tournaments and not existing_tournaments:
             return Response(
                 response=response_data,
                 status=400
@@ -72,11 +89,18 @@ class CreateMultipleTournamentsHandler:
 
         cache.delete("tournament-overview")
 
-        # If some tournaments failed but others succeeded, return 207 (Multi-Status)
-        if failed_tournaments:
+        # If some tournaments were created and some already existed, return 207 (Multi-Status)
+        if created_tournaments and existing_tournaments:
             return Response(
                 response=response_data,
                 status=207
+            )
+
+        # If all tournaments already existed, return 200 (success - tournaments are available)
+        if existing_tournaments and not created_tournaments:
+            return Response(
+                response=response_data,
+                status=200
             )
 
         # If all tournaments were created successfully, return 200
