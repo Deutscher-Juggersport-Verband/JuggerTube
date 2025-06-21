@@ -1,4 +1,4 @@
-from .api_client import ApiClient
+from .api_client import send_tournaments, send_teams
 from .data_fetcher import DataFetcher
 from .date_utils import format_date
 from .cache_manager import load_cache, save_cache
@@ -159,7 +159,6 @@ def process_tournament(data_fetcher, tournament, cached_tournaments):
 def main():
     # Initialize components
     data_fetcher = DataFetcher()
-    api_client = ApiClient()
 
     # Load cached data
     cached_tournaments, cached_teams = load_cache()
@@ -211,12 +210,25 @@ def main():
     save_cache(cached_tournaments, unique_teams)
 
     # Send data to APIs
-    tournaments_response = api_client.send_tournaments(tournaments_data)
-    teams_response = api_client.send_teams(unique_teams)
+    tournaments_success = send_tournaments(tournaments_data)
+    teams_success = send_teams(unique_teams)
 
-    # Send status message
-    notify("Turniere und Teams wurden importiert",
-           f"Turniere: {tournaments_response}, Teams: {teams_response}")
+    response_message = "\n"
+    
+    if tournaments_success:
+        response_message += "=== TOURNAMENTS ===\n"
+        response_message += "\n".join(tournaments_success)
+        response_message += "\n\n"
+    
+    if teams_success:
+        response_message += "=== TEAMS ===\n"
+        response_message += "\n".join(teams_success)
+        response_message += "\n"
+    
+    # Remove trailing newlines if message is empty
+    response_message = response_message.strip()
+
+    notify("Turniere und Teams wurden importiert", response_message)
 
 
 if __name__ == '__main__':
