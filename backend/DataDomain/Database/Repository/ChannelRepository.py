@@ -2,6 +2,7 @@ from typing import List
 
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels
+from sqlalchemy import func
 
 
 class ChannelRepository:
@@ -91,3 +92,17 @@ class ChannelRepository:
             return None
 
         return channel.id
+
+    @staticmethod
+    def checkIfChannelAlreadyExists(channel_name: str, channel_link: str) -> bool:
+        channel = (db.session.query(
+            Channels.id,
+            Channels.name,
+            Channels.channel_link,
+        ).filter(
+            Channels.is_deleted != True,
+            func.lower(Channels.name) == func.lower(channel_name),
+            Channels.channel_link == channel_link
+        ).first())
+
+        return channel is not None
