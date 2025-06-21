@@ -1,4 +1,7 @@
 import os
+import json
+from datetime import datetime
+import re
 
 import pandas as pd
 import math
@@ -25,20 +28,60 @@ def clean_value(value: Any) -> Optional[str]:
 
 def send_data_to_backend(endpoint: str, data: Dict, entity_name: str) -> bool:
     """Send data to the backend API."""
+    print(f"=== SENDING {entity_name.upper()} TO BACKEND ===")
+    
     try:
+        url = f'https://{base_host}{endpoint}'
+
+        # Add headers for better compatibility
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'User-Agent': 'JuggerTube-Excel-Processor/1.0'
+        }
+        
         response = requests.post(
-            f'https://{base_host}{endpoint}',
+            url,
             json=data,
-            verify=False
+            headers=headers,
+            verify=False,
+            timeout=60
         )
-        if response.status_code == 207:
-            print(f"Partial success for {entity_name}. Server message: {response.text}")
+
+        print(f"Response Status Code: {response.status_code}")
+
+        # Handle different response codes
+        if response.status_code in [200, 207]:
+            print(f"Successfully sent {entity_name} data to backend")
+            if response.text:
+                try:
+                    response_data = response.json()
+                    print(f"Response content: {response_data}")
+                    
+                except ValueError:
+                    print(f"Raw response: {response.text[:500]}...")
             return True
-        response.raise_for_status()
-        print(f"Successfully sent {entity_name} data to backend")
-        return True
-    except requests.exceptions.RequestException as e:
-        print(f"Error sending {entity_name} data to backend: {str(e)}")
-        if hasattr(e, 'response') and hasattr(e.response, 'text'):
-            print(f"Response content: {e.response.text}")
+        elif response.status_code == 413:
+            print(f"Request too large for {entity_name}. Consider reducing chunk size.")
+            return False
+        elif response.status_code == 400:
+            print(f"Bad request for {entity_name}: {response.text}")
+            return False
+        else:
+            print(f"Unexpected status code {response.status_code} for {entity_name}")
+            print(f"Response content: {response.text[:500]}...")
+            return False
+            
+    except requests.exceptions.Timeout:
+        print(f"Timeout error sending {entity_name} data to backend")
         return False
+    except requests.exceptions.ConnectionError as e:
+        print(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+        return False
+    except requests.exceptions.RequestException as e:
+        print(f"Request error sending {entity_name} data to backend: {str(e)}")
+        if hasattr(e, 'response') and hasattr(e.response, 'text'):
+            print(f"Response content: {e.response.text[:500]}...")
+        return False
+    except Exception as e:
+        print(f"Unexpected error sending {entity_name} data to backend: {str(e)}")

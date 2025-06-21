@@ -54,23 +54,29 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
         chunk = data_list[start_idx:end_idx]
 
         print(f"\nSending chunk {i + 1}/{total_chunks} of {entity_name}...")
-        print(f"Processing videos {start_idx + 1} to {end_idx} of {len(data_list)}")
+        print(f"Processing {entity_name} {start_idx + 1} to {end_idx} of {len(data_list)}")
 
-        success = send_data_to_backend(
-            endpoint,
-            {f"{entity_name}": chunk},
-            f"{entity_name} chunk {i + 1}/{total_chunks}"
-        )
+        try:
+            success = send_data_to_backend(
+                endpoint,
+                {f"{entity_name}": chunk},
+                f"{entity_name} chunk {i + 1}/{total_chunks}"
+            )
 
-        videos_error_messages.append(success)
+            if success:
+                print(f"Successfully sent chunk {i + 1} of {entity_name}")
+                break
+            else:
+                print(f"Failed to send chunk {i + 1} of {entity_name}")
+                        
+        except Exception as e:
+            print(f"Exception sending chunk {i + 1} of {entity_name}: {str(e)}")
 
-        if not success:
-            all_success = False
-            print(f"Failed to send chunk {i + 1} of {entity_name}")
+        videos_error_messages.append(success if 'success' in locals() else False)
 
-        # Add a small delay between chunks to prevent overwhelming the server
         if i < total_chunks - 1:
-            time.sleep(1)
+            delay = 3
+            time.sleep(delay)
 
     for error_message in videos_error_messages:
         print(error_message)
@@ -78,24 +84,12 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
     return all_success
 
 
-def send_data_to_backend(endpoint, data, entity_name) -> str | bool:
-    try:
-        response = requests.post(
-            f'https://{base_host}{endpoint}',
-            json=data,
-            verify=False
-        )
-
-        print(f"Status Code: {response.status_code}")
-        return f"Error Message: {response.text}"
-    except requests.exceptions.RequestException as e:
-        print(f"\nError sending {entity_name} data to backend: {str(e)}")
-        if hasattr(e, 'response') and hasattr(e.response, 'text'):
-            print(f"Response content: {e.response.text}")
-        return False
-
-
 def main():
+    # Check if Excel file exists
+    if not os.path.exists(excel_file):
+        print(f"Excel file not found: {excel_file}")
+        return
+    
     # Initialize data processor
     processor = DataProcessor(excel_file)
 
@@ -109,15 +103,19 @@ def main():
 
         if sheet_name == 'DATA-Channels':
             processor.process_channels(df)
+            print(f"Processed {len(processor.channels_dict)} channels")
         elif sheet_name == 'DATA-Teams':
             processor.process_teams(df)
+            print(f"Processed {len(processor.teams_dict)} teams")
         elif sheet_name == 'DATA-Videos':
             processor.process_videos(df)
-            print(f"\nTotal videos in Excel: {len(df)}")
+            print(f"Processed {len(processor.videos_dict)} videos")
 
     # Prepare and send data to backend
     teams_list, channels_list, videos_list = processor.prepare_data_for_api()
-    print(f"\nVideos after validation: {len(videos_list)}")
+    print(f"Teams prepared: {len(teams_list)}")
+    print(f"Channels prepared: {len(channels_list)}")
+    print(f"Videos after validation: {len(videos_list)}")
 
     # Send teams data
     teams_success = send_data_to_backend(
@@ -129,12 +127,12 @@ def main():
 
     # Send channels data
     print("\nProceeding with channels...")
-    channels_success = send_data_to_backend(
+    channels_success = send_data_in_chunks(
         '/api/channel-frontend/create-multiple-channels',
-        {"channels": channels_list},
-        'channels'
+        channels_list,
+        'channels',
     )
-    print(channels_success)
+    print(f"Channels send result: {channels_success}")
 
     # Wait a bit before sending videos to allow backend processing
     time.sleep(2)
@@ -153,16 +151,6 @@ def main():
     print(f"Teams status: {'Success' if teams_success else 'Failed'}")
     print(f"Channels status: {'Success' if channels_success else 'Failed'}")
     print(f"Videos status: {'Success' if videos_success else 'Failed'}")
-
-    # Print error summary
-    print("\nError Summary:")
-    for error_type, errors in error_tracking.items():
-        if errors:  # Only show non-empty error lists
-            print(f"\n{error_type.upper()} errors ({len(errors)}):")
-            for error in errors[:10]:  # Show first 10 errors
-                print(f"- {error}")
-            if len(errors) > 10:
-                print(f"... and {len(errors) - 10} more errors")
 
 
 if __name__ == "__main__":
