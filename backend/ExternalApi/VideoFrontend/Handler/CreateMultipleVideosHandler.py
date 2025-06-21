@@ -38,7 +38,8 @@ class CreateMultipleVideosHandler:
                 video_name = video_data.get('name')
                 video_url = video_data.get('videoLink')
 
-                if VideoRepository.checkIfVideoAlreadyExists(video_name, video_url):
+                if (VideoRepository.checkIfVideoNameAlreadyExists(video_name) or
+                        VideoRepository.checkIfVideoLinkAlreadyExists(video_url)):
                     existing_videos.append({
                         'name': video_name,
                         'video_link': video_url
@@ -142,7 +143,19 @@ class CreateMultipleVideosHandler:
 
                 # Set optional fields
                 video.comment = video_data.get('comment', '')
-                video.upload_date = datetime.fromisoformat(video_data.get('uploadDate'))
+
+                # Handle uploadDate - it might be a datetime object from ToDateTimeFilter or a string
+                upload_date = video_data.get('uploadDate')
+                if isinstance(upload_date, str):
+                    video.upload_date = datetime.fromisoformat(upload_date)
+                elif isinstance(upload_date, datetime):
+                    video.upload_date = upload_date
+                else:
+                    failed_videos.append({
+                        'name': video.name,
+                        'reason': 'Invalid upload date format'
+                    })
+                    continue
 
                 try:
                     video_id = video.create()
