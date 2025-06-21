@@ -24,7 +24,9 @@ class CreateTournamentHandler:
         )
 
         if TournamentRepository.checkIfTournamentAlreadyExists(
-                tournament.name, tournament.start_date):
+            name=tournament.name,
+                start_date=tournament.start_date
+        ):
             return Response(
                 response='Tournament with this name and start date already exists',
                 status=400

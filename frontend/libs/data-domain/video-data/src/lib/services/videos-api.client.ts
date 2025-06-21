@@ -32,8 +32,8 @@ export interface CreateVideoRequest {
   dateOfRecording: string;
   topic?: string;
   guests?: string;
-  weaponType?: WeaponTypesEnum;
-  gameSystem?: GameSystemTypesEnum;
+  weaponType?: WeaponTypesEnum | null;
+  gameSystem?: GameSystemTypesEnum | null;
   tournament?: {
     id?: number;
     name?: string;
@@ -92,9 +92,7 @@ export class VideosApiClient {
     limit: number,
     filters?: VideoFilterOptions
   ): Observable<PaginatedVideosApiResponseModel> {
-    let params = new HttpParams()
-      .set('start', start)
-      .set('limit', limit);
+    let params = new HttpParams().set('start', start).set('limit', limit);
 
     if (filters) {
       if (filters.sort) {

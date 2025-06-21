@@ -11,7 +11,7 @@ Authorization: Bearer {{jwtToken}}
 
 
 ### Get another users details
-GET https://localhost:8080/api/user-frontend/get-user-details/test
+GET https://{{host}}/api/user-frontend/get-user-details/test
 
 > {%
     client.test("It should return a successful status code", function() {

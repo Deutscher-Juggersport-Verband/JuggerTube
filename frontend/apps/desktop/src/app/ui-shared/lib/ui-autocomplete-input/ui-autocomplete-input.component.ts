@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -33,8 +41,9 @@ type ValueFieldType = keyof Pick<OptionType, 'id'>;
   templateUrl: './ui-autocomplete-input.component.html',
   styleUrl: './ui-autocomplete-input.component.less',
 })
-export class UiAutocompleteInputComponent {
+export class UiAutocompleteInputComponent implements OnInit {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private readonly destroyRef$: DestroyRef = inject(DestroyRef);
 
   @Input() public formControlElement!: FormControl;
   @Input() public options: OptionType[] = [];
@@ -42,7 +51,7 @@ export class UiAutocompleteInputComponent {
   @Input() public valueField: ValueFieldType = 'id';
   @Input() public placeholder: string = 'Suchen...';
 
-  @Input() public labelText!: string;
+  @Input() public labelText?: string;
   @Input() public direction: UiInputDirectionEnum = UiInputDirectionEnum.COLUMN;
 
   @Input() public infoButtonHeadline?: string;
@@ -56,9 +65,13 @@ export class UiAutocompleteInputComponent {
   public searchControl = new FormControl('');
   public hasExactMatch = false;
 
-  constructor() {
+  public ngOnInit(): void {
     this.searchControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef$)
+      )
       .subscribe((value) => {
         this.filterOptions(value);
       });

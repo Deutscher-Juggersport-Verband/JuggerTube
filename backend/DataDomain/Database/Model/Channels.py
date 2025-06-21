@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
@@ -14,7 +13,6 @@ class Channels(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique=True,
     )
 
     name: str = db.Column(
@@ -46,7 +44,7 @@ class Channels(BaseModel):
         onupdate=func.now()
     )
 
-    videos: Mapped[List['Videos']] = db.relationship(
+    videos: Mapped[list['Videos']] = db.relationship(
         'Videos',
         back_populates='channel'
     )

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { TournamentApiResponseModel } from '../models/tournament-api-response.mo
   providedIn: 'root',
 })
 export class TournamentsApiClient {
-  constructor(private httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient = inject(HttpClient);
 
   public get(): Observable<TournamentApiResponseModel[]> {
     return this.httpClient.get<TournamentApiResponseModel[]>(

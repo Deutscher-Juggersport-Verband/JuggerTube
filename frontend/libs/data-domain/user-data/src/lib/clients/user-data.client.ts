@@ -1,17 +1,19 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
 
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 
 import { UserRoleEnum } from '../enums/role-type.enum';
 import { User, UserShort } from '../models/user-data.model';
 import { convertFileToBase64Rule } from '@frontend/user';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserDataClient {
   private readonly http: HttpClient = inject(HttpClient);
+  private readonly destroyRef$: DestroyRef = inject(DestroyRef);
 
   private readonly privilegedUserShortOverviewCache$ = new BehaviorSubject<
     UserShort[]
@@ -30,6 +32,7 @@ export class UserDataClient {
         .get<UserShort[]>(
           '/api/user-frontend/get-privileged-user-short-overview'
         )
+        .pipe(takeUntilDestroyed(this.destroyRef$))
         .subscribe((data) => this.privilegedUserShortOverviewCache$.next(data));
     }
     return this.privilegedUserShortOverviewCache$.asObservable();

@@ -19,7 +19,6 @@ class Videos(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique=True,
     )
 
     name: str = db.Column(
@@ -51,17 +50,17 @@ class Videos(BaseModel):
         default=''
     )
 
-    date_of_recording: datetime = db.Column(
+    date_of_recording: datetime | None = db.Column(
         db.DateTime,
         nullable=True,
     )
 
-    game_system: GameSystemTypesEnum = db.Column(
+    game_system: GameSystemTypesEnum | None = db.Column(
         db.Enum(GameSystemTypesEnum),
         nullable=True,
     )
 
-    weapon_type: WeaponTypesEnum = db.Column(
+    weapon_type: WeaponTypesEnum | None = db.Column(
         db.Enum(WeaponTypesEnum),
         nullable=True,
     )
@@ -76,7 +75,7 @@ class Videos(BaseModel):
         nullable=False
     )
 
-    status = db.Column(
+    status: VideoStatusEnum = db.Column(
         db.Enum(VideoStatusEnum),
         nullable=False,
         default=VideoStatusEnum.PENDING
@@ -88,7 +87,7 @@ class Videos(BaseModel):
         nullable=True
     )
 
-    uploader: Mapped['Users'] = db.relationship(
+    uploader: Mapped[Users | None] = db.relationship(
         'Users',
         foreign_keys=[uploader_id],
     )
@@ -99,39 +98,39 @@ class Videos(BaseModel):
         nullable=False
     )
 
-    channel: Mapped['Channels'] = db.relationship(
+    channel: Mapped[Channels] = db.relationship(
         'Channels',
         back_populates='videos'
     )
 
-    tournament_id: int = db.Column(
+    tournament_id: int | None = db.Column(
         db.Integer,
         db.ForeignKey('tournaments.id'),
         nullable=True
     )
 
-    tournament: Mapped['Tournaments'] = db.relationship(
+    tournament: Mapped[Tournaments | None] = db.relationship(
         'Tournaments',
         back_populates='videos'
     )
 
-    team_one_id: int = db.Column(
+    team_one_id: int | None = db.Column(
         db.Integer,
         db.ForeignKey('teams.id'),
         nullable=True)
 
-    team_two_id: int = db.Column(
+    team_one: Mapped[Teams | None] = db.relationship(
+        'Teams',
+        foreign_keys=[team_one_id]
+    )
+
+    team_two_id: int | None = db.Column(
         db.Integer,
         db.ForeignKey('teams.id'),
         nullable=True
     )
 
-    team_one: Mapped[Teams] = db.relationship(
-        'Teams',
-        foreign_keys=[team_one_id]
-    )
-
-    team_two: Mapped[Teams] = db.relationship(
+    team_two: Mapped[Teams | None] = db.relationship(
         'Teams',
         foreign_keys=[team_two_id]
     )

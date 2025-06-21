@@ -36,9 +36,18 @@ def get_paginated_videos() -> Response:
     return GetPaginatedVideosHandler.handle()
 
 
+@video_frontend.route('/get-pending-video-overview',
+                      methods=['GET'], endpoint='get-pending-video-overview')
+@cache.cached(key_prefix='pending-video-overview')
+@jwt_required()
+def get_pending_video_overview() -> Response:
+    return GetPendingVideoOverviewHandler.handle()
+
+
 @video_frontend.route('/create-video',
                       methods=['POST'], endpoint='create-video')
 @limiter.limit('45 per day, 15 per hour')
+@jwt_required()
 @CreateVideoInputFilter.validate()
 def create_video() -> Response:
     return CreateVideoHandler.handle()
@@ -46,18 +55,10 @@ def create_video() -> Response:
 
 @video_frontend.route('/create-multiple-videos',
                       methods=['POST'], endpoint='create-multiple-videos')
-# TODO: Extra authentication für die skripte
+# TODO: Remove after migrating to flask commands
 @CreateMultipleVideosInputFilter.validate()
 def create_multiple_videos() -> Response:
     return CreateMultipleVideosHandler.handle()
-
-
-@video_frontend.route('/get-pending-video-overview',
-                      methods=['GET'], endpoint='get-pending-video-overview')
-@cache.cached(key_prefix='pending-video-overview')
-@jwt_required()
-def get_pending_video_overview() -> Response:
-    return GetPendingVideoOverviewHandler.handle()
 
 
 @video_frontend.route('/update-pending-video-status',

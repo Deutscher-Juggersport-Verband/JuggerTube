@@ -1,19 +1,18 @@
-from typing import List
 from datetime import datetime
 
+from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
-from sqlalchemy import or_, func
 
 from BusinessDomain.User.Model import UserShort
 from DataDomain.Database import db
-from DataDomain.Database.Enum import VideoStatusEnum, VideoCategoriesEnum
+from DataDomain.Database.Enum import VideoCategoriesEnum, VideoStatusEnum
 from DataDomain.Database.Model import Channels, Teams, Tournaments, Users, Videos
 
 
 class VideoRepository:
 
     @staticmethod
-    def getVideoOverview() -> List[dict]:
+    def getVideoOverview() -> list[dict]:
 
         team_one = aliased(Teams)
         team_two = aliased(Teams)
@@ -64,11 +63,11 @@ class VideoRepository:
             {
                 'id': video.id,
                 'name': video.name,
-                'category': video.category.value if video.category else None,
+                'category': video.category,
                 'videoLink': video.video_link,
                 'comment': video.comment,
-                'gameSystem': video.game_system.value if video.game_system else None,
-                'weaponType': video.weapon_type.value if video.weapon_type else None,
+                'gameSystem': video.game_system,
+                'weaponType': video.weapon_type,
                 'topic': video.topic,
                 'guests': video.guests,
                 'uploadDate': video.upload_date,
@@ -141,9 +140,9 @@ class VideoRepository:
 
     @staticmethod
     def videoAlreadyExists(video_name: str, video_url: str) -> dict | None:
-        video = Videos.session.query(
+        video = db.session.query(
             Videos.name,
-            Videos.url,
+            Videos.video_link,
             Videos.status,
             Videos.is_deleted
         ).filter(
@@ -151,7 +150,7 @@ class VideoRepository:
             Videos.name == video_name,
             Videos.video_link == video_url,
             Videos.status != VideoStatusEnum.DECLINED
-        )
+        ).first()
 
         if not video:
             return None
@@ -160,7 +159,7 @@ class VideoRepository:
 
     @staticmethod
     def getPaginatedVideos(
-        start: int, 
+        start: int,
         limit: int,
         sort: str = None,
         name_filter: str = None,
@@ -220,13 +219,13 @@ class VideoRepository:
         # Apply filters
         if name_filter:
             query = query.filter(Videos.name.ilike(f'%{name_filter}%'))
-        
+
         if category:
             query = query.filter(Videos.category == VideoCategoriesEnum(category))
-        
+
         if channel_name:
             query = query.filter(Channels.name.ilike(f'%{channel_name}%'))
-        
+
         if team_name:
             query = query.filter(
                 or_(
@@ -234,22 +233,22 @@ class VideoRepository:
                     team_two.name.ilike(f'%{team_name}%')
                 )
             )
-        
+
         if tournament_name:
             query = query.filter(Tournaments.name.ilike(f'%{tournament_name}%'))
-        
+
         if recording_date_from:
             recording_from = datetime.strptime(recording_date_from, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.date_of_recording) >= recording_from)
-        
+
         if recording_date_to:
             recording_to = datetime.strptime(recording_date_to, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.date_of_recording) <= recording_to)
-        
+
         if upload_date_from:
             upload_from = datetime.strptime(upload_date_from, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.upload_date) >= upload_from)
-        
+
         if upload_date_to:
             upload_to = datetime.strptime(upload_date_to, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.upload_date) <= upload_to)
@@ -279,11 +278,11 @@ class VideoRepository:
             {
                 'id': video.id,
                 'name': video.name,
-                'category': video.category.value if video.category else None,
+                'category': video.category,
                 'videoLink': video.video_link,
                 'comment': video.comment,
-                'gameSystem': video.game_system.value if video.game_system else None,
-                'weaponType': video.weapon_type.value if video.weapon_type else None,
+                'gameSystem': video.game_system,
+                'weaponType': video.weapon_type,
                 'topic': video.topic,
                 'guests': video.guests,
                 'uploadDate': video.upload_date,
@@ -344,13 +343,13 @@ class VideoRepository:
         # Apply the same filters as in getPaginatedVideos
         if name_filter:
             query = query.filter(Videos.name.ilike(f'%{name_filter}%'))
-        
+
         if category:
             query = query.filter(Videos.category == VideoCategoriesEnum(category))
-        
+
         if channel_name:
             query = query.filter(Channels.name.ilike(f'%{channel_name}%'))
-        
+
         if team_name:
             query = query.filter(
                 or_(
@@ -358,22 +357,22 @@ class VideoRepository:
                     team_two.name.ilike(f'%{team_name}%')
                 )
             )
-        
+
         if tournament_name:
             query = query.filter(Tournaments.name.ilike(f'%{tournament_name}%'))
-        
+
         if recording_date_from:
             recording_from = datetime.strptime(recording_date_from, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.date_of_recording) >= recording_from)
-        
+
         if recording_date_to:
             recording_to = datetime.strptime(recording_date_to, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.date_of_recording) <= recording_to)
-        
+
         if upload_date_from:
             upload_from = datetime.strptime(upload_date_from, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.upload_date) >= upload_from)
-        
+
         if upload_date_to:
             upload_to = datetime.strptime(upload_date_to, '%Y-%m-%d').date()
             query = query.filter(func.date(Videos.upload_date) <= upload_to)
@@ -440,11 +439,11 @@ class VideoRepository:
             {
                 'id': video.id,
                 'name': video.name,
-                'category': video.category.value if video.category else None,
+                'category': video.category,
                 'videoLink': video.video_link,
                 'comment': video.comment,
-                'gameSystem': video.game_system.value if video.game_system else None,
-                'weaponType': video.weapon_type.value if video.weapon_type else None,
+                'gameSystem': video.game_system,
+                'weaponType': video.weapon_type,
                 'topic': video.topic,
                 'guests': video.guests,
                 'uploadDate': video.upload_date,

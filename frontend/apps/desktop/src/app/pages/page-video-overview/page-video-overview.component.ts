@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, Signal } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -9,7 +9,11 @@ import { UiInputComponent, UiInputTypeEnum } from '../../ui-shared';
 import { SearchVideoTileComponent } from './components/search-video-tile/search-video-tile.component';
 import { VideoTileComponent } from './components/video-tile/video-tile.component';
 import { VideosDataService } from '@frontend/video';
-import { SortOption,VideoApiResponseModel, VideoFilterOptions } from '@frontend/video-data';
+import {
+  SortOption,
+  VideoApiResponseModel,
+  VideoFilterOptions,
+} from '@frontend/video-data';
 
 @Component({
   imports: [
@@ -18,14 +22,16 @@ import { SortOption,VideoApiResponseModel, VideoFilterOptions } from '@frontend/
     SearchVideoTileComponent,
     RouterLink,
     MatPaginatorModule,
-    ReactiveFormsModule,
-    UiInputComponent
+    UiInputComponent,
   ],
   standalone: true,
   templateUrl: './page-video-overview.component.html',
   styleUrl: './page-video-overview.component.less',
 })
 export class PageVideoOverviewComponent {
+  private readonly videosDataService: VideosDataService =
+    inject(VideosDataService);
+
   public readonly paginatedVideos: Signal<VideoApiResponseModel[]>;
   public readonly totalVideos: Signal<number>;
   public readonly pageSizeOptions = [5, 10, 25, 50];
@@ -43,11 +49,13 @@ export class PageVideoOverviewComponent {
     'Aufnahme: Neueste zuerst',
     'Aufnahme: Älteste zuerst',
     'Upload: Neueste zuerst',
-    'JuggerTube: Neueste zuerst'
+    'JuggerTube: Neueste zuerst',
   ];
 
-  constructor(private readonly videosDataService: VideosDataService) {
-    this.videosDataService.loadPaginatedVideos(this.startIndex, this.pageSize, { sort: this.currentSort });
+  constructor() {
+    this.videosDataService.loadPaginatedVideos(this.startIndex, this.pageSize, {
+      sort: this.currentSort,
+    });
     this.paginatedVideos = this.videosDataService.paginatedVideos;
     this.totalVideos = this.videosDataService.totalCountVideos;
 
@@ -60,7 +68,8 @@ export class PageVideoOverviewComponent {
   }
 
   public onFiltersChanged(filters: VideoFilterOptions): void {
-    const filtersChanged = JSON.stringify(this.currentFilters) !== JSON.stringify(filters);
+    const filtersChanged =
+      JSON.stringify(this.currentFilters) !== JSON.stringify(filters);
 
     if (filtersChanged) {
       this.videosDataService.clearVideoCache();
@@ -98,7 +107,9 @@ export class PageVideoOverviewComponent {
     }
 
     const targetStartIndex = targetPageIndex * newPageSize;
-    const maxStartIndex = Math.max(0, Math.ceil(this.totalVideos() / newPageSize) - 1) * newPageSize;
+    const maxStartIndex =
+      Math.max(0, Math.ceil(this.totalVideos() / newPageSize) - 1) *
+      newPageSize;
 
     if (targetStartIndex >= this.totalVideos()) {
       this.navigateToPage(maxStartIndex, newPageSize);
@@ -113,8 +124,18 @@ export class PageVideoOverviewComponent {
     this.startIndex = startIndex;
     this.pageSize = pageSize;
 
-    if (!this.videosDataService.isRangeCached(startIndex, pageSize, this.currentFilters)) {
-      this.videosDataService.loadNextVideos(startIndex, pageSize, this.currentFilters);
+    if (
+      !this.videosDataService.isRangeCached(
+        startIndex,
+        pageSize,
+        this.currentFilters
+      )
+    ) {
+      this.videosDataService.loadNextVideos(
+        startIndex,
+        pageSize,
+        this.currentFilters
+      );
     } else {
       this.videosDataService.updateCurrentView(startIndex, pageSize);
     }
@@ -126,7 +147,11 @@ export class PageVideoOverviewComponent {
   }
 
   private loadVideosWithCurrentFilters(): void {
-    this.videosDataService.loadPaginatedVideos(this.startIndex, this.pageSize, this.currentFilters);
+    this.videosDataService.loadPaginatedVideos(
+      this.startIndex,
+      this.pageSize,
+      this.currentFilters
+    );
   }
 
   // Hilfsmethoden für Sortierung
@@ -137,19 +162,19 @@ export class PageVideoOverviewComponent {
       'Aufnahme: Neueste zuerst': 'recording_date_desc',
       'Aufnahme: Älteste zuerst': 'recording_date_asc',
       'Upload: Neueste zuerst': 'upload_date_desc',
-      'JuggerTube: Neueste zuerst': 'created_at_desc'
+      'JuggerTube: Neueste zuerst': 'created_at_desc',
     };
     return mapping[label] || 'upload_date_desc';
   }
 
   public getSortLabelFromValue(value: SortOption): string {
     const mapping: Record<SortOption, string> = {
-      'name_asc': 'Name A-Z',
-      'name_desc': 'Name Z-A',
-      'recording_date_desc': 'Aufnahme: Neueste zuerst',
-      'recording_date_asc': 'Aufnahme: Älteste zuerst',
-      'upload_date_desc': 'Upload: Neueste zuerst',
-      'created_at_desc': 'JuggerTube: Neueste zuerst'
+      name_asc: 'Name A-Z',
+      name_desc: 'Name Z-A',
+      recording_date_desc: 'Aufnahme: Neueste zuerst',
+      recording_date_asc: 'Aufnahme: Älteste zuerst',
+      upload_date_desc: 'Upload: Neueste zuerst',
+      created_at_desc: 'JuggerTube: Neueste zuerst',
     };
     return mapping[value] || 'Upload: Neueste zuerst';
   }

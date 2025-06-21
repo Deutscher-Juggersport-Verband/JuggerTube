@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
@@ -10,6 +9,7 @@ from DataDomain.Database.Model import BaseModel
 
 class Tournaments(BaseModel):
     __tablename__ = 'tournaments'
+
     __table_args__ = (
         db.UniqueConstraint('name', 'start_date', name='uix_tournament_name_date'),
     )
@@ -17,7 +17,6 @@ class Tournaments(BaseModel):
     id: int = db.Column(
         db.Integer,
         primary_key=True,
-        unique=True,
     )
 
     name: str = db.Column(
@@ -63,7 +62,7 @@ class Tournaments(BaseModel):
         onupdate=func.now()
     )
 
-    videos: Mapped[List['Videos']] = db.relationship(
+    videos: Mapped[list['Videos']] = db.relationship(
         'Videos',
         back_populates='tournament'
     )

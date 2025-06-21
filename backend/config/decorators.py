@@ -6,6 +6,7 @@ from flask_jwt_extended import verify_jwt_in_request
 from flask_jwt_extended.exceptions import InvalidHeaderError, NoAuthorizationError
 from flask_jwt_extended.view_decorators import LocationType
 
+from BusinessDomain.User.Rule import IsCurrentUserPrivilegedRule
 from DataDomain.Model import Response
 
 
@@ -70,8 +71,6 @@ def jwt_guest_required(
         return decorator
     return wrapper
 
-# TODO: implement jwt_privileged_required correctly
-
 
 def jwt_privileged_required(
         optional: bool = False,
@@ -82,11 +81,12 @@ def jwt_privileged_required(
         skip_revocation_check: bool = False,
 ) -> Any:
     """
-    A decorator to protect a Flask endpoint with JSON Web Tokens.
+    A decorator to protect a Flask endpoint with JSON Web Tokens, requiring privileged roles.
 
     Any route decorated with this will require a valid JWT to be present in the
     request (unless optional=True, in which case no JWT is also valid) before the
-    endpoint can be called.
+    endpoint can be called. Additionally, the JWT must be associated with a user
+    that has either the ADMIN or MODERATOR role.
 
     :param optional:
         If ``True``, allow the decorated endpoint to be accessed if no JWT is present in
@@ -122,6 +122,11 @@ def jwt_privileged_required(
             verify_jwt_in_request(
                 optional, fresh, refresh, locations, verify_type, skip_revocation_check
             )
+
+            if not IsCurrentUserPrivilegedRule.applies():
+                return Response(
+                    error="Du besitzt nicht die benötigten Rechte, dies zu tun.",
+                    status=403)
             return current_app.ensure_sync(fn)(*args, **kwargs)
 
         return decorator

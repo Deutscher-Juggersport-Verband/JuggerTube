@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Customer Frontend API
+  version: 1.0.0
+paths:
+  /api/user-frontend/is-privileged:
+    get:
+      summary: Is privileged
+      description: Checks if the user is privileged.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+        '500':
+          description: Internal server error

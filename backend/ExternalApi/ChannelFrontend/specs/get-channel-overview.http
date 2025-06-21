@@ -1,0 +1,9 @@
+### Get channel overview
+GET https://{{host}}/api/channel-frontend/get-channel-overview
+Authorization: Bearer {{jwtToken}}
+
+> {%
+client.test("It should return a successful status code", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%} 

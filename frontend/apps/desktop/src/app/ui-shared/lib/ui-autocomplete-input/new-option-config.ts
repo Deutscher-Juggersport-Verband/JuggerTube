@@ -18,15 +18,13 @@ export interface NewOptionConfig {
   prefillField?: FormControl;
 }
 
-export interface NewOptionRawFieldConfig {
-  labelText: string;
-  type: UiInputTypeEnum;
+export interface NewOptionRawFieldConfig
+  extends Omit<NewOptionFieldConfig, 'formControlElement'> {
   formControlElement: string;
-  direction: UiInputDirectionEnum;
 }
 
-export interface NewOptionRawConfig {
-  labelText: string;
+export interface NewOptionRawConfig
+  extends Omit<NewOptionConfig, 'fields' | 'prefillField'> {
   fields: NewOptionRawFieldConfig[];
   prefillField?: string;
 }

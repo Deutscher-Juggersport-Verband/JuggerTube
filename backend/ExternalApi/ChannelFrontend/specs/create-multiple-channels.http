@@ -1,5 +1,5 @@
 ### Create multiple channels
-POST https://localhost:8080/api/channel-frontend/create-multiple-channels
+POST https://{{host}}/api/channel-frontend/create-multiple-channels
 Content-Type: application/json
 
 {

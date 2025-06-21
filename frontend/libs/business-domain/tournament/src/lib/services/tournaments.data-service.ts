@@ -1,4 +1,4 @@
-import { Injectable, Signal } from '@angular/core';
+import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
@@ -8,9 +8,10 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class TournamentsDataService {
-  constructor(private readonly tournamentsApiClient: TournamentsApiClient) {}
+  private readonly tournamentsApiClient: TournamentsApiClient =
+    inject(TournamentsApiClient);
 
-  public getTournaments(): Signal<TournamentApiResponseModel[] | undefined> {
-    return toSignal(this.tournamentsApiClient.get());
+  public getTournaments(): Signal<TournamentApiResponseModel[]> {
+    return toSignal(this.tournamentsApiClient.get(), { initialValue: [] });
   }
 }

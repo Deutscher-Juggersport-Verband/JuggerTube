@@ -65,7 +65,6 @@ export const teamOneNewOptionConfig: NewOptionRawConfig = {
       direction: UiInputDirectionEnum.ROW,
     },
   ],
-  prefillField: '',
 };
 
 export const teamTwoNewOptionConfig: NewOptionRawConfig = {

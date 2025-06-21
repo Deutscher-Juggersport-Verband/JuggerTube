@@ -1,5 +1,5 @@
 ### Get videos overview (basic)
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10
 
 > {%
     client.test("It should return a successful status code", function() {
@@ -8,16 +8,16 @@ GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit
 %}
 
 ### Get videos with sorting (alphabetical ascending)
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10&sort=name_asc
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10&sort=name_asc
 
 ### Get videos with name filter
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10&name_filter=Cup
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10&name_filter=Cup
 
 ### Get videos with category filter
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10&category=match
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10&category=match
 
 ### Get videos with date range filter (recording date)
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10&recording_date_from=2024-01-01&recording_date_to=2024-12-31
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10&recording_date_from=2024-01-01&recording_date_to=2024-12-31
 
 ### Get videos with multiple filters and sorting
-GET https://localhost:8080/api/video-frontend/get-paginated-videos?start=0&limit=10&sort=upload_date_desc&category=match&team_name=Basel
+GET https://{{host}}/api/video-frontend/get-paginated-videos?start=0&limit=10&sort=upload_date_desc&category=match&team_name=Basel

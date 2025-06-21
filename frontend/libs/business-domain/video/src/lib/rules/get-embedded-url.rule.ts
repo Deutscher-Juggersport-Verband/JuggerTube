@@ -3,9 +3,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { isYoutubeUrl } from './is-youtube-url.rule';
 
-export function getEmbeddedUrlRule(url: string): SafeResourceUrl {
+export function getEmbeddedUrlRule(url: string): SafeResourceUrl | null {
   if (isYoutubeUrl(url)) {
-    return '';
+    return null;
   }
 
   const sanitizer = inject(DomSanitizer);

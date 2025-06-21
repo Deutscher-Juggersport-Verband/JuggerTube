@@ -1,0 +1,9 @@
+### Get privileged user short overview
+GET https://{{host}}/api/user-frontend/get-privileged-user-short-overview
+Authorization: Bearer {{jwtToken}}
+
+> {%
+client.test("It should return a successful status code", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}

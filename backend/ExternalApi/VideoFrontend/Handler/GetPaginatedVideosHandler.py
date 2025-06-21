@@ -1,6 +1,5 @@
 from flask import g
 
-from DataDomain.Database.Model import Videos
 from DataDomain.Database.Repository import VideoRepository
 from DataDomain.Model import Response
 
@@ -14,10 +13,10 @@ class GetPaginatedVideosHandler:
 
         start = data.get('start')
         limit = data.get('limit')
-        
+
         # Sorting parameter
         sort = data.get('sort')
-        
+
         # Filter parameters
         name_filter = data.get('name_filter')
         category = data.get('category')
