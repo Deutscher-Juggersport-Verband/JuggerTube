@@ -21,7 +21,7 @@ class CreateChannelHandler:
             channel.name = data.get('name')
             channel.link = data.get('link')
 
-            if ChannelRepository.getChannelIdByLink(channel.link):
+            if ChannelRepository.checkIfChannelAlreadyExists(channel.name, channel.link):
                 logging.warning(f"Channel with link {channel.link} already exists")
                 return Response(
                     response='Channel with this link already exists',

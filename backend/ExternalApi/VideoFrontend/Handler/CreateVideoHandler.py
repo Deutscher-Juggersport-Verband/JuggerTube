@@ -36,7 +36,7 @@ class CreateVideoHandler:
                 logging.error(f"Validation error: {str(e)}")
                 return Response(response=str(e), status=400)
 
-            if VideoRepository.getVideoByName(video.name):
+            if VideoRepository.checkIfVideoAlreadyExists(video.name, video.video_link):
                 logging.warning(f"Video with name {video.name} already exists")
                 return Response(
                     response='Video with this name already exists',
