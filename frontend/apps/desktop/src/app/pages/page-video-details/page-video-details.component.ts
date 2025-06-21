@@ -41,7 +41,7 @@ export class PageVideoDetailsComponent {
       Number(this.route.snapshot.paramMap.get('id'))
     );
   public isYoutubeUrl = isYoutubeUrl(this.video?.videoLink ?? '');
-  public embeddedUrl: SafeResourceUrl = getEmbeddedUrlRule(
+  public embeddedUrl: SafeResourceUrl | null = getEmbeddedUrlRule(
     this.video?.videoLink ?? ''
   );
 

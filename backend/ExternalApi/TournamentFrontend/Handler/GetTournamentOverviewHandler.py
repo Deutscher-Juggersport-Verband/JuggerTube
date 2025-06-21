@@ -8,9 +8,7 @@ class GetTournamentOverviewHandler:
     @staticmethod
     def handle() -> Response:
 
-        tournaments = TournamentRepository.getTournamentOverview()
-
         return Response(
-            response=tournaments,
+            response=TournamentRepository.getTournamentOverview(),
             status=200,
         )

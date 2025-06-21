@@ -8,11 +8,8 @@ from flask_inputfilter.validators import (
 
 
 class CreateMultipleTeamsInputFilter(InputFilter):
-    """Input filter for creating multiple teams"""
 
-    def __init__(self):
-        """Initializes the CreateMultipleTeamsInputFilter"""
-        super().__init__()
+    def __init__(self) -> None:
 
         self.add(
             'teams',

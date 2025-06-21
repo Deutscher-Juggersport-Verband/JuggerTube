@@ -14,8 +14,8 @@ class CreateUserHandler:
 
         data = g.validated_data
 
-        username = data.get('username')
-        email = data.get('email')
+        username: str = data.get('username')
+        email: str = data.get('email')
 
         if DoesUsernameExistsRule.applies(username):
             return Response(

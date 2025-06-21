@@ -14,6 +14,21 @@ export function markAllFieldsAsTouched(form: FormGroup): void {
   });
 }
 
+let isUpdating = false;
+export function updateAllControlsValidity(form: FormGroup): void {
+  if (isUpdating) return;
+  isUpdating = true;
+
+  Object.keys(form.controls).forEach((key) => {
+    const control = form.get(key);
+    if (control) {
+      control.updateValueAndValidity();
+    }
+  });
+
+  isUpdating = false;
+}
+
 export function notZeroValidator(
   control: AbstractControl
 ): ValidationErrors | null {

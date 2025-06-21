@@ -22,7 +22,7 @@ def get_team_overview() -> Response:
 
 @team_frontend.route('/create-multiple-teams',
                      methods=['POST'], endpoint='create-multiple-teams')
-# TODO: Extra authentication für die skripte
+# TODO: Remove after migrating to flask commands
 @CreateMultipleTeamsInputFilter.validate()
 def create_multiple_teams() -> Response:
     return CreateMultipleTeamsHandler.handle()

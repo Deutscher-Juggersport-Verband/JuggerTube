@@ -1,4 +1,3 @@
-from typing import Dict, List
 
 from flask import g
 
@@ -11,11 +10,10 @@ from DataDomain.Model import Response
 
 
 class CreateMultipleTournamentsHandler:
-    """Handler for creating multiple tournaments"""
 
     @staticmethod
     def handle() -> Response:
-        """Create multiple tournaments from an array of tournament data"""
+
         data = g.validated_data
         tournaments_data = data.get('tournaments', [])
 
@@ -25,9 +23,9 @@ class CreateMultipleTournamentsHandler:
                 status=400
             )
 
-        created_tournaments: List[Dict] = []
-        failed_tournaments: List[Dict] = []
-        existing_tournaments: List[Dict] = []
+        created_tournaments: list[dict] = []
+        failed_tournaments: list[dict] = []
+        existing_tournaments: list[dict] = []
 
         for tournament_data in tournaments_data:
             try:

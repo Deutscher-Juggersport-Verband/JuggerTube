@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime
 
 from amqp import channel
 from flask import g
@@ -27,17 +26,13 @@ class CreateVideoHandler:
         """Create Video"""
         try:
             data = g.validated_data
+
             logging.info(
                 f"CreateVideo | Received video creation request with data: {data}")
 
-            try:
-                video = CreateVideoHandler._create_base_video(data)
-            except ValueError as e:
-                logging.error(f"Validation error: {str(e)}")
-                return Response(response=str(e), status=400)
+            video = CreateVideoHandler._create_base_video(data)
 
             if VideoRepository.checkIfVideoAlreadyExists(video.name, video.video_link):
-                logging.warning(f"Video with name {video.name} already exists")
                 return Response(
                     response='Video with this name already exists',
                     status=400
@@ -59,20 +54,15 @@ class CreateVideoHandler:
                 logging.warning(f"Missing required data for category {video.category}")
                 return Response(response='missing required data', status=400)
 
-            try:
-                video_id = video.create()
-                logging.info(f"Successfully created video with ID: {video_id}")
+            video_id = video.create()
+            logging.info(f"Successfully created video with ID: {video_id}")
 
-                clear_video_overview_cache()
+            clear_video_overview_cache()
 
-                return Response(
-                    response=video_id,
-                    status=200
-                )
-
-            except Exception as e:
-                logging.error(f"Error creating video in database: {str(e)}")
-                return Response(status=500)
+            return Response(
+                response=video_id,
+                status=200
+            )
 
         except Exception as e:
             logging.error(f"Unexpected error in CreateVideoHandler: {str(e)}")
@@ -95,11 +85,10 @@ class CreateVideoHandler:
 
         # Set optional fields
         video.comment = data.get('comment')
-        video.upload_date = datetime.fromisoformat(data.get('uploadDate'))
-        video.date_of_recording = datetime.fromisoformat(
-            data.get('dateOfRecording')) if data.get('dateOfRecording') else None
+        video.upload_date = data.get('uploadDate')
+        video.date_of_recording = data.get('dateOfRecording')
 
-        # TODO: Check if bot
+        # TODO: Remove after migrating to flask commands
         if not get_jwt_identity():
             video.status = VideoStatusEnum.APPROVED
 
@@ -151,7 +140,7 @@ class CreateVideoHandler:
 
         channel.name = channel_data.get('name')
         channel.link = channel_data.get('link')
-        return ChannelRepository.create(channel)
+        return channel.create()
 
     @staticmethod
     def _handle_tournament_data(tournament_data: dict) -> int | None:
@@ -162,10 +151,10 @@ class CreateVideoHandler:
         if 'id' in tournament_data:
             return tournament_data.get('id')
 
-        tournament = Tournaments()
-
         if TournamentRepository.getTournamentByName(tournament_data.get('name')):
             return None
+
+        tournament = Tournaments()
 
         tournament.name = tournament_data.get('name')
         tournament.city = tournament_data.get('city')

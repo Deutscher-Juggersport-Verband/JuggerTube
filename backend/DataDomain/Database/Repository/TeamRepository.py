@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import func
 
 from DataDomain.Database import db
@@ -10,9 +8,9 @@ class TeamRepository:
     """Repository for team related queries"""
 
     @staticmethod
-    def getTeamOverview() -> List[dict]:
+    def getTeamOverview() -> list[dict]:
         """Get all teams from database"""
-        teams = (db.session.query(
+        return db.session.query(
             Teams.id,
             Teams.name,
             Teams.city,
@@ -20,18 +18,7 @@ class TeamRepository:
             Teams.is_deleted != True
         ).order_by(
             Teams.name
-        ).all())
-
-        result = []
-        for team in teams:
-            team_dict = {
-                'id': team.id,
-                'name': team.name,
-                'city': team.city,
-            }
-            result.append(team_dict)
-
-        return result
+        ).all()
 
     @staticmethod
     def getTeamIdByName(team_name: str) -> int | None:

@@ -1,0 +1,29 @@
+### Create multiple tournaments
+POST https://{{host}}/api/tournament-frontend/create-multiple-tournaments
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "tournaments": [
+    {
+      "name": "Tournament A",
+      "city": "City A",
+      "startDate": "2024-07-25T14:30:00Z",
+      "endDate": "2024-07-25T14:30:00Z",
+      "jtrLink": "https://turniere.jugger.org/tournament.php?id=785"
+    },
+    {
+      "name": "Tournament B",
+      "city": "City B",
+      "startDate": "2024-07-26T14:30:00Z",
+      "endDate": "2024-07-26T14:30:00Z",
+      "jtrLink": "https://turniere.jugger.org/tournament.php?id=786"
+    }
+  ]
+}
+
+> {%
+client.test("It should return a successful status code", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}

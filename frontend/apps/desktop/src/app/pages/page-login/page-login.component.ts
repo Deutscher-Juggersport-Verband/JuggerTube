@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import {
@@ -15,25 +10,12 @@ import {
   UiInputTypeEnum,
 } from '../../ui-shared';
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
+import { loginForm } from '@frontend/user';
 import {
   AuthResponse,
   LoginRequestBody,
   UserApiClient,
 } from '@frontend/user-data';
-
-export const loginForm = new FormGroup<{
-  email: FormControl<string>;
-  password: FormControl<string>;
-}>({
-  email: new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required, Validators.email],
-  }),
-  password: new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required, Validators.minLength(8)],
-  }),
-});
 
 @Component({
   imports: [

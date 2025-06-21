@@ -24,7 +24,7 @@ def get_tournament_overview() -> Response:
 
 @tournament_frontend.route('/create-multiple-tournaments',
                            methods=['POST'], endpoint='create-multiple-tournaments')
-# TODO: Extra authentication für die skripte
+# TODO: Remove after migrating to flask commands
 @CreateMultipleTournamentsInputFilter.validate()
 def create_multiple_tournaments() -> Response:
     return CreateMultipleTournamentsHandler.handle()

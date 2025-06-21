@@ -35,12 +35,12 @@ class Users(BaseModel):
         nullable=False
     )
 
-    password_reset_hash: str = db.Column(
+    password_reset_hash: str | None = db.Column(
         db.String(255),
         nullable=True
     )
 
-    email: str | None = db.Column(
+    email: str = db.Column(
         db.String(100),
         nullable=False,
         unique=True
@@ -51,9 +51,9 @@ class Users(BaseModel):
         nullable=True
     )
 
-    picture: str | None = db.Column(
+    picture: str = db.Column(
         db.String(255),
-        nullable=True,
+        nullable=False,
         server_default='default.png'
     )
 

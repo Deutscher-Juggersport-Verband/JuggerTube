@@ -11,8 +11,7 @@ class Teams(BaseModel):
 
     id: int = db.Column(
         db.Integer,
-        primary_key=True,
-        unique=True,
+        primary_key=True
     )
 
     name: str = db.Column(

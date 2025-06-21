@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Signal } from '@angular/core';
-import {
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, Signal } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
   initConfig,
@@ -25,13 +20,12 @@ import {
 } from './form-configs';
 import { ChannelsDataService } from '@frontend/channel';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
-import { differentTeamsValidator, TeamsDataService } from '@frontend/team';
+import { TeamsDataService } from '@frontend/team';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentsDataService } from '@frontend/tournament';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
 import {
   AdditionalFieldsEnum,
-  determineAdditionalFieldsRule,
   ToastService,
   VideoFormModel,
   VideoFormService,
@@ -57,13 +51,29 @@ import {
   templateUrl: './page-create-video.component.html',
   styleUrl: './page-create-video.component.less',
 })
-export class PageCreateVideoComponent implements OnInit {
-  public teams: Signal<TeamApiResponseModel[] | undefined>;
-  public tournaments: Signal<TournamentApiResponseModel[] | undefined>;
-  public channels: Signal<ChannelApiResponseModel[] | undefined>;
+export class PageCreateVideoComponent {
+  private readonly tournamentService: TournamentsDataService = inject(
+    TournamentsDataService
+  );
+  private readonly teamService: TeamsDataService = inject(TeamsDataService);
+  private readonly channelsDataService: ChannelsDataService =
+    inject(ChannelsDataService);
+  private readonly videoFormService: VideoFormService =
+    inject(VideoFormService);
+  private readonly videosDataService: VideosDataService =
+    inject(VideosDataService);
+  private readonly toastService: ToastService = inject(ToastService);
 
-  protected readonly form: FormGroup<VideoFormModel>;
-  protected additionalFields: AdditionalFieldsEnum[] = [];
+  public teams: Signal<TeamApiResponseModel[]> = this.teamService.getTeams();
+  public tournaments: Signal<TournamentApiResponseModel[]> =
+    this.tournamentService.getTournaments();
+  public channels: Signal<ChannelApiResponseModel[]> =
+    this.channelsDataService.getChannels();
+
+  protected readonly form: FormGroup<VideoFormModel> =
+    this.videoFormService.create();
+  protected additionalFields$: Signal<AdditionalFieldsEnum[]> =
+    this.videoFormService.additionalFields$;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
@@ -81,107 +91,6 @@ export class PageCreateVideoComponent implements OnInit {
   protected readonly teamTwoNewOptionConfig = teamTwoNewOptionConfig;
   protected readonly initConfig = initConfig;
 
-  constructor(
-    private readonly tournamentService: TournamentsDataService,
-    private readonly teamService: TeamsDataService,
-    private readonly channelsDataService: ChannelsDataService,
-    private readonly videoFormService: VideoFormService,
-    private readonly videosDataService: VideosDataService,
-    private readonly toastService: ToastService
-  ) {
-    this.teams = this.teamService.getTeams();
-    this.tournaments = this.tournamentService.getTournaments();
-    this.channels = this.channelsDataService.getChannels();
-    this.form = this.videoFormService.create();
-  }
-
-  public ngOnInit() {
-    this.form.controls.category.valueChanges.subscribe(
-      (value: VideoCategoriesEnum | null) => {
-        if (!value) {
-          this.additionalFields = [];
-          this.updateFormValidation();
-          return;
-        }
-
-        this.additionalFields = determineAdditionalFieldsRule(value);
-
-        this.updateFormValidation();
-      }
-    );
-  }
-
-  private updateFormValidation(): void {
-    // Reset all additional fields
-    this.form.controls.topic.clearValidators();
-    this.form.controls.guests.clearValidators();
-    this.form.controls.weaponType.clearValidators();
-    this.form.controls.gameSystem.clearValidators();
-    this.form.controls.tournamentId.clearValidators();
-    this.form.controls.teamOneId.clearValidators();
-    this.form.controls.teamTwoId.clearValidators();
-    this.form.controls.teamOneCity.clearValidators();
-    this.form.controls.teamTwoCity.clearValidators();
-    this.form.controls.tournamentCity.clearValidators();
-    this.form.controls.tournamentStartDate.clearValidators();
-    this.form.controls.tournamentEndDate.clearValidators();
-    this.form.controls.tournamentAddress.clearValidators();
-
-    // Add validators based on visible fields
-    this.additionalFields.forEach((field) => {
-      switch (field) {
-        case AdditionalFieldsEnum.TOPIC:
-          this.form.controls.topic.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.GUESTS:
-          this.form.controls.guests.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.WEAPON_TYPE:
-          this.form.controls.weaponType.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.GAME_SYSTEM:
-          this.form.controls.gameSystem.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.TOURNAMENT:
-          this.form.controls.tournamentId.addValidators(Validators.required);
-          if (this.form.controls.teamOneCity.value !== '') {
-            this.form.controls.tournamentCity.addValidators(
-              Validators.required
-            );
-            this.form.controls.tournamentStartDate.addValidators(
-              Validators.required
-            );
-            this.form.controls.tournamentEndDate.addValidators(
-              Validators.required
-            );
-            this.form.controls.tournamentAddress.addValidators(
-              Validators.required
-            );
-          }
-          break;
-        case AdditionalFieldsEnum.TEAMS:
-          this.form.controls.teamOneId.addValidators([Validators.required]);
-          this.form.controls.teamTwoId.addValidators([Validators.required]);
-          this.form.addValidators(differentTeamsValidator());
-          if (this.form.controls.teamOneCity.value !== '') {
-            this.form.controls.teamOneCity.addValidators(Validators.required);
-          }
-          if (this.form.controls.teamTwoCity.value !== '') {
-            this.form.controls.teamTwoCity.addValidators(Validators.required);
-          }
-          break;
-      }
-    });
-
-    // Update validation state
-    Object.keys(this.form.controls).forEach((key) => {
-      const control = this.form.get(key);
-      if (control) {
-        control.updateValueAndValidity();
-      }
-    });
-  }
-
   public onSubmit(): void {
     if (!this.form.valid) {
       markAllFieldsAsTouched(this.form);
@@ -197,17 +106,10 @@ export class PageCreateVideoComponent implements OnInit {
       return;
     }
 
-    const videoData: CreateVideoRequest = {
-      ...formValue,
-      category: formValue.category as VideoCategoriesEnum,
-      weaponType: formValue.weaponType as WeaponTypesEnum | undefined,
-      gameSystem: formValue.gameSystem as GameSystemTypesEnum | undefined,
-    };
-
-    this.videosDataService.create(videoData);
+    this.videosDataService.create(formValue as CreateVideoRequest);
   }
 
-  public hasTeamValidationError(): boolean {
+  public sameTeamValidationError(): boolean {
     return this.form.touched && this.form.hasError('sameTeam');
   }
 }

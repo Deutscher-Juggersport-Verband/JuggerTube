@@ -23,5 +23,6 @@ def get_channel_overview() -> Response:
 @channel_frontend.route('/create-multiple-channels',
                         methods=['POST'], endpoint='create-multiple-channels')
 @CreateMultipleChannelsInputFilter.validate()
+# TODO: Remove after migrating to flask commands
 def create_multiple_channels() -> Response:
     return CreateMultipleChannelsHandler.handle()

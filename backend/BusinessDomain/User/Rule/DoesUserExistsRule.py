@@ -13,7 +13,7 @@ class DoesUserExistsRule:
             return False
 
         return Users().exists(
-            user_id=user_id,
+            id=user_id,
             escaped_username=escaped_username,
             email=email
         )

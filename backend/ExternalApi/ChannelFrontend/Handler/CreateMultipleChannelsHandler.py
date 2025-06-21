@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from flask import g
 
 from config import cache
@@ -9,7 +7,6 @@ from DataDomain.Model import Response
 
 
 class CreateMultipleChannelsHandler:
-    """Handler for creating multiple channels"""
 
     @staticmethod
     def handle() -> Response:
@@ -23,9 +20,9 @@ class CreateMultipleChannelsHandler:
                     status=400
                 )
 
-            created_channels: List[Dict] = []
-            failed_channels: List[Dict] = []
-            existing_channels: List[Dict] = []
+            created_channels: list[dict] = []
+            failed_channels: list[dict] = []
+            existing_channels: list[dict] = []
 
             for i, channel_data in enumerate(channels_data):
                 try:
@@ -89,7 +86,7 @@ class CreateMultipleChannelsHandler:
                 response=response_data,
                 status=200
             )
-            
+
         except Exception as e:
             return Response(
                 response={'error': f'Internal server error: {str(e)}'},

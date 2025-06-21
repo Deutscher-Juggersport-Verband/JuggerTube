@@ -8,8 +8,6 @@ class UpdatePendingVideoStatusInputFilter(InputFilter):
 
     def __init__(self) -> None:
 
-        super().__init__()
-
         self.add(
             'videoId',
             required=True,

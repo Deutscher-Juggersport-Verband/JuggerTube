@@ -8,11 +8,13 @@ COPY ../../backend/pyproject.toml .
 
 RUN python -m pip install .
 
-COPY scripts /app/scripts
+COPY ../../backend/scripts /app/scripts
+
 COPY docker/production/crontab.txt /app/crontab.txt
-COPY docker/production/provisioning/start.sh /app/provisioning/start.sh
-RUN chmod +x /app/provisioning/start.sh
+COPY docker/production/provisioning /usr/local/bin
+
+RUN find /usr/local/bin -type f -name "*" -exec chmod +x {} \;
 
 RUN crontab /app/crontab.txt
 
-CMD ["/app/provisioning/start.sh"]
+CMD ["start-cron.sh"]

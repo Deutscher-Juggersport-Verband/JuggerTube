@@ -31,7 +31,6 @@ dependencies = [
     "pytest_env",
     "pyyaml",
     "python-telegram-bot>=20.7",
-
     "redis",
     "requests",
 ]

@@ -1,0 +1,34 @@
+openapi: 3.0.0
+info:
+  title: Customer Frontend API
+  version: 1.0.0
+paths:
+  /api/video-frontend/update-pending-video-status:
+    put:
+      summary: Update pending video status
+      description: Updates the status of a pending video.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                videoId:
+                  type: integer
+                  description: The ID of the video to update
+                  example: 123
+                status:
+                  type: string
+                  description: The new status of the video
+                  example: "approved"
+              required:
+                - videoId
+                - status
+
+      responses:
+        '200':
+          description: OK
+
+        '500':
+          description: Internal server error

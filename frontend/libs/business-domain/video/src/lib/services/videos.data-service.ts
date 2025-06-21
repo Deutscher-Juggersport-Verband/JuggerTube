@@ -1,4 +1,4 @@
-import { inject, Injectable, Signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, Signal } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -27,9 +27,12 @@ import {
   VideoApiResponseModel,
   VideoFilterOptions,
 } from '@frontend/video-data';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class VideosDataService {
+  private readonly destroyRef$: DestroyRef = inject(DestroyRef);
+
   @SingletonGetter()
   public get paginatedVideos(): Signal<VideoApiResponseModel[]> {
     return this.store$.selectSignal(paginatedVideosDataSelector);
@@ -47,11 +50,19 @@ export class VideosDataService {
 
   private readonly store$: Store<VideosStateAware> = inject(Store);
 
-  public loadPaginatedVideos(start: number, limit: number, filters?: VideoFilterOptions): void {
+  public loadPaginatedVideos(
+    start: number,
+    limit: number,
+    filters?: VideoFilterOptions
+  ): void {
     this.store$.dispatch(loadPaginatedVideosAction({ start, limit, filters }));
   }
 
-  public loadNextVideos(start: number, limit: number, filters?: VideoFilterOptions): void {
+  public loadNextVideos(
+    start: number,
+    limit: number,
+    filters?: VideoFilterOptions
+  ): void {
     this.store$.dispatch(loadNextVideos({ start, limit, filters }));
   }
 
@@ -60,7 +71,11 @@ export class VideosDataService {
     this.store$.dispatch(updateCurrentView({ start, limit, displayedVideos }));
   }
 
-  public isRangeCached(start: number, limit: number, filters?: VideoFilterOptions): boolean {
+  public isRangeCached(
+    start: number,
+    limit: number,
+    filters?: VideoFilterOptions
+  ): boolean {
     if (filters && Object.keys(filters).length > 0) {
       return false;
     }
@@ -68,6 +83,7 @@ export class VideosDataService {
     let loadedRanges: VideosState['loadedRanges'] = [];
     this.store$
       .select(videosStateFeatureSelector)
+      .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe((state) => (loadedRanges = state.loadedRanges))
       .unsubscribe();
     return isRangeCached(start, limit, loadedRanges);

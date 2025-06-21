@@ -1,4 +1,4 @@
-from operator import or_
+import functools
 from typing import Any
 
 from DataDomain.Database import db
@@ -80,10 +80,19 @@ class BaseModel(db.Model):
         filters = [getattr(self.__class__, key) == value for key,
                    value in kwargs.items() if value is not None]
 
-        return self.__class__.query(db.exists()).filter(
-            or_(*filters),
+        if not filters:
+            return False
+
+        if len(filters) > 1:
+            from sqlalchemy import or_
+            filter_expr = functools.reduce(or_, filters)
+        else:
+            filter_expr = filters[0]
+
+        return self.__class__.query.filter(
+            filter_expr,
             self.__class__.is_deleted == False
-        ).scalar()
+        ).first() is not None
 
     def count(self) -> int:
         """Count the number of records in the database"""

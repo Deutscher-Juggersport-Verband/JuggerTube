@@ -1,4 +1,3 @@
-from typing import Dict, List
 
 from flask import g
 
@@ -19,7 +18,7 @@ class CreateMultipleTeamsHandler:
                     response={'error': 'No validated data provided'},
                     status=400
                 )
-            
+
             data = g.validated_data
 
             teams_data = data.get('teams')
@@ -35,9 +34,9 @@ class CreateMultipleTeamsHandler:
                     status=413
                 )
 
-            created_teams: List[Dict] = []
-            failed_teams: List[Dict] = []
-            existing_teams: List[Dict] = []
+            created_teams: list[dict] = []
+            failed_teams: list[dict] = []
+            existing_teams: list[dict] = []
 
             for i, team_data in enumerate(teams_data):
                 try:
@@ -66,7 +65,7 @@ class CreateMultipleTeamsHandler:
                         'name': team.name,
                         'id': team_id
                     })
-                    
+
                     if (i + 1) % 25 == 0:
                         try:
                             db.session.commit()
@@ -122,7 +121,7 @@ class CreateMultipleTeamsHandler:
                 response=response_data,
                 status=200
             )
-            
+
         except Exception as e:
             try:
                 db.session.rollback()

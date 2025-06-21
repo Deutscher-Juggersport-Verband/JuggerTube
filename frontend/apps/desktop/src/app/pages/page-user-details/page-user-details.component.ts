@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -21,7 +16,7 @@ import {
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { SingletonGetter } from '@frontend/cache';
-import { userDetailsSelector } from '@frontend/user';
+import { updateUserForm, userDetailsSelector } from '@frontend/user';
 import {
   UpdateRequestBody,
   UpdateResponse,
@@ -29,26 +24,6 @@ import {
   UserApiClient,
   UserDataClient,
 } from '@frontend/user-data';
-
-export const userForm = new FormGroup<{
-  email: FormControl<string>;
-  password: FormControl<string>;
-}>({
-  email: new FormControl('', {
-    nonNullable: true,
-    validators: [Validators.required, Validators.email],
-  }),
-  password: new FormControl(
-    {
-      value: '',
-      disabled: true,
-    },
-    {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(8)],
-    }
-  ),
-});
 
 @Component({
   imports: [
@@ -68,7 +43,7 @@ export class PageUserDetailsComponent {
   private readonly router: Router = inject(Router);
   private readonly store$: Store = inject(Store);
 
-  protected readonly form = userForm;
+  protected readonly form = updateUserForm;
   protected error: string = '';
   protected readonly isAdmin: Promise<boolean> = this.userApiClient.isAdmin();
   protected pictureUrl?: string;
@@ -99,7 +74,7 @@ export class PageUserDetailsComponent {
 
     this.form.reset();
 
-    await this.router.navigate(['user-details']);
+    await this.router.navigate(['/user-details']);
   }
 
   public onDelete(): void {

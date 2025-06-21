@@ -10,7 +10,7 @@ export interface Toast {
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
-  private toasts = new BehaviorSubject<Toast[]>([]);
+  private readonly toasts = new BehaviorSubject<Toast[]>([]);
   public toasts$ = this.toasts.asObservable();
   private nextId = 0;
 
