@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import math
 import os
 import time
@@ -9,9 +13,9 @@ from urllib3.exceptions import InsecureRequestWarning
 from urllib3.exceptions import InsecureRequestWarning
 import time
 import math
-from .enums import TARGET_SHEETS, VideoCategoriesEnum
-from .data_processor import DataProcessor
-from .helpers import send_data_to_backend
+from scripts.excel_videos.enums import TARGET_SHEETS, VideoCategoriesEnum
+from scripts.excel_videos.data_processor import DataProcessor
+from scripts.excel_videos.helpers import send_data_to_backend
 from collections import defaultdict
 
 # Get the directory where the script is located
@@ -48,9 +52,8 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
     Send data to backend in chunks of specified size
     """
     total_chunks = math.ceil(len(data_list) / chunk_size)
-    all_success = True
-
-    videos_error_messages = []
+    successful_chunks = 0
+    failed_chunks = 0
 
     for i in range(total_chunks):
         start_idx = i * chunk_size
@@ -69,23 +72,25 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
 
             if success:
                 print(f"Successfully sent chunk {i + 1} of {entity_name}")
-                break
+                successful_chunks += 1
             else:
                 print(f"Failed to send chunk {i + 1} of {entity_name}")
+                failed_chunks += 1
 
         except Exception as e:
             print(f"Exception sending chunk {i + 1} of {entity_name}: {str(e)}")
+            failed_chunks += 1
 
-        videos_error_messages.append(success if 'success' in locals() else False)
-
+        # Wait between chunks (except for the last one)
         if i < total_chunks - 1:
             delay = 3
             time.sleep(delay)
 
-    for error_message in videos_error_messages:
-        print(error_message)
+    print(f"\nChunk sending completed for {entity_name}:")
+    print(f"Successful chunks: {successful_chunks}/{total_chunks}")
+    print(f"Failed chunks: {failed_chunks}/{total_chunks}")
 
-    return all_success
+    return successful_chunks == total_chunks
 
 
 def main():

@@ -1,10 +1,14 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 import re
 from datetime import datetime
 
 import pandas as pd
-from .helpers import clean_value
-from .enums import CATEGORY_MAPPING
-from .validation_logger import log_validation_error
+from scripts.excel_videos.helpers import clean_value
+from scripts.excel_videos.enums import CATEGORY_MAPPING
+from scripts.excel_videos.validation_logger import log_validation_error
 
 
 def convert_date_to_iso(date_value) -> str:
@@ -17,12 +21,19 @@ def convert_date_to_iso(date_value) -> str:
             # Try German format (DD.MM.YYYY)
             day, month, year = date_value.split('.')
             date_obj = datetime(int(year), int(month), int(day))
-            return date_obj.isoformat()
+            return date_obj.strftime('%Y-%m-%d')
         except (ValueError, AttributeError):
             return None
 
-    # If it's already a datetime object (from pandas)
-    return date_value.isoformat()
+    # If it's already a datetime object (from pandas), convert to string
+    if isinstance(date_value, datetime):
+        return date_value.strftime('%Y-%m-%d')
+    
+    # Fallback: try to convert to string
+    try:
+        return str(date_value)
+    except:
+        return None
 
 
 class DataProcessor:
