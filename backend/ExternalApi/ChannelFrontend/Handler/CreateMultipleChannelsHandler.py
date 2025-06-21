@@ -31,11 +31,9 @@ class CreateMultipleChannelsHandler:
                         channel_link=channel_data.get('channelLink'),
                     )
 
-                    existing_channel_id = ChannelRepository.checkIfChannelAlreadyExists(channel.name, channel.channel_link)
-                    if existing_channel_id:
+                    if ChannelRepository.checkIfChannelNameAlreadyExists(channel.name) or ChannelRepository.checkIfChannelLinkAlreadyExists(channel.channel_link):
                         existing_channels.append({
-                            'name': channel.name,
-                            'id': existing_channel_id
+                            'name': channel.name
                         })
                         continue
 

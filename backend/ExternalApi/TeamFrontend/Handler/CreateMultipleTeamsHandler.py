@@ -52,11 +52,9 @@ class CreateMultipleTeamsHandler:
                         city=team_data.get('city'),
                     )
 
-                    existing_team_id = TeamRepository.checkIfTeamAlreadyExists(team_name=team.name)
-                    if existing_team_id:
+                    if TeamRepository.checkIfTeamAlreadyExists(name=team.name):
                         existing_teams.append({
                             'name': team.name,
-                            'id': existing_team_id
                         })
                         continue
 

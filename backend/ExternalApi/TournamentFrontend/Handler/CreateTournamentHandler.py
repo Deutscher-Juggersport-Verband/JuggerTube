@@ -23,13 +23,6 @@ class CreateTournamentHandler:
             jtr_link=data.get('jtrLink')
         )
 
-        if tournament.jtr_link:
-            if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
-                return Response(
-                    response='Tournament with this jtr link already exists',
-                    status=400
-                )
-
         if TournamentRepository.checkIfTournamentAlreadyExists(
             name=tournament.name,
                 start_date=tournament.start_date
@@ -38,6 +31,13 @@ class CreateTournamentHandler:
                 response='Tournament with this name and start date already exists',
                 status=400
             )
+
+        if tournament.jtr_link:
+            if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                return Response(
+                    response='Tournament with this jtr link already exists',
+                    status=400
+                )
 
         try:
             tournament_id = tournament.create()

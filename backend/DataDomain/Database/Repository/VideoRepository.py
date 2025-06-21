@@ -139,16 +139,29 @@ class VideoRepository:
         return video
 
     @staticmethod
-    def checkIfVideoAlreadyExists(name: str, link: str) -> bool:
+    def checkIfVideoNameAlreadyExists(name: str) -> bool:
         video = (db.session.query(
             Videos.id,
             Videos.name,
-            Videos.video_link,
             Videos.status,
             Videos.is_deleted
         ).filter(
             Videos.is_deleted != True,
             func.lower(Videos.name) == func.lower(name),
+            Videos.status != VideoStatusEnum.DECLINED
+        ).first())
+
+        return video is not None
+
+    @staticmethod
+    def checkIfVideoLinkAlreadyExists(link: str) -> bool:
+        video = (db.session.query(
+            Videos.id,
+            Videos.video_link,
+            Videos.status,
+            Videos.is_deleted
+        ).filter(
+            Videos.is_deleted != True,
             Videos.video_link == link,
             Videos.status != VideoStatusEnum.DECLINED
         ).first())
