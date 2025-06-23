@@ -32,6 +32,13 @@ class CreateTournamentHandler:
                 status=400
             )
 
+        if tournament.jtr_link:
+            if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                return Response(
+                    error='Tournament with this jtr link already exists',
+                    status=400
+                )
+
         try:
             tournament_id = tournament.create()
 

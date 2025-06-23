@@ -139,23 +139,34 @@ class VideoRepository:
         return video
 
     @staticmethod
-    def videoAlreadyExists(video_name: str, video_url: str) -> dict | None:
-        video = db.session.query(
+    def checkIfVideoNameAlreadyExists(name: str) -> bool:
+        video = (db.session.query(
+            Videos.id,
             Videos.name,
+            Videos.status,
+            Videos.is_deleted
+        ).filter(
+            Videos.is_deleted != True,
+            func.lower(Videos.name) == func.lower(name),
+            Videos.status != VideoStatusEnum.DECLINED
+        ).first())
+
+        return video is not None
+
+    @staticmethod
+    def checkIfVideoLinkAlreadyExists(link: str) -> bool:
+        video = (db.session.query(
+            Videos.id,
             Videos.video_link,
             Videos.status,
             Videos.is_deleted
         ).filter(
             Videos.is_deleted != True,
-            Videos.name == video_name,
-            Videos.video_link == video_url,
+            Videos.video_link == link,
             Videos.status != VideoStatusEnum.DECLINED
-        ).first()
+        ).first())
 
-        if not video:
-            return None
-
-        return video
+        return video is not None
 
     @staticmethod
     def getPaginatedVideos(

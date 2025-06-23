@@ -3,29 +3,30 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+# Add the backend directory to Python path for local development
+current_dir = Path(__file__).parent
+backend_dir = current_dir.parent.parent  # Go up to backend directory
+sys.path.insert(0, str(backend_dir))
+
+# Now we can import from scripts
 from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
-from .api_client import ApiClient
-from .cache_manager import load_cache, save_cache
-from .data_fetcher import DataFetcher
-from .date_utils import format_date
-from .tournament_details_parser import parser as tournament_parser
-from .tournament_overview_parser import parser as overview_parser
-from .tournament_teams_parser import TournamentTeamsParser
-
-# Add the root directory to Python path
-sys.path.append('/app')
-
+from cache_manager import load_cache, save_cache
+from api_client import send_tournaments, send_teams
+from data_fetcher import DataFetcher
+from date_utils import format_date
+from tournament_details_parser import parser as tournament_parser
+from tournament_overview_parser import parser as overview_parser
+from tournament_teams_parser import TournamentTeamsParser
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-# Cache file paths
-CACHE_DIR = Path("cache")
+# Cache file paths - use relative to script location
+CACHE_DIR = current_dir.parent.parent.parent / "cache"
 TOURNAMENTS_CACHE_FILE = CACHE_DIR / "tournaments_cache.json"
 TEAMS_CACHE_FILE = CACHE_DIR / "teams_cache.json"
 
@@ -162,7 +163,6 @@ def process_tournament(data_fetcher, tournament):
 def main():
     # Initialize components
     data_fetcher = DataFetcher()
-    api_client = ApiClient()
 
     # Load cached data
     cached_tournaments, cached_teams = load_cache()
@@ -214,12 +214,25 @@ def main():
     save_cache(cached_tournaments, unique_teams)
 
     # Send data to APIs
-    tournaments_response = api_client.send_tournaments(tournaments_data)
-    teams_response = api_client.send_teams(unique_teams)
+    tournaments_success = send_tournaments(tournaments_data)
+    teams_success = send_teams(unique_teams)
 
-    # Send status message
-    notify("Turniere und Teams wurden importiert",
-           f"Turniere: {tournaments_response}, Teams: {teams_response}")
+    response_message = "\n"
+
+    if tournaments_success:
+        response_message += "=== TOURNAMENTS ===\n"
+        response_message += "\n".join(tournaments_success)
+        response_message += "\n\n"
+
+    if teams_success:
+        response_message += "=== TEAMS ===\n"
+        response_message += "\n".join(teams_success)
+        response_message += "\n"
+
+    # Remove trailing newlines if message is empty
+    response_message = response_message.strip()
+
+    notify("Turniere und Teams wurden importiert", response_message)
 
 
 if __name__ == '__main__':

@@ -7,29 +7,6 @@ from flask_inputfilter.validators import (
 )
 
 
-class CreateMultipleChannelsChannelInputFilter(InputFilter):
-    """Input filter for single channel element for creating
-    multiple channels"""
-
-    def __init__(self):
-
-        self.add(
-            'name',
-            required=True,
-            validators=[
-                IsStringValidator(),
-            ]
-        )
-
-        self.add(
-            'channelLink',
-            required=True,
-            validators=[
-                IsStringValidator(),
-            ]
-        )
-
-
 class CreateMultipleChannelsInputFilter(InputFilter):
     """Input filter for creating multiple channels"""
 
@@ -41,6 +18,5 @@ class CreateMultipleChannelsInputFilter(InputFilter):
             validators=[
                 IsArrayValidator(),
                 ArrayLengthValidator(min_length=1),
-                ArrayElementValidator(CreateMultipleChannelsChannelInputFilter)
             ],
         )

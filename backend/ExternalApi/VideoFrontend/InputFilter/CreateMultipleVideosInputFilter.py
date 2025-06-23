@@ -51,11 +51,8 @@ class CreateMultipleVideosVideoElementInputFilter(InputFilter):
         self.add(
             'uploadDate',
             required=True,
-            filters=[
-                ToDateTimeFilter()
-            ],
             validators=[
-                IsDateTimeValidator()
+                IsStringValidator()
             ],
         )
 

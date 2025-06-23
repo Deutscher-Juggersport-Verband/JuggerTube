@@ -3,7 +3,7 @@ info:
   title: Customer Frontend API
   version: 1.0.0
 paths:
-  /api/video-frontend/get-channel-overview:
+  /api/team-frontend/get-team-overview:
     get:
       summary: Get team overview
       description: Returns a list of all registered teams.

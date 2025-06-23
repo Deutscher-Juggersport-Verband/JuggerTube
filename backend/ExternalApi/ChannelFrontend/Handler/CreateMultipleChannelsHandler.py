@@ -10,58 +10,83 @@ class CreateMultipleChannelsHandler:
 
     @staticmethod
     def handle() -> Response:
+        try:
+            data = g.validated_data
+            channels_data = data.get('channels')
 
-        data = g.validated_data
-        channels_data = data.get('channels')
-
-        created_channels: list[dict] = []
-        failed_channels: list[dict] = []
-
-        for channel_data in channels_data:
-            try:
-                channel = Channels(
-                    name=channel_data.get('name'),
-                    channel_link=channel_data.get('channelLink'),
+            if not channels_data:
+                return Response(
+                    response={'error': 'No channels data provided'},
+                    status=400
                 )
 
-                # Check if channel already exists
-                if ChannelRepository.getChannelIdByName(channel.name):
-                    continue
+            created_channels: list[dict] = []
+            failed_channels: list[dict] = []
+            existing_channels: list[dict] = []
 
-                channel_id = channel.create()
-                created_channels.append({
-                    'name': channel.name,
-                    'id': channel_id
-                })
-            except Exception as e:
-                failed_channels.append({
-                    'name': channel_data.get('name', 'Unknown'),
-                    'reason': str(e)
-                })
+            for i, channel_data in enumerate(channels_data):
+                try:
+                    channel = Channels(
+                        name=channel_data.get('name'),
+                        channel_link=channel_data.get('channelLink'),
+                    )
 
-        response_data = {
-            'created_channels': created_channels,
-            'failed_channels': failed_channels
-        }
+                    if ChannelRepository.checkIfChannelNameAlreadyExists(channel.name) or ChannelRepository.checkIfChannelLinkAlreadyExists(channel.channel_link):
+                        existing_channels.append({
+                            'name': channel.name
+                        })
+                        continue
 
-        # If no channels were created successfully, return 400
-        if not created_channels:
+                    channel_id = channel.create()
+                    created_channels.append({
+                        'name': channel.name,
+                        'id': channel_id
+                    })
+                except Exception as e:
+                    failed_channels.append({
+                        'name': channel_data.get('name', 'Unknown'),
+                        'reason': str(e)
+                    })
+
+            response_data = {
+                'created_channels': created_channels,
+                'failed_channels': failed_channels,
+                'existing_channels': existing_channels
+            }
+
+            if failed_channels:
+                return Response(
+                    response=response_data,
+                    status=400
+                )
+
+            if not created_channels and not existing_channels:
+                return Response(
+                    response=response_data,
+                    status=400
+                )
+
+            cache.delete('channel-overview')
+
+            if created_channels and existing_channels:
+                return Response(
+                    response=response_data,
+                    status=207
+                )
+
+            if existing_channels and not created_channels:
+                return Response(
+                    response=response_data,
+                    status=200
+                )
+
             return Response(
                 response=response_data,
-                status=400
+                status=200
             )
 
-        cache.delete('channel-overview')
-
-        # If some channels failed but others succeeded, return 207 (Multi-Status)
-        if failed_channels:
+        except Exception as e:
             return Response(
-                response=response_data,
-                status=207
+                error='Internal server error',
+                status=500,
             )
-
-        # If all channels were created successfully, return 200
-        return Response(
-            response=response_data,
-            status=200
-        )
