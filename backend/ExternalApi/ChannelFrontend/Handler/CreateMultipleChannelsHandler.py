@@ -87,6 +87,6 @@ class CreateMultipleChannelsHandler:
 
         except Exception as e:
             return Response(
-                response={'error': f'Internal server error: {str(e)}'},
-                status=500
+                error='Internal server error',
+                status=500,
             )

@@ -13,12 +13,6 @@ class CreateMultipleTeamsHandler:
     @staticmethod
     def handle() -> Response:
         try:
-            if not hasattr(g, 'validated_data'):
-                return Response(
-                    response={'error': 'No validated data provided'},
-                    status=400
-                )
-
             data = g.validated_data
 
             teams_data = data.get('teams')
@@ -126,6 +120,6 @@ class CreateMultipleTeamsHandler:
             except:
                 pass
             return Response(
-                response={'error': f'Internal server error: {str(e)}'},
+                error='Internal server error',
                 status=500
             )

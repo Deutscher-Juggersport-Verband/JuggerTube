@@ -24,12 +24,6 @@ class CreateMultipleVideosHandler:
             data = g.validated_data
             videos_data = data.get('videos', [])
 
-            if not videos_data:
-                return Response(
-                    response='No videos provided',
-                    status=400
-                )
-
             created_videos: list[dict] = []
             failed_videos: list[dict] = []
             existing_videos: list[dict] = []
