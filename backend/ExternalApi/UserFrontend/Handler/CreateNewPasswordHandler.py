@@ -13,9 +13,9 @@ class CreateNewPasswordHandler:
 
         data = g.validated_data
 
-        hash: str = data.get('hash')
+        password_hash: str = data.get('hash')
 
-        if not DoesPasswordResetHashExistsRule.applies(hash):
+        if not DoesPasswordResetHashExistsRule.applies(password_hash):
             return Response(
                 status=400
             )
@@ -23,7 +23,7 @@ class CreateNewPasswordHandler:
         try:
             CreateNewPasswordCommandHandler.execute(
                 CreateNewPasswordCommand(
-                    hash=hash,
+                    hash=password_hash,
                     password=data.get('password')
                 )
             )

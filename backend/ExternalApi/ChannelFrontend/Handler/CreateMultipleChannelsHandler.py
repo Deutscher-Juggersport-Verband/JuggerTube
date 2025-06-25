@@ -16,7 +16,7 @@ class CreateMultipleChannelsHandler:
 
             if not channels_data:
                 return Response(
-                    response={'error': 'No channels data provided'},
+                    error='No channels data provided',
                     status=400
                 )
 
@@ -31,7 +31,9 @@ class CreateMultipleChannelsHandler:
                         channel_link=channel_data.get('channelLink'),
                     )
 
-                    if ChannelRepository.checkIfChannelNameAlreadyExists(channel.name) or ChannelRepository.checkIfChannelLinkAlreadyExists(channel.channel_link):
+                    if ChannelRepository.checkIfChannelNameAlreadyExists(
+                            channel.name) or ChannelRepository.checkIfChannelLinkAlreadyExists(
+                            channel.channel_link):
                         existing_channels.append({
                             'name': channel.name
                         })

@@ -7,8 +7,8 @@ from DataDomain.Database.Enum import UserRoleEnum
 class UserShort:
 
     id: int
-    escapedUsername: str
+    escaped_username: str
     name: str
-    pictureUrl: str
+    picture_url: str
     role: UserRoleEnum
     username: str

@@ -13,6 +13,7 @@
   <main>
     @if (isYoutubeUrl(video.videoLink)) {
     <iframe
+      title="Video of {{ video.name }}"
       [src]="getEmbeddedUrlRule(video.videoLink)"
       allowfullscreen
     ></iframe>

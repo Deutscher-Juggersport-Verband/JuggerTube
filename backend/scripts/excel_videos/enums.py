@@ -1,8 +1,8 @@
+from enum import Enum
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from enum import Enum
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
 class VideoCategoriesEnum(Enum):

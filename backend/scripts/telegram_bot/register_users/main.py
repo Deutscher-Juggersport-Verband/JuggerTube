@@ -1,3 +1,4 @@
+from scripts.telegram_bot.register_users.telegram_bot import start, unsubscribe
 import os
 import sys
 from pathlib import Path
@@ -9,7 +10,6 @@ current_dir = Path(__file__).parent
 backend_dir = current_dir.parent.parent.parent  # Go up to backend directory
 sys.path.insert(0, str(backend_dir))
 
-from scripts.telegram_bot.register_users.telegram_bot import start, unsubscribe
 
 telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
 if not telegram_bot_token:

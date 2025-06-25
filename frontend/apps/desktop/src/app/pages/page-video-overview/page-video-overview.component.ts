@@ -164,7 +164,7 @@ export class PageVideoOverviewComponent {
       'Upload: Neueste zuerst': 'upload_date_desc',
       'JuggerTube: Neueste zuerst': 'created_at_desc',
     };
-    return mapping[label] || 'upload_date_desc';
+    return mapping[label] ?? 'upload_date_desc';
   }
 
   public getSortLabelFromValue(value: SortOption): string {
@@ -176,6 +176,6 @@ export class PageVideoOverviewComponent {
       upload_date_desc: 'Upload: Neueste zuerst',
       created_at_desc: 'JuggerTube: Neueste zuerst',
     };
-    return mapping[value] || 'Upload: Neueste zuerst';
+    return mapping[value] ?? 'Upload: Neueste zuerst';
   }
 }

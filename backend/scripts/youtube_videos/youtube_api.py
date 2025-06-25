@@ -1,18 +1,16 @@
+from scripts.youtube_videos.video_processor import process_video_data
+from scripts.youtube_videos.cache_manager import load_cache, save_cache
+from scripts.youtube_videos.api_client import send_videos_to_api
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from googleapiclient.discovery import build
+import requests
+import os
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-import os
-
-import requests
-from googleapiclient.discovery import build
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-
-from scripts.telegram_bot.send_messages.telegram_notifier import notify
-
-from scripts.youtube_videos.api_client import send_videos_to_api
-from scripts.youtube_videos.cache_manager import load_cache, save_cache
-from scripts.youtube_videos.video_processor import process_video_data
 
 # Disable SSL verification warnings
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -88,11 +86,11 @@ def send_other_naming_notification(channel_name, videos_other_naming):
     """Send Telegram notification for unmatched videos"""
     if not videos_other_naming:
         return
-    
+
     # Create message with all unmatched videos
     message_lines = [f"Channel: {channel_name}"]
     message_lines.append("Videos mit anderem Naming:")
-    
+
     for video in videos_other_naming:
         # Extract video name and link from the set
         video_name = None
@@ -102,10 +100,10 @@ def send_other_naming_notification(channel_name, videos_other_naming):
                 video_link = item
             else:
                 video_name = item
-        
+
         if video_name and video_link:
             message_lines.append(f"• {video_name}: {video_link}")
-    
+
     message = "\n".join(message_lines)
     notify(f"Videos mit anderem Naming - {channel_name}", message)
 
@@ -127,8 +125,12 @@ def main(channel_id):
     save_cache(videos_cache)
 
     # Process videos
-    videos_data, videos_other_naming = process_youtube_videos(youtube_videos, channel_name)
-    print(f"Processed {len(videos_data)} valid videos and {len(videos_other_naming)} unmatched videos")
+    videos_data, videos_other_naming = process_youtube_videos(
+        youtube_videos, channel_name)
+    print(
+        f"Processed {
+            len(videos_data)} valid videos and {
+            len(videos_other_naming)} unmatched videos")
 
     # Send valid videos to API
     if videos_data:

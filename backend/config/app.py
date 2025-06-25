@@ -7,8 +7,8 @@ from flask_migrate import Migrate
 from flask_talisman import Talisman
 from redis import Redis
 
+from Commands import register_commands
 from config import Config, cache, limiter
-from DataDomain.Commands import register_commands
 from DataDomain.Database import db
 from ExternalApi.ChannelFrontend.config import channel_frontend
 from ExternalApi.System.config import system

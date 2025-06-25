@@ -1,7 +1,8 @@
 
+from sqlalchemy import func
+
 from DataDomain.Database import db
 from DataDomain.Database.Model import Channels
-from sqlalchemy import func
 
 
 class ChannelRepository:

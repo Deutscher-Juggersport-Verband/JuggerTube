@@ -1,18 +1,15 @@
+from urllib3.exceptions import NotOpenSSLWarning
+import requests
+import pandas as pd
+from typing import Any, Optional
+import warnings
+import os
+import math
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-import math
-import os
-import warnings
-from typing import Any, Optional
-import json
-from datetime import datetime
-import re
-
-import pandas as pd
-import requests
-from urllib3.exceptions import NotOpenSSLWarning
 
 base_host = os.getenv('BASE_HOST', 'localhost:8080')
 
@@ -80,7 +77,9 @@ def send_data_to_backend(endpoint: str, data: dict, entity_name: str) -> bool:
         print(f"Timeout error sending {entity_name} data to backend")
         return False
     except requests.exceptions.ConnectionError as e:
-        print(f"Connection Error: Could not connect to the server. Is it running? Error: {str(e)}")
+        print(
+            f"Connection Error: Could not connect to the server. Is it running? Error: {
+                str(e)}")
         return False
     except requests.exceptions.RequestException as e:
         print(f"Request error sending {entity_name} data to backend: {str(e)}")

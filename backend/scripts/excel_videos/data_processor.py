@@ -1,17 +1,16 @@
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-import re
-from datetime import datetime
-
-import pandas as pd
+from scripts.excel_videos.validation_logger import log_validation_error
 from scripts.excel_videos.helpers import clean_value
 from scripts.excel_videos.enums import CATEGORY_MAPPING
-from scripts.excel_videos.validation_logger import log_validation_error
+import pandas as pd
+from datetime import datetime
+import re
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 
-def convert_date_to_iso(date_value) -> str:
+def convert_date_to_iso(date_value) -> str | None:
     """Convert date to ISO format string."""
     if pd.isna(date_value):
         return None
@@ -28,11 +27,11 @@ def convert_date_to_iso(date_value) -> str:
     # If it's already a datetime object (from pandas), convert to string
     if isinstance(date_value, datetime):
         return date_value.strftime('%Y-%m-%d')
-    
+
     # Fallback: try to convert to string
     try:
         return str(date_value)
-    except:
+    except BaseException:
         return None
 
 

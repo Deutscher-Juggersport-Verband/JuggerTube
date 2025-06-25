@@ -2,8 +2,6 @@ from flask_inputfilter import InputFilter
 from flask_inputfilter.validators import (
     ArrayLengthValidator,
     IsArrayValidator,
-    IsStringValidator,
-    ArrayElementValidator
 )
 
 
@@ -16,6 +14,6 @@ class CreateMultipleTeamsInputFilter(InputFilter):
             required=True,
             validators=[
                 IsArrayValidator(),
-                ArrayLengthValidator(min_length=1),
+                ArrayLengthValidator(min_length=1, max_length=1000),
             ],
         )

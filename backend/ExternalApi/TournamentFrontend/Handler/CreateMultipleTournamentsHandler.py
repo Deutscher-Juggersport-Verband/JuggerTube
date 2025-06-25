@@ -47,7 +47,8 @@ class CreateMultipleTournamentsHandler:
                     continue
 
                 if tournament.jtr_link:
-                    if TournamentRepository.checkIfJtrLinkAlreadyExists(tournament.jtr_link):
+                    if TournamentRepository.checkIfJtrLinkAlreadyExists(
+                            tournament.jtr_link):
                         existing_tournaments.append({
                             'name': tournament.name,
                             'jtr_link': tournament.jtr_link
@@ -78,7 +79,8 @@ class CreateMultipleTournamentsHandler:
                 status=400
             )
 
-        # If no tournaments were created and none exist, return 400 (no valid tournaments provided)
+        # If no tournaments were created and none exist, return 400 (no valid
+        # tournaments provided)
         if not created_tournaments and not existing_tournaments:
             return Response(
                 response=response_data,
@@ -87,14 +89,16 @@ class CreateMultipleTournamentsHandler:
 
         cache.delete("tournament-overview")
 
-        # If some tournaments were created and some already existed, return 207 (Multi-Status)
+        # If some tournaments were created and some already existed, return 207
+        # (Multi-Status)
         if created_tournaments and existing_tournaments:
             return Response(
                 response=response_data,
                 status=207
             )
 
-        # If all tournaments already existed, return 200 (success - tournaments are available)
+        # If all tournaments already existed, return 200 (success - tournaments
+        # are available)
         if existing_tournaments and not created_tournaments:
             return Response(
                 response=response_data,

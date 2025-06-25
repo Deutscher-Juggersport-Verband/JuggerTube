@@ -30,6 +30,17 @@
 ui-button {
   grid-column: 3;
   margin-top: 8px;
+
+  .material-icons-outlined {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  &.expanded {
+    .material-icons-outlined {
+      transform: rotate(180deg);
+    }
+  }
 }
 
 .basic-filters-row {
@@ -59,17 +70,4 @@ ui-button {
   font-weight: 500;
   color: @color-green;
   align-self: center;
-}
-
-ui-button {
-  .material-icons-outlined {
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-
-  &.expanded {
-    .material-icons-outlined {
-      transform: rotate(180deg);
-    }
-  }
 }
