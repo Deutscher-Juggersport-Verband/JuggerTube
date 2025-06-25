@@ -1,22 +1,18 @@
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
-import math
-import os
-import time
-from collections import defaultdict
-
-import pandas as pd
-import requests
-from urllib3.exceptions import InsecureRequestWarning
-from urllib3.exceptions import InsecureRequestWarning
-import time
-import math
+from scripts.excel_videos.helpers import send_data_to_backend
 from scripts.excel_videos.enums import TARGET_SHEETS, VideoCategoriesEnum
 from scripts.excel_videos.data_processor import DataProcessor
-from scripts.excel_videos.helpers import send_data_to_backend
+from urllib3.exceptions import InsecureRequestWarning
+import requests
+import pandas as pd
 from collections import defaultdict
+import time
+import os
+import math
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 
 # Get the directory where the script is located
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -61,7 +57,11 @@ def send_data_in_chunks(endpoint, data_list, entity_name, chunk_size=100):
         chunk = data_list[start_idx:end_idx]
 
         print(f"\nSending chunk {i + 1}/{total_chunks} of {entity_name}...")
-        print(f"Processing {entity_name} {start_idx + 1} to {end_idx} of {len(data_list)}")
+        print(
+            f"Processing {entity_name} {
+                start_idx +
+                1} to {end_idx} of {
+                len(data_list)}")
 
         try:
             success = send_data_to_backend(

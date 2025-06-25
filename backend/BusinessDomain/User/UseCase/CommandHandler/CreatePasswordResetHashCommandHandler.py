@@ -14,13 +14,13 @@ class CreatePasswordResetHashCommandHandler:
 
         user = UserRepository.getByEmail(command.email)
 
-        hash = uuid.uuid4().hex
+        password_hash = uuid.uuid4().hex
 
-        user.password_reset_hash = hash
+        user.password_reset_hash = password_hash
 
         user.save()
 
         SendPasswordResetMail().send(
             user=user,
-            hash=hash
+            hash=password_hash
         )

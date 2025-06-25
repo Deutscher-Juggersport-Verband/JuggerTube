@@ -1,5 +1,5 @@
-import sys
-from pathlib import Path
+
+
 def clean_tournament_name(tournament_name):
     """Clean tournament name by removing the year if present"""
     if not tournament_name or len(tournament_name) <= 5:

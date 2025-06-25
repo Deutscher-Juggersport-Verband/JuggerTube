@@ -32,7 +32,9 @@ class CreateVideoHandler:
 
             video = CreateVideoHandler._create_base_video(data)
 
-            if VideoRepository.checkIfVideoNameAlreadyExistsk(video.name) or VideoRepository.checkIfVideoLinkAlreadyExists(video.video_link):
+            if VideoRepository.checkIfVideoNameAlreadyExistsk(
+                    video.name) or VideoRepository.checkIfVideoLinkAlreadyExists(
+                    video.video_link):
                 return Response(
                     response='Video with this name already exists',
                     status=400

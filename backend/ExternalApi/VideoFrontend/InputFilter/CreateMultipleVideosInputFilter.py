@@ -1,11 +1,9 @@
 from flask_inputfilter import InputFilter
-from flask_inputfilter.filters import ToDateTimeFilter
 from flask_inputfilter.validators import (
     ArrayElementValidator,
     ArrayLengthValidator,
     InEnumValidator,
     IsArrayValidator,
-    IsDateTimeValidator,
     IsStringValidator,
 )
 

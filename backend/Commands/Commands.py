@@ -9,7 +9,7 @@ def register_commands(app) -> None:
     commands_dir: str = os.path.dirname(__file__)
 
     for finder, name, ispkg in pkgutil.walk_packages(
-            [commands_dir], "DataDomain.Commands."):
+            [commands_dir], "Commands."):
         if name.endswith(".Commands") or name.endswith(".__init__"):
             continue
 

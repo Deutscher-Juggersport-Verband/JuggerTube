@@ -1,3 +1,4 @@
+from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
 import asyncio
 import logging
 import os
@@ -11,7 +12,6 @@ current_dir = Path(__file__).parent
 backend_dir = current_dir.parent.parent.parent  # Go up to backend directory
 sys.path.insert(0, str(backend_dir))
 
-from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +19,8 @@ logger = logging.getLogger(__name__)
 
 telegram_bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
 if not telegram_bot_token:
-    logger.info("TELEGRAM_BOT_TOKEN not set in environment variables - Telegram notifications will be skipped")
+    logger.info(
+        "TELEGRAM_BOT_TOKEN not set in environment variables - Telegram notifications will be skipped")
     bot = None
 else:
     bot = Bot(token=telegram_bot_token)
@@ -49,8 +50,9 @@ async def send_telegram_status(status_message: str, error_message: str | None = 
 
         except Exception as e:
             logger.error(
-                f"Error sending Telegram message to user_id {user.get('userId')}: {str(e)}"
-            )
+                f"Error sending Telegram message to user_id {
+                    user.get('userId')}: {
+                    str(e)}")
 
 
 def notify(status_message: str, error_message: str | None = None):

@@ -7,7 +7,7 @@
 <div class="content">
   <main>
     @if (isYoutubeUrl) {
-    <iframe [src]="embeddedUrl" allowfullscreen></iframe>
+    <iframe [src]="embeddedUrl" allowfullscreen title="Video of {{video.name}}"></iframe>
     } @else {
     <a href="{{ video.videoLink }}">zum Video >></a>
     }

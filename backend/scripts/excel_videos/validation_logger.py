@@ -1,8 +1,9 @@
 import logging
 import os
-from datetime import datetime
 import sys
+from datetime import datetime
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 # Configure logging

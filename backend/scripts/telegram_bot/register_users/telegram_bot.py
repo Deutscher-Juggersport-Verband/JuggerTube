@@ -1,3 +1,7 @@
+from scripts.telegram_bot.register_users.user_controller import (
+    delete_user_from_json,
+    save_users_to_json,
+)
 import sys
 from pathlib import Path
 
@@ -8,8 +12,6 @@ from telegram.ext import ContextTypes
 current_dir = Path(__file__).parent
 backend_dir = current_dir.parent.parent.parent  # Go up to backend directory
 sys.path.insert(0, str(backend_dir))
-
-from scripts.telegram_bot.register_users.user_controller import save_users_to_json, delete_user_from_json
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

@@ -10,7 +10,7 @@
     alt=""
     [routerLink]="['user-details']"
   />
-  <span (click)="logout()">Logout</span>
+  <span tabindex="0" (click)="logout()">Logout</span>
   } @else {
   <span [routerLink]="['login']">Login</span>
   }

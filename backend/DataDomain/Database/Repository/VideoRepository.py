@@ -482,8 +482,8 @@ class VideoRepository:
                     id=video.user_id,
                     name=video.user_name,
                     username=video.user_username,
-                    pictureUrl=video.user_pictureUrl,
-                    escapedUsername=video.user_escapedUsername,
+                    picture_url=video.user_pictureUrl,
+                    escaped_username=video.user_escapedUsername,
                     role=video.user_role
                 ),
             } for video in videos]

@@ -50,4 +50,3 @@ class TeamRepository:
         ).first())
 
         return team is not None
-
