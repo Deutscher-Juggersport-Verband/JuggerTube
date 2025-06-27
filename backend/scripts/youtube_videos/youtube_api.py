@@ -1,13 +1,15 @@
-from scripts.youtube_videos.video_processor import process_video_data
-from scripts.youtube_videos.cache_manager import load_cache, save_cache
-from scripts.youtube_videos.api_client import send_videos_to_api
-from scripts.telegram_bot.send_messages.telegram_notifier import notify
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from googleapiclient.discovery import build
-import requests
 import os
 import sys
 from pathlib import Path
+
+import requests
+from googleapiclient.discovery import build
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
+from scripts.youtube_videos.api_client import send_videos_to_api
+from scripts.youtube_videos.cache_manager import load_cache, save_cache
+from scripts.youtube_videos.video_processor import process_video_data
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 

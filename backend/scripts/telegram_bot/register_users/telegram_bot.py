@@ -1,12 +1,13 @@
-from scripts.telegram_bot.register_users.user_controller import (
-    delete_user_from_json,
-    save_users_to_json,
-)
 import sys
 from pathlib import Path
 
 from telegram import Update
 from telegram.ext import ContextTypes
+
+from scripts.telegram_bot.register_users.user_controller import (
+    delete_user_from_json,
+    save_users_to_json,
+)
 
 # Add the backend directory to Python path for local development
 current_dir = Path(__file__).parent

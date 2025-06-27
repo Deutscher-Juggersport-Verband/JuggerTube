@@ -1,12 +1,13 @@
-from urllib3.exceptions import NotOpenSSLWarning
-import requests
-import pandas as pd
-from typing import Any, Optional
-import warnings
-import os
 import math
+import os
 import sys
+import warnings
 from pathlib import Path
+from typing import Any, Optional
+
+import pandas as pd
+import requests
+from urllib3.exceptions import NotOpenSSLWarning
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 

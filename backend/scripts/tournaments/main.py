@@ -1,11 +1,3 @@
-from scripts.telegram_bot.send_messages.telegram_notifier import notify
-from tournament_teams_parser import TournamentTeamsParser
-from tournament_overview_parser import parser as overview_parser
-from tournament_details_parser import parser as tournament_parser
-from date_utils import format_date
-from data_fetcher import DataFetcher
-from cache_manager import load_cache, save_cache
-from api_client import send_teams, send_tournaments
 import json
 import os
 import sys
@@ -13,7 +5,16 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
+from api_client import send_teams, send_tournaments
+from cache_manager import load_cache, save_cache
+from data_fetcher import DataFetcher
+from date_utils import format_date
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from tournament_details_parser import parser as tournament_parser
+from tournament_overview_parser import parser as overview_parser
+from tournament_teams_parser import TournamentTeamsParser
+
+from scripts.telegram_bot.send_messages.telegram_notifier import notify
 
 # Add the backend directory to Python path for local development
 current_dir = Path(__file__).parent

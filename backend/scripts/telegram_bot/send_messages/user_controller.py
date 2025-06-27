@@ -1,7 +1,8 @@
-from scripts.telegram_bot.config import TELEGRAM_IDS_PATH
 import json
 import sys
 from pathlib import Path
+
+from scripts.telegram_bot.config import TELEGRAM_IDS_PATH
 
 # Add the backend directory to Python path for local development
 current_dir = Path(__file__).parent

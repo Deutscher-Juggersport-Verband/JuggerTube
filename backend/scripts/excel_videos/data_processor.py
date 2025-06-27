@@ -1,11 +1,13 @@
-from scripts.excel_videos.validation_logger import log_validation_error
-from scripts.excel_videos.helpers import clean_value
-from scripts.excel_videos.enums import CATEGORY_MAPPING
-import pandas as pd
-from datetime import datetime
 import re
 import sys
+from datetime import datetime
 from pathlib import Path
+
+import pandas as pd
+
+from scripts.excel_videos.enums import CATEGORY_MAPPING
+from scripts.excel_videos.helpers import clean_value
+from scripts.excel_videos.validation_logger import log_validation_error
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 

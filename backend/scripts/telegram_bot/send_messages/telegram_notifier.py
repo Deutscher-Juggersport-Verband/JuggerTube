@@ -1,4 +1,3 @@
-from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
 import asyncio
 import logging
 import os
@@ -6,6 +5,8 @@ import sys
 from pathlib import Path
 
 from telegram import Bot
+
+from scripts.telegram_bot.send_messages.user_controller import read_users_from_json
 
 # Add the backend directory to Python path for local development
 current_dir = Path(__file__).parent

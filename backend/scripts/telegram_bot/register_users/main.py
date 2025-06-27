@@ -1,9 +1,10 @@
-from scripts.telegram_bot.register_users.telegram_bot import start, unsubscribe
 import os
 import sys
 from pathlib import Path
 
 from telegram.ext import ApplicationBuilder, CommandHandler
+
+from scripts.telegram_bot.register_users.telegram_bot import start, unsubscribe
 
 # Add the backend directory to Python path for local development
 current_dir = Path(__file__).parent
