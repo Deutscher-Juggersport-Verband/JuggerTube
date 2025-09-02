@@ -19,6 +19,5 @@ ENV PYTHONPATH=/app
 
 EXPOSE 8080
 
-ENTRYPOINT ["wait-for-mysql.sh"]
-
+ENTRYPOINT ["/usr/local/bin/wait-for-mysql.sh"]
 CMD ["python", "run.py"]
