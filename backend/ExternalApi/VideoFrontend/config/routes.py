@@ -23,7 +23,6 @@ video_frontend = Blueprint('video-frontend', __name__)
 
 @video_frontend.route('/get-video-overview',
                       methods=['GET'], endpoint='get-video-overview')
-@cache.cached(key_prefix='video-overview')
 def get_video_overview() -> Response:
     return GetVideoOverviewHandler.handle()
 
@@ -31,14 +30,12 @@ def get_video_overview() -> Response:
 @video_frontend.route('/get-paginated-videos',
                       methods=['GET'], endpoint='get-paginated-videos')
 @GetPaginatedVideosInputFilter.validate()
-@cache.cached(key_prefix='paginated-videos-overview')
 def get_paginated_videos() -> Response:
     return GetPaginatedVideosHandler.handle()
 
 
 @video_frontend.route('/get-pending-video-overview',
                       methods=['GET'], endpoint='get-pending-video-overview')
-@cache.cached(key_prefix='pending-video-overview')
 @jwt_required()
 def get_pending_video_overview() -> Response:
     return GetPendingVideoOverviewHandler.handle()

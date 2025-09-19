@@ -53,9 +53,7 @@ export class PageVideoOverviewComponent {
   ];
 
   constructor() {
-    this.videosDataService.loadPaginatedVideos(this.startIndex, this.pageSize, {
-      sort: this.currentSort,
-    });
+    this.onLoadNewVideos();
     this.paginatedVideos = this.videosDataService.paginatedVideos;
     this.totalVideos = this.videosDataService.totalCountVideos;
 
@@ -65,6 +63,30 @@ export class PageVideoOverviewComponent {
         this.onSortChanged(sortValue);
       }
     });
+  }
+
+  public onLoadNewVideos(
+    start: number = this.startIndex,
+    limit: number = this.pageSize,
+    filters: VideoFilterOptions = { sort: this.currentSort }
+  ): void {
+    this.videosDataService.loadPaginatedVideos(start, limit, filters);;
+  }
+
+  public onSortChanged(sort: SortOption): void {
+    if (this.currentSort !== sort) {
+      this.videosDataService.clearVideoCache();
+
+      this.currentSort = sort;
+      this.currentFilters = { ...this.currentFilters, sort };
+      this.resetToFirstPage();
+      this.onLoadNewVideos(this.startIndex, this.pageSize, this.currentFilters);
+    }
+  }
+
+  private resetToFirstPage(): void {
+    this.startIndex = 0;
+    this.pageIndex = 0;
   }
 
   public onFiltersChanged(filters: VideoFilterOptions): void {
@@ -82,19 +104,7 @@ export class PageVideoOverviewComponent {
 
     if (filtersChanged) {
       this.resetToFirstPage();
-      this.loadVideosWithCurrentFilters();
-    }
-  }
-
-  public onSortChanged(sort: SortOption): void {
-    // Only clear cache and reload if sort actually changed
-    if (this.currentSort !== sort) {
-      this.videosDataService.clearVideoCache();
-
-      this.currentSort = sort;
-      this.currentFilters = { ...this.currentFilters, sort };
-      this.resetToFirstPage();
-      this.loadVideosWithCurrentFilters();
+      this.onLoadNewVideos(this.startIndex, this.pageSize, this.currentFilters);
     }
   }
 
@@ -107,54 +117,14 @@ export class PageVideoOverviewComponent {
     }
 
     const targetStartIndex = targetPageIndex * newPageSize;
-    const maxStartIndex =
-      Math.max(0, Math.ceil(this.totalVideos() / newPageSize) - 1) *
-      newPageSize;
 
-    if (targetStartIndex >= this.totalVideos()) {
-      this.navigateToPage(maxStartIndex, newPageSize);
-      return;
-    }
-
-    this.navigateToPage(targetStartIndex, newPageSize);
+    this.pageSize = newPageSize;
+    this.pageIndex = targetPageIndex;
+    
+    this.startIndex = targetStartIndex;
+    this.onLoadNewVideos(targetStartIndex, newPageSize);
   }
 
-  private navigateToPage(startIndex: number, pageSize: number): void {
-    this.pageIndex = startIndex / pageSize;
-    this.startIndex = startIndex;
-    this.pageSize = pageSize;
-
-    if (
-      !this.videosDataService.isRangeCached(
-        startIndex,
-        pageSize,
-        this.currentFilters
-      )
-    ) {
-      this.videosDataService.loadNextVideos(
-        startIndex,
-        pageSize,
-        this.currentFilters
-      );
-    } else {
-      this.videosDataService.updateCurrentView(startIndex, pageSize);
-    }
-  }
-
-  private resetToFirstPage(): void {
-    this.startIndex = 0;
-    this.pageIndex = 0;
-  }
-
-  private loadVideosWithCurrentFilters(): void {
-    this.videosDataService.loadPaginatedVideos(
-      this.startIndex,
-      this.pageSize,
-      this.currentFilters
-    );
-  }
-
-  // Hilfsmethoden für Sortierung
   public getSortValueFromLabel(label: string): SortOption {
     const mapping: Record<string, SortOption> = {
       'Name A-Z': 'name_asc',
