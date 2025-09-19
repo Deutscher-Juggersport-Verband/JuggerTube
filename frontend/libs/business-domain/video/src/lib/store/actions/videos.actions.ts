@@ -50,62 +50,6 @@ export const loadPaginatedVideosActionError = createAction(
   }>()
 );
 
-export const loadNextVideos = createAction(
-  VideosActionNamesEnum.LoadNextVideos,
-  props<{
-    start: number;
-    limit: number;
-    filters?: VideoFilterOptions;
-  }>()
-);
-
-export const loadNextVideosSuccess = createAction(
-  VideosActionNamesEnum.LoadNextVideosSuccess,
-  props<{
-    videos: VideoApiResponseModel[];
-    count: number;
-  }>()
-);
-
-export const loadNextVideosError = createAction(
-  VideosActionNamesEnum.LoadNextVideosError,
-  props<{
-    error: HttpErrorResponse;
-  }>()
-);
-
-export const mergeVideoRanges = createAction(
-  VideosActionNamesEnum.MergeVideoRanges,
-  props<{
-    ranges: LoadedRange[];
-  }>()
-);
-
-export const updateCurrentView = createAction(
-  VideosActionNamesEnum.UpdateCurrentView,
-  props<{
-    start: number;
-    limit: number;
-    displayedVideos: number[];
-  }>()
-);
-
-export const cacheVideos = createAction(
-  VideosActionNamesEnum.CacheVideos,
-  props<{
-    videos: VideoApiResponseModel[];
-    range: LoadedRange;
-  }>()
-);
-
-export const requestVideoRange = createAction(
-  VideosActionNamesEnum.RequestVideoRange,
-  props<{
-    start: number;
-    limit: number;
-  }>()
-);
-
 export const createVideo = createAction(
   VideosActionNamesEnum.CreateVideo,
   props<{ videoData: CreateVideoRequest }>()

@@ -15,7 +15,6 @@ import { GetUserDetailsDataEffect } from '@frontend/user';
 import { JwtInterceptor } from '@frontend/user-data';
 import {
   CreateVideoEffects,
-  LoadNextVideosEffects,
   LoadPaginatedVideosEffects,
   metaReducers,
   reducers,
@@ -29,12 +28,10 @@ export const appConfig: ApplicationConfig = {
     provideStore(reducers, { metaReducers }),
     provideEffects([
       LoadPaginatedVideosEffects,
-      LoadNextVideosEffects,
       GetUserDetailsDataEffect,
     ]),
     provideEffects([
       LoadPaginatedVideosEffects,
-      LoadNextVideosEffects,
       CreateVideoEffects,
     ]),
     provideHttpClient(withInterceptorsFromDi()),
