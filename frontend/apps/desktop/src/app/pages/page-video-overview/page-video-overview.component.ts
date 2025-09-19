@@ -73,32 +73,31 @@ export class PageVideoOverviewComponent {
     this.videosDataService.loadPaginatedVideos(start, limit, this.currentFilters());;
   }
 
+  private resetToFirstPage(): void {
+    this.startIndex = 0;
+    this.pageIndex = 0;
+  }
+
   public onSortChanged(sort: SortOption): void {
     if (this.currentFilters().sort !== sort) {
       this.videosDataService.clearVideoCache();
 
-      this.currentFilters.set({ ...this.currentFilters, sort });
+      this.currentFilters.set({ ...this.currentFilters(), sort });
       this.resetToFirstPage();
       this.onLoadNewVideos(this.startIndex, this.pageSize);
     }
-  }
-
-  private resetToFirstPage(): void {
-    this.startIndex = 0;
-    this.pageIndex = 0;
   }
 
   public onFiltersChanged(filters: VideoFilterOptions): void {
     const filtersChanged =
       JSON.stringify(this.currentFilters) !== JSON.stringify(filters);
 
+    const currentSort = this.currentFilters().sort;
+
+    this.currentFilters.set({ ...filters, sort: currentSort });
+
     if (filtersChanged) {
       this.videosDataService.clearVideoCache();
-    }
-
-    this.currentFilters.set(filters);
-
-    if (filtersChanged) {
       this.resetToFirstPage();
       this.onLoadNewVideos(this.startIndex, this.pageSize);
     }
