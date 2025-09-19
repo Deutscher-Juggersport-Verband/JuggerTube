@@ -2,7 +2,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { createAction, props } from '@ngrx/store';
 
-import { LoadedRange } from '../models/videos-state.model';
 import {
   CreateVideoRequest,
   VideoApiResponseModel,
