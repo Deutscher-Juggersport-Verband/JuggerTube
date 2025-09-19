@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -38,8 +38,9 @@ export class PageVideoOverviewComponent {
   public pageSize = 20;
   public startIndex = 0;
   public pageIndex = 0;
-  public currentFilters: VideoFilterOptions = {};
-  public currentSort: SortOption = 'upload_date_desc';
+  public currentFilters: WritableSignal<VideoFilterOptions> = signal({
+    sort: 'upload_date_desc',
+  });
 
   public readonly UiInputTypeEnum = UiInputTypeEnum;
   public readonly sortFormControl = new FormControl('Upload: Neueste zuerst');
@@ -68,20 +69,8 @@ export class PageVideoOverviewComponent {
   public onLoadNewVideos(
     start: number = this.startIndex,
     limit: number = this.pageSize,
-    filters: VideoFilterOptions = { sort: this.currentSort }
   ): void {
-    this.videosDataService.loadPaginatedVideos(start, limit, filters);;
-  }
-
-  public onSortChanged(sort: SortOption): void {
-    if (this.currentSort !== sort) {
-      this.videosDataService.clearVideoCache();
-
-      this.currentSort = sort;
-      this.currentFilters = { ...this.currentFilters, sort };
-      this.resetToFirstPage();
-      this.onLoadNewVideos(this.startIndex, this.pageSize, this.currentFilters);
-    }
+    this.videosDataService.loadPaginatedVideos(start, limit, this.currentFilters());;
   }
 
   private resetToFirstPage(): void {
@@ -89,22 +78,28 @@ export class PageVideoOverviewComponent {
     this.pageIndex = 0;
   }
 
+  public onSortChanged(sort: SortOption): void {
+    if (this.currentFilters().sort !== sort) {
+      this.videosDataService.clearVideoCache();
+
+      this.currentFilters.set({ ...this.currentFilters(), sort });
+      this.resetToFirstPage();
+      this.onLoadNewVideos(this.startIndex, this.pageSize);
+    }
+  }
+
   public onFiltersChanged(filters: VideoFilterOptions): void {
     const filtersChanged =
       JSON.stringify(this.currentFilters) !== JSON.stringify(filters);
 
+    const currentSort = this.currentFilters().sort;
+
+    this.currentFilters.set({ ...filters, sort: currentSort });
+
     if (filtersChanged) {
       this.videosDataService.clearVideoCache();
-    }
-
-    this.currentFilters = filters;
-    if (filters.sort) {
-      this.currentSort = filters.sort;
-    }
-
-    if (filtersChanged) {
       this.resetToFirstPage();
-      this.onLoadNewVideos(this.startIndex, this.pageSize, this.currentFilters);
+      this.onLoadNewVideos(this.startIndex, this.pageSize);
     }
   }
 
