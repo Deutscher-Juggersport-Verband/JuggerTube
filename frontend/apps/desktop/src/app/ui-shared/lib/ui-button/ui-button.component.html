@@ -1,9 +1,18 @@
 @if (text) {
-{{ text }}
-} @else { @switch (type) { @case (UiButtonTypeEnum.ICON) {
-<span class="material-icons-outlined" tabindex="0">info_i</span>
-} @default {
-<button [attr.type]="type">
-  <ng-content />
-</button>
-} } }
+  {{ text }}
+} @else { 
+  @switch (type) { 
+    @case (UiButtonTypeEnum.ICON) {
+      <span class="material-icons-outlined" tabindex="0">info_i</span>
+    } @default {
+      <button [attr.type]="type"
+        matTooltip="{{ tooltipText }}"
+        matTooltipPosition="right"
+        matTooltipDisabled="{{ !tooltipText }}"
+        matTooltipClass="custom-tooltip"
+      >
+        <ng-content />
+      </button>
+    } 
+  } 
+}
