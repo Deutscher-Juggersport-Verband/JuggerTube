@@ -1,0 +1,3 @@
+from .tournament_details_parser import TournamentDetailsParser
+from .tournament_teams_parser import TournamentTeamsParser
+from .tournament_overview_parser import TournamentOverviewParser

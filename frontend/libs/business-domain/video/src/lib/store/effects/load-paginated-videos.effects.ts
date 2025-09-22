@@ -20,42 +20,6 @@ import {
 
 const unknownError = { form: 'Unknown error' };
 
-function convertStringToDate(dateStr: string): Date {
-  if (!dateStr) return new Date();
-
-  // Handle ISO format (2010-07-10T00:00:00)
-  if (dateStr.includes('T')) {
-    return new Date(dateStr);
-  }
-
-  // Handle DD-MM-YYYY format
-  const [day, month, year] = dateStr.split('-').map((num) => parseInt(num, 10));
-  return new Date(year, month - 1, day);
-}
-
-function convertDatesInVideo(
-  video: VideoApiResponseModel
-): VideoApiResponseModel {
-  return {
-    ...video,
-    uploadDate: convertStringToDate(video.uploadDate as unknown as string),
-    dateOfRecording: convertStringToDate(
-      video.dateOfRecording as unknown as string
-    ),
-    tournament: video.tournament
-      ? {
-          ...video.tournament,
-          startDate: convertStringToDate(
-            video.tournament.startDate as unknown as string
-          ),
-          endDate: convertStringToDate(
-            video.tournament.endDate as unknown as string
-          ),
-        }
-      : video.tournament,
-  };
-}
-
 @Injectable()
 export class LoadPaginatedVideosEffects {
   private readonly actions$ = inject(Actions);
@@ -69,7 +33,9 @@ export class LoadPaginatedVideosEffects {
           .getPaginatedVideos$(action.start, action.limit, action.filters)
           .pipe(
             map((data: PaginatedVideosApiResponseModel) => {
-              const convertedVideos = data.results.map(convertDatesInVideo);
+              console.log('data', data);
+              const convertedVideos = data.results.map((video) => this.convertDatesInVideo(video));
+              console.log('convertedVideos', convertedVideos);
               return loadPaginatedVideosActionSuccess({
                 videos: convertedVideos,
                 count: data.count,
@@ -87,4 +53,40 @@ export class LoadPaginatedVideosEffects {
       )
     )
   );
+
+  private convertStringToDate(dateStr: string): Date {
+    if (!dateStr) { 
+      return new Date('1990-01-01T00:00:00') 
+    };
+  
+    // Handle ISO format (2010-07-10T00:00:00)
+    if (dateStr.includes('T')) {
+      return new Date(dateStr);
+    }
+
+    // DD-MM-YYYY format
+    const [day, month, year] = dateStr.split('-').map((num) => parseInt(num, 10));
+    return new Date(year, month - 1, day);
+  }
+
+  private convertDatesInVideo(video: VideoApiResponseModel): VideoApiResponseModel {
+    const uploadDateStr = video.uploadDate as unknown as string;
+    const uploadDate = this.convertStringToDate(uploadDateStr);
+    const dateOfRecording =
+      video.dateOfRecording == null ? null : this.convertStringToDate(video.dateOfRecording as unknown as string);
+
+    const startDate =
+      video.tournament?.startDate ? this.convertStringToDate(video.tournament.startDate as unknown as string) : uploadDate;
+    const endDate =
+      video.tournament?.endDate ? this.convertStringToDate(video.tournament.endDate as unknown as string) : startDate;
+
+    return {
+      ...video,
+      uploadDate,
+      dateOfRecording,
+      tournament: video.tournament
+        ? { ...video.tournament, startDate, endDate }
+        : video.tournament,
+    };
+  }
 }

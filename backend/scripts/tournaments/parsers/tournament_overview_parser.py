@@ -1,6 +1,6 @@
 from html.parser import HTMLParser
 
-from tournament import Tournament
+from tournament_model import Tournament
 
 
 class TournamentsOverviewParser(HTMLParser):
