@@ -159,7 +159,9 @@ export class PageVideoOverviewComponent {
   private saveSortToSession(sort: SortOption): void {
     try {
       sessionStorage.setItem(this.STORAGE_KEY_SORT, sort);
-    } catch {}
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
   }
 
   private loadSortFromSession(): SortOption | null {

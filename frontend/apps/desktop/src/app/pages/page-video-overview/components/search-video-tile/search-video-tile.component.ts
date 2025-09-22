@@ -156,7 +156,9 @@ export class SearchVideoTileComponent {
         isExpanded: this.isExpandedFiltersVisible,
       };
       sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
-    } catch {}
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
   }
 
   private loadStateFromSession(): { form: FormGroup; isExpanded: boolean } | null {
@@ -172,6 +174,8 @@ export class SearchVideoTileComponent {
   private clearStateFromSession(): void {
     try {
       sessionStorage.removeItem(this.STORAGE_KEY);
-    } catch {}
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
   }
 }
