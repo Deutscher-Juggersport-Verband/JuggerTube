@@ -11,7 +11,8 @@
       [type]="UiButtonTypeEnum.BUTTON"
       [color]="UiButtonColorEnum.NONE"
       (click)="toggleExpandedFilters()"
-      [class.expanded]="isExpandedFiltersVisible">
+      [class.expanded]="isExpandedFiltersVisible"
+      [tooltipText]="isExpandedFiltersVisible ? 'Erweiterte Filter ausblenden' : 'Erweiterte Filter einblenden'">
       <span class="material-icons-outlined">keyboard_arrow_down</span>
     </ui-button>
   </div>

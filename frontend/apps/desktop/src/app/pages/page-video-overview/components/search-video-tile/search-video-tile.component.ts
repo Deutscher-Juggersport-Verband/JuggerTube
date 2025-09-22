@@ -40,6 +40,8 @@ export class SearchVideoTileComponent {
 
   public isExpandedFiltersVisible = false;
 
+  private readonly STORAGE_KEY = 'jt.videoOverview.searchTile';
+
   public readonly categoryDropdownOptions: string[] = [
     'Alle Kategorien',
     'Match',
@@ -87,6 +89,15 @@ export class SearchVideoTileComponent {
       .subscribe(() => {
         this.onFiltersChange();
       });
+
+    const state = this.loadStateFromSession();
+    if (state) {
+      this.filterForm.patchValue(state.form ?? {}, { emitEvent: false });
+      if (typeof state.isExpanded === 'boolean') {
+        this.isExpandedFiltersVisible = state.isExpanded;
+      }
+      this.onFiltersChange();
+    }
   }
 
   public getFormControl(controlName: string): FormControl {
@@ -97,15 +108,18 @@ export class SearchVideoTileComponent {
     const formValue = this.filterForm.value;
     const filters: VideoFilterOptions = {};
 
-    if (formValue.nameFilter) filters.nameFilter = formValue.nameFilter;
+    if (formValue.nameFilter) { filters.nameFilter = formValue.nameFilter };
 
     const categoryValue = this.getCategoryValueFromLabel(formValue.category);
-    if (categoryValue) filters.category = categoryValue;
+    if (categoryValue) {filters.category = categoryValue};
 
-    if (formValue.channelName) filters.channelName = formValue.channelName;
-    if (formValue.teamName) filters.teamName = formValue.teamName;
-    if (formValue.tournamentName)
+    if (formValue.channelName) { filters.channelName = formValue.channelName };
+    if (formValue.teamName) { 
+      filters.teamName = formValue.teamName;
+    };
+    if (formValue.tournamentName) {
       filters.tournamentName = formValue.tournamentName;
+    }
     if (formValue.recordingDateFrom) {
       filters.recordingDateFrom = formValue.recordingDateFrom;
     }
@@ -120,15 +134,48 @@ export class SearchVideoTileComponent {
     }
 
     this.filtersChanged.emit(filters);
+    this.saveStateToSession();
   }
 
   public clearFilters(): void {
     this.filterForm.reset({
       category: 'Alle Kategorien',
     });
+    this.clearStateFromSession();
   }
 
   public toggleExpandedFilters(): void {
     this.isExpandedFiltersVisible = !this.isExpandedFiltersVisible;
+    this.saveStateToSession();
+  }
+
+  private saveStateToSession(): void {
+    try {
+      const state = {
+        form: this.filterForm.getRawValue(),
+        isExpanded: this.isExpandedFiltersVisible,
+      };
+      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
+  }
+
+  private loadStateFromSession(): { form: FormGroup; isExpanded: boolean } | null {
+    try {
+      const raw = sessionStorage.getItem(this.STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  private clearStateFromSession(): void {
+    try {
+      sessionStorage.removeItem(this.STORAGE_KEY);
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
   }
 }

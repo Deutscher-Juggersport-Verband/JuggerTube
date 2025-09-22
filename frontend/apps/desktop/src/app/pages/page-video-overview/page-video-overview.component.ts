@@ -53,7 +53,18 @@ export class PageVideoOverviewComponent {
     'JuggerTube: Neueste zuerst',
   ];
 
+  private readonly STORAGE_KEY_SORT = 'jt.videoOverview.sort';
+
   constructor() {
+    const persistedSort = this.loadSortFromSession();
+    if (persistedSort) {
+      this.currentFilters.set({ ...this.currentFilters(), sort: persistedSort });
+      this.sortFormControl.setValue(
+        this.getSortLabelFromValue(persistedSort),
+        { emitEvent: false },
+      );
+    }
+
     this.onLoadNewVideos();
     this.paginatedVideos = this.videosDataService.paginatedVideos;
     this.totalVideos = this.videosDataService.totalCountVideos;
@@ -83,6 +94,7 @@ export class PageVideoOverviewComponent {
       this.videosDataService.clearVideoCache();
 
       this.currentFilters.set({ ...this.currentFilters(), sort });
+      this.saveSortToSession(sort);
       this.resetToFirstPage();
       this.onLoadNewVideos(this.startIndex, this.pageSize);
     }
@@ -142,5 +154,22 @@ export class PageVideoOverviewComponent {
       created_at_desc: 'JuggerTube: Neueste zuerst',
     };
     return mapping[value] ?? 'Upload: Neueste zuerst';
+  }
+
+  private saveSortToSession(sort: SortOption): void {
+    try {
+      sessionStorage.setItem(this.STORAGE_KEY_SORT, sort);
+    } catch (err) {
+      console.debug('sessionStorage unavailable', err);
+    }
+  }
+
+  private loadSortFromSession(): SortOption | null {
+    try {
+      const raw = sessionStorage.getItem(this.STORAGE_KEY_SORT);
+      return (raw as SortOption) || null;
+    } catch {
+      return null;
+    }
   }
 }
