@@ -27,7 +27,7 @@ export interface VideoApiResponseModel {
   videoLink: string;
   uploadDate: Date;
   comment: string;
-  dateOfRecording: Date;
+  dateOfRecording: Date | null;
   gameSystem: GameSystemTypesEnum;
   weaponType: WeaponTypesEnum;
   topic: string;
