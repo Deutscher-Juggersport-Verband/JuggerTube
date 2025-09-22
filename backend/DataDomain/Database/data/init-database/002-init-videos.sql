@@ -12,8 +12,8 @@ INSERT IGNORE INTO videos (
    team_two_id,
    uploader_id
 ) VALUES
-('aTestvideo 1', 'reports', 'https://youtu.be/f27SC622NvE', '2028-03-11T23:00:00', 'comment', '2018-05-24T00:00:00', 'approved', 1, 1, 1, 2, 1),
-('aTestvideo 2', 'highlights', 'https://youtu.be/f27SC622Nv', '2028-03-12T23:00:00', 'comment', '2018-05-25T00:00:00', 'approved', 1, 2, 3, 4, 1),
+('aTestvideo 1', 'reports', 'https://youtu.be/f27SC622NvE', '2028-03-11T23:00:00', 'comment', NULL, 'approved', 1, 1, 1, 2, 1),
+('aTestvideo 2', 'highlights', 'https://youtu.be/f27SC622Nv', '2028-03-12T23:00:00', 'comment', NULL, 'approved', 1, 2, 3, 4, 1),
 ('bTestvideo 3', 'sparbuilding', 'https://youtu.be/f27SC622N', '2028-03-13T23:00:00', 'comment', '2018-05-26T00:00:00', 'approved', 1, 3, 5, 6, 2),
 ('bTestvideo 4', 'match', 'https://youtu.be/f27SC622', '2028-03-14T23:00:00', 'comment', '2018-05-27T00:00:00', 'approved', 1, 4, 7, 8, 2),
 ('cTestvideo 5', 'song', 'https://youtu.be/f27SC62', '2028-03-15T23:00:00', 'comment', '2018-05-28T00:00:00', 'declined', 2, 5, 9, 10, 3),
