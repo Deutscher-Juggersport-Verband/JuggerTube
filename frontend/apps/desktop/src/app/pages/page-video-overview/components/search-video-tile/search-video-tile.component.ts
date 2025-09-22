@@ -97,15 +97,18 @@ export class SearchVideoTileComponent {
     const formValue = this.filterForm.value;
     const filters: VideoFilterOptions = {};
 
-    if (formValue.nameFilter) filters.nameFilter = formValue.nameFilter;
+    if (formValue.nameFilter) { filters.nameFilter = formValue.nameFilter };
 
     const categoryValue = this.getCategoryValueFromLabel(formValue.category);
-    if (categoryValue) filters.category = categoryValue;
+    if (categoryValue) {filters.category = categoryValue};
 
-    if (formValue.channelName) filters.channelName = formValue.channelName;
-    if (formValue.teamName) filters.teamName = formValue.teamName;
-    if (formValue.tournamentName)
+    if (formValue.channelName) { filters.channelName = formValue.channelName };
+    if (formValue.teamName) { 
+      filters.teamName = formValue.teamName;
+    };
+    if (formValue.tournamentName) {
       filters.tournamentName = formValue.tournamentName;
+    }
     if (formValue.recordingDateFrom) {
       filters.recordingDateFrom = formValue.recordingDateFrom;
     }
