@@ -1,18 +1,24 @@
+@import 'colors-desktop';
+
 :host {
   padding: 6px 10px 3px;
   border-radius: 16px;
   font-size: 13px;
+  border: 1px solid @color-tag-green;
+  color: @color-tag-green;
 
   &.training,
   &.podcast,
   &.admin,
   &.moderator {
-    background-color: #c5e0df;
-    color: #002727;
+    background-color: @color-tag-bg-green;
+    color: @color-tag-green;
+    border-color: @color-tag-bg-green;
   }
   &.highlights,
   &.longsword {
-    background-color: #ebd3d6;
-    color: #66112c;
+    background-color: @color-tag-bg-red;
+    color: @color-tag-red;
+    border-color: @color-tag-bg-red;
   }
 }
