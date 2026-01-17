@@ -28,6 +28,7 @@
           "error",
           {
             "type": "element",
+            "prefix": "",
             "style": "kebab-case"
           }
         ],
