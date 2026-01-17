@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,13 +17,12 @@ import {
 
 @Component({
   imports: [
-    CommonModule,
     VideoTileComponent,
     SearchVideoTileComponent,
     RouterLink,
     MatPaginatorModule,
-    UiInputComponent,
-  ],
+    UiInputComponent
+],
   standalone: true,
   templateUrl: './page-video-overview.component.html',
   styleUrl: './page-video-overview.component.less',

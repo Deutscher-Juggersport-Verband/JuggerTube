@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'ui-tag',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './ui-tag.component.html',
   styleUrl: './ui-tag.component.less',
   standalone: true,

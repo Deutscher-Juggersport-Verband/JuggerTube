@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FormBuilder,
@@ -21,11 +21,10 @@ import { VideoCategoriesEnum, VideoFilterOptions } from '@frontend/video-data';
 @Component({
   selector: 'search-video-tile',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     UiInputComponent,
-    UiButtonComponent,
-  ],
+    UiButtonComponent
+],
   standalone: true,
   templateUrl: './search-video-tile.component.html',
   styleUrl: './search-video-tile.component.less',

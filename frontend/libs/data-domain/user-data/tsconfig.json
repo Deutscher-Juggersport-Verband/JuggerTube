@@ -15,6 +15,9 @@
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "target": "esnext"
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "module": "preserve",
+    "lib": ["dom", "es2022"]
   }
 }

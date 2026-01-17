@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, HostBinding, Input } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -18,7 +18,7 @@ export enum UiButtonTypeEnum {
 
 @Component({
   selector: 'ui-button',
-  imports: [CommonModule, MatTooltipModule],
+  imports: [MatTooltipModule],
   standalone: true,
   templateUrl: './ui-button.component.html',
   styleUrl: './ui-button.component.less',

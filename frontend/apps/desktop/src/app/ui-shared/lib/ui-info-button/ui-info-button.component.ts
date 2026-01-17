@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -12,7 +12,7 @@ import { Popover } from 'primeng/popover';
 
 @Component({
   selector: 'ui-info-button',
-  imports: [CommonModule, MatButtonModule, UiButtonComponent, Popover],
+  imports: [MatButtonModule, UiButtonComponent, Popover],
   standalone: true,
   templateUrl: './ui-info-button.component.html',
   styleUrls: ['./ui-info-button.component.less'],
