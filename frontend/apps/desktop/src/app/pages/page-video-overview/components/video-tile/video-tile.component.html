@@ -7,13 +7,13 @@
 <div class="date-row">
   <span>Upload: {{ video.uploadDate | date : 'dd.MM.YYYY' }}</span>
   @if (video.dateOfRecording) {
-    <span>Aufnahme: {{ video.dateOfRecording | date : 'dd.MM.YYYY' }}</span>
+  <span>Aufnahme: {{ video.dateOfRecording | date : 'dd.MM.YYYY' }}</span>
   }
 </div>
 
 <div class="description-row">
   @if (video.channel) {
-    <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
+  <span>{{ video.channel.name }}</span>
   }
   <span>{{ video.comment }}</span>
 </div>
