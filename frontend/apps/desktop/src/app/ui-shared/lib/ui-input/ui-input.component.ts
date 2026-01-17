@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -21,7 +21,7 @@ export enum UiInputDirectionEnum {
 
 @Component({
   selector: 'ui-input',
-  imports: [CommonModule, ReactiveFormsModule, UiInfoButtonComponent],
+  imports: [ReactiveFormsModule, UiInfoButtonComponent],
   standalone: true,
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.less',

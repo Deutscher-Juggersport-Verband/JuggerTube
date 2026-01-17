@@ -7,7 +7,8 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": [],
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "esnext"],
+    "moduleResolution": "bundler"
   },
   "exclude": [
     "src/test-setup.ts",

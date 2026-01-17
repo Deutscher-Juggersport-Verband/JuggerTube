@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 import { Toast } from '@frontend/video';
@@ -6,7 +6,7 @@ import { Toast } from '@frontend/video';
 @Component({
   selector: 'ui-toast',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './ui-toast.component.html',
   styleUrls: ['./ui-toast.component.less'],
 })
