@@ -77,8 +77,11 @@ class BaseModel(db.Model):
 
     def exists(self, **kwargs) -> bool:
         """Überprüft, ob ein Datensatz basierend auf den übergebenen Keyword-Argumenten existiert."""
-        filters = [getattr(self.__class__, key) == value for key,
-                   value in kwargs.items() if value is not None]
+        filters = [
+            getattr(self.__class__, key) == value 
+            for key, value in kwargs.items() 
+            if value is not None and hasattr(self.__class__, key)
+        ]
 
         if not filters:
             return False
@@ -89,10 +92,12 @@ class BaseModel(db.Model):
         else:
             filter_expr = filters[0]
 
-        return self.__class__.query.filter(
-            filter_expr,
-            self.__class__.is_deleted == False
-        ).first() is not None
+        query = self.__class__.query.filter(filter_expr)
+
+        if hasattr(self.__class__, 'is_deleted'):
+            query = query.filter(self.__class__.is_deleted == False)
+
+        return query.first() is not None
 
     def count(self) -> int:
         """Count the number of records in the database"""
