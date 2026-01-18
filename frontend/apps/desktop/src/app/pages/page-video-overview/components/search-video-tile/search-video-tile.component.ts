@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+
+import { Component, EventEmitter, inject,Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -21,16 +21,17 @@ import { VideoCategoriesEnum, VideoFilterOptions } from '@frontend/video-data';
 @Component({
   selector: 'search-video-tile',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     UiInputComponent,
-    UiButtonComponent,
-  ],
+    UiButtonComponent
+],
   standalone: true,
   templateUrl: './search-video-tile.component.html',
   styleUrl: './search-video-tile.component.less',
 })
 export class SearchVideoTileComponent {
+  private readonly fb = inject(FormBuilder);
+
   @Output() public filtersChanged = new EventEmitter<VideoFilterOptions>();
 
   public readonly filterForm: FormGroup;
@@ -71,7 +72,7 @@ export class SearchVideoTileComponent {
     return mapping[label] || '';
   }
 
-  constructor(private readonly fb: FormBuilder) {
+  constructor() {
     this.filterForm = this.fb.group({
       nameFilter: new FormControl(''),
       category: new FormControl('Alle Kategorien'),

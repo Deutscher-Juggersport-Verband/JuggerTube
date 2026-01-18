@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -19,12 +19,11 @@ import {
 
 @Component({
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     UiButtonComponent,
     UiInputComponent,
-    RouterLink,
-  ],
+    RouterLink
+],
   standalone: true,
   templateUrl: './page-login.component.html',
   styleUrl: './page-login.component.less',

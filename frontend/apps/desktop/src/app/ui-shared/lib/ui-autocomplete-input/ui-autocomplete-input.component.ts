@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectorRef,
   Component,
@@ -32,11 +32,10 @@ type ValueFieldType = keyof Pick<OptionType, 'id'>;
 @Component({
   selector: 'ui-autocomplete-input',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     UiInfoButtonComponent,
-    UiInputComponent,
-  ],
+    UiInputComponent
+],
   standalone: true,
   templateUrl: './ui-autocomplete-input.component.html',
   styleUrl: './ui-autocomplete-input.component.less',

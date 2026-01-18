@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Signal } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -40,13 +40,12 @@ import {
 
 @Component({
   imports: [
-    CommonModule,
     FormsModule,
     UiButtonComponent,
     UiInputComponent,
     UiAutocompleteInputComponent,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   standalone: true,
   templateUrl: './page-create-video.component.html',
   styleUrl: './page-create-video.component.less',
