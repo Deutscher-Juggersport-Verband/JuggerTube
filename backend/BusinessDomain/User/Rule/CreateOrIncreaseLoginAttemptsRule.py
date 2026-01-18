@@ -1,7 +1,5 @@
-from BusinessDomain.User.Rule import (
-    DoesLoginAttemptExistsRule,
-    IncreaseFailedAttemptsRule,
-)
+from .DoesLoginAttemptExistsRule import DoesLoginAttemptExistsRule
+from .IncreaseFailedAttemptsRule import IncreaseFailedAttemptsRule
 from DataDomain.Database.Model import LoginAttempts
 
 
