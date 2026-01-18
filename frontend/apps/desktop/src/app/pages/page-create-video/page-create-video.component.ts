@@ -1,6 +1,6 @@
 
 import { Component, inject, Signal } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
   initConfig,
@@ -90,8 +90,28 @@ export class PageCreateVideoComponent {
   protected readonly teamTwoNewOptionConfig = teamTwoNewOptionConfig;
   protected readonly initConfig = initConfig;
 
+  public logFormErrors(
+  form: FormGroup | FormArray,
+  path: string = ''
+): void {
+  Object.entries(form.controls).forEach(([key, control]) => {
+    const currentPath = path ? `${path}.${key}` : key;
+
+    if (control instanceof FormGroup || control instanceof FormArray) {
+      this.logFormErrors(control, currentPath);
+    } else if (control.invalid) {
+      console.log('❌ INVALID:', currentPath);
+      console.log('   status:', control.status);
+      console.log('   errors:', control.errors);
+      console.log('   value:', control.value);
+    }
+  });
+}
+
   public onSubmit(): void {
     if (!this.form.valid) {
+      console.log(this.form.status);
+      this.logFormErrors(this.form);
       markAllFieldsAsTouched(this.form);
       this.toastService.showError(
         'Bitte fülle alle erforderlichen Felder aus.'
@@ -104,6 +124,8 @@ export class PageCreateVideoComponent {
       this.toastService.showError('Bitte wähle eine Kategorie aus.');
       return;
     }
+
+    console.log('Form Value 1:', formValue);
 
     this.videosDataService.create(formValue as CreateVideoRequest);
   }

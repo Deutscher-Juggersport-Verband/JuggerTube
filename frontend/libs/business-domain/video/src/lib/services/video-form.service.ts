@@ -29,26 +29,25 @@ export type VideoFormModel = {
   name: FormControl<string>;
   videoLink: FormControl<string>;
   channelId: FormControl<number>;
-  channelLink: FormControl<string>;
   category: FormControl<VideoCategoriesEnum | null>;
   uploadDate: FormControl<string>;
   dateOfRecording: FormControl<string>;
-  topic: FormControl<string>;
-  guests: FormControl<string>;
+  topic: FormControl<string | null>;
+  guests: FormControl<string | null>;
   weaponType: FormControl<WeaponTypesEnum | null>;
   gameSystem: FormControl<GameSystemTypesEnum | null>;
-  tournamentId: FormControl<number>;
-  teamOneId: FormControl<number>;
-  teamTwoId: FormControl<number>;
-  teamOneCity: FormControl<string>;
-  teamTwoCity: FormControl<string>;
-  teamOneMix: FormControl<boolean>;
-  teamTwoMix: FormControl<boolean>;
-  comment: FormControl<string>;
-  tournamentCity: FormControl<string>;
-  tournamentStartDate: FormControl<string>;
-  tournamentEndDate: FormControl<string>;
-  tournamentAddress: FormControl<string>;
+  tournamentId: FormControl<number | null>;
+  teamOneId: FormControl<number | null>;
+  teamTwoId: FormControl<number | null>;
+  teamOneCity: FormControl<string | null>;
+  teamTwoCity: FormControl<string | null>;
+  teamOneMix: FormControl<boolean | null>;
+  teamTwoMix: FormControl<boolean | null>;
+  comment: FormControl<string | null>;
+  tournamentCity: FormControl<string | null>;
+  tournamentStartDate: FormControl<string | null>;
+  tournamentEndDate: FormControl<string | null>;
+  tournamentAddress: FormControl<string | null>;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -98,13 +97,6 @@ export class VideoFormService {
             validators: [Validators.required, notZeroValidator],
           }
         ),
-        channelLink: new FormControl(
-          { value: '', disabled: false },
-          {
-            nonNullable: true,
-            validators: [Validators.required],
-          }
-        ),
         category: new FormControl(
           { value: null, disabled: false },
           {
@@ -127,113 +119,99 @@ export class VideoFormService {
           }
         ),
         topic: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         guests: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         weaponType: new FormControl(
           { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         gameSystem: new FormControl(
           { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         tournamentId: new FormControl(
-          { value: 0, disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         teamOneId: new FormControl(
-          { value: 0, disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         teamTwoId: new FormControl(
           { value: 0, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         teamOneCity: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         teamTwoCity: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         teamOneMix: new FormControl(
-          { value: false, disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
           }
         ),
         teamTwoMix: new FormControl(
-          { value: false, disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
           }
         ),
         comment: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         tournamentCity: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         tournamentStartDate: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         tournamentEndDate: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
         tournamentAddress: new FormControl(
-          { value: '', disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
           }
         ),
       },
@@ -307,20 +285,20 @@ export class VideoFormService {
           this.currentForm.controls.tournamentId.addValidators(
             Validators.required
           );
-          if (this.currentForm.controls.teamOneCity.value !== '') {
-            this.currentForm.controls.tournamentCity.addValidators(
-              Validators.required
-            );
-            this.currentForm.controls.tournamentStartDate.addValidators(
-              Validators.required
-            );
-            this.currentForm.controls.tournamentEndDate.addValidators(
-              Validators.required
-            );
-            this.currentForm.controls.tournamentAddress.addValidators(
-              Validators.required
-            );
-          }
+          //if (this.currentForm.controls.teamOneCity.value !== '') {
+            //this.currentForm.controls.tournamentCity.addValidators(
+              //Validators.required
+            //);
+            //this.currentForm.controls.tournamentStartDate.addValidators(
+              //Validators.required
+            //);
+            //this.currentForm.controls.tournamentEndDate.addValidators(
+              //Validators.required
+            //);
+            //this.currentForm.controls.tournamentAddress.addValidators(
+             // Validators.required
+            //);
+          //}
           break;
         case AdditionalFieldsEnum.TEAMS:
           this.currentForm.controls.teamOneId.addValidators([

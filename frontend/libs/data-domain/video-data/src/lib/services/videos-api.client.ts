@@ -26,7 +26,6 @@ export interface CreateChannelRequest {
 export interface CreateVideoRequest {
   name: string;
   videoLink: string;
-  channelLink: string;
   category: VideoCategoriesEnum;
   uploadDate: string;
   dateOfRecording: string;
@@ -34,23 +33,20 @@ export interface CreateVideoRequest {
   guests?: string;
   weaponType?: WeaponTypesEnum | null;
   gameSystem?: GameSystemTypesEnum | null;
-  tournament?: {
-    id?: number;
-    name?: string;
-    city?: string;
-    startDate?: string;
-    endDate?: string;
-  };
-  teamOne?: {
-    id?: number;
-    name?: string;
-    city?: string;
-  };
-  teamTwo?: {
-    id?: number;
-    name?: string;
-    city?: string;
-  };
+  channelId?: number;
+  channelName?: string;
+  channelLink?: string;
+  tournamentId?: number;
+  tournamentName?: string;
+  tournamentCity?: string;
+  tournamentStartDate?: string;
+  tournamentEndDate?: string;
+  teamOneId?: number;
+  teamOneName?: string;
+  teamOneCity?: string;
+  teamTwoId?: number;
+  teamTwoName?: string;
+  teamTwoCity?: string;
   comment?: string;
 }
 
@@ -136,6 +132,7 @@ export class VideosApiClient {
   public create(
     videoData: CreateVideoRequest
   ): Observable<{ id: number; message: string }> {
+    console.log('Creating video with data 3:', videoData);
     return this.httpClient
       .post<{ id: number; message: string }>(
         '/api/video-frontend/create-video',

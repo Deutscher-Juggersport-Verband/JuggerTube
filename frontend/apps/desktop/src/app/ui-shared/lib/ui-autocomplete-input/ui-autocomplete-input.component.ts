@@ -113,9 +113,9 @@ export class UiAutocompleteInputComponent implements OnInit {
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
     this.showNewFields = false;
-    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
-      field.formControlElement.reset()
-    );
+    //this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
+      //field.formControlElement.reset()
+    //);
   }
 
   public onInputFocus(): void {
