@@ -24,6 +24,7 @@
     [placeholder]="'Channel suchen...'"
     [direction]="UiInputDirectionEnum.ROW"
     [newOptionConfig]="initConfig(channelNewOptionConfig, form.controls)"
+    [newOptionElementType]="CreateNewObjectTypesEnum.CHANNEL"
   />
 
   <ui-input
@@ -48,81 +49,91 @@
     [direction]="UiInputDirectionEnum.ROW"
   />
 
-  @for (field of additionalFields$(); track field) { @switch (field) { @case
-  (AdditionalFieldsEnum.TOPIC) {
-  <ui-input
-    [labelText]="'Thema:'"
-    [type]="UiInputTypeEnum.TEXT"
-    [formControlElement]="form.controls.topic"
-    [direction]="UiInputDirectionEnum.ROW"
-  />
-  } @case (AdditionalFieldsEnum.GUESTS) {
-  <ui-input
-    [labelText]="'Gäste:'"
-    [type]="UiInputTypeEnum.TEXT"
-    [formControlElement]="form.controls.guests"
-    [direction]="UiInputDirectionEnum.ROW"
-  />
-  } @case (AdditionalFieldsEnum.TOURNAMENT) {
-  <ui-autocomplete-input
-    [labelText]="'Turnier: '"
-    [formControlElement]="form.controls.tournamentId"
-    [options]="tournaments()"
-    [displayField]="'name'"
-    [valueField]="'id'"
-    [placeholder]="'Turnier suchen...'"
-    [direction]="UiInputDirectionEnum.ROW"
-    [newOptionConfig]="initConfig(tournamentNewOptionConfig, form.controls)"
-  />
+  @for (config of categoriesAdditionalFieldsConfig(); track config) { 
+    @switch (config.field) { 
+      @case (CategoriesAdditionalFieldsEnum.TOPIC) {
+        <ui-input
+          [labelText]="'Thema:'"
+          [type]="UiInputTypeEnum.TEXT"
+          [formControlElement]="form.controls.topic"
+          [direction]="UiInputDirectionEnum.ROW"
+        />
+      } 
+      @case (CategoriesAdditionalFieldsEnum.GUESTS) {
+        <ui-input
+          [labelText]="'Gäste:'"
+          [type]="UiInputTypeEnum.TEXT"
+          [formControlElement]="form.controls.guests"
+          [direction]="UiInputDirectionEnum.ROW"
+        />
+      } 
+      @case (CategoriesAdditionalFieldsEnum.TOURNAMENT) {
+        <ui-autocomplete-input
+          [labelText]="'Turnier: '"
+          [formControlElement]="form.controls.tournamentId"
+          [options]="tournaments()"
+          [displayField]="'name'"
+          [valueField]="'id'"
+          [placeholder]="'Turnier suchen...'"
+          [direction]="UiInputDirectionEnum.ROW"
+          [newOptionConfig]="initConfig(tournamentNewOptionConfig, form.controls)"
+          [newOptionElementType]="CreateNewObjectTypesEnum.TOURNAMENT"
+        />
+      }
+      @case (CategoriesAdditionalFieldsEnum.TEAMS) {
+        <ui-autocomplete-input
+          [labelText]="'Team 1:'"
+          [formControlElement]="form.controls.teamOneId"
+          [options]="teams()"
+          [displayField]="'name'"
+          [valueField]="'id'"
+          [placeholder]="'Team 1 suchen...'"
+          [direction]="UiInputDirectionEnum.ROW"
+          [newOptionConfig]="initConfig(teamOneNewOptionConfig, form.controls)"
+          [newOptionElementType]="CreateNewObjectTypesEnum.TEAM_ONE"
+        />
 
-  } @case (AdditionalFieldsEnum.TEAMS) {
-  <ui-autocomplete-input
-    [labelText]="'Team 1:'"
-    [formControlElement]="form.controls.teamOneId"
-    [options]="teams()"
-    [displayField]="'name'"
-    [valueField]="'id'"
-    [placeholder]="'Team 1 suchen...'"
-    [direction]="UiInputDirectionEnum.ROW"
-    [newOptionConfig]="initConfig(teamOneNewOptionConfig, form.controls)"
-  />
+        <div>
+          <ui-autocomplete-input
+            [labelText]="'Team 2:'"
+            [formControlElement]="form.controls.teamTwoId"
+            [options]="teams()"
+            [displayField]="'name'"
+            [valueField]="'id'"
+            [placeholder]="'Team 2 suchen...'"
+            [direction]="UiInputDirectionEnum.ROW"
+            [newOptionConfig]="initConfig(teamTwoNewOptionConfig, form.controls)"
+            [newOptionElementType]="CreateNewObjectTypesEnum.TEAM_TWO"
+          />
 
-  <div>
-    <ui-autocomplete-input
-      [labelText]="'Team 2:'"
-      [formControlElement]="form.controls.teamTwoId"
-      [options]="teams()"
-      [displayField]="'name'"
-      [valueField]="'id'"
-      [placeholder]="'Team 2 suchen...'"
-      [direction]="UiInputDirectionEnum.ROW"
-      [newOptionConfig]="initConfig(teamTwoNewOptionConfig, form.controls)"
-    />
+          @if (sameTeamValidationError()) {
+            <div class="error-message">
+              Ein Team kann nicht gegen sich selbst antreten.
+            </div>
+          }
+        </div>
 
-    @if (sameTeamValidationError()) {
-    <div class="error-message">
-      Ein Team kann nicht gegen sich selbst antreten.
-    </div>
-    }
-  </div>
-
-  } @case (AdditionalFieldsEnum.WEAPON_TYPE) {
-  <ui-input
-    [labelText]="'Pompfenart:'"
-    [type]="UiInputTypeEnum.DROPDOWN"
-    [formControlElement]="form.controls.weaponType"
-    [dropdownOptions]="Object.values(WeaponTypesEnum)"
-    [direction]="UiInputDirectionEnum.ROW"
-  />
-  } @case (AdditionalFieldsEnum.GAME_SYSTEM) {
-  <ui-input
-    [labelText]="'Spielsystem:'"
-    [type]="UiInputTypeEnum.DROPDOWN"
-    [formControlElement]="form.controls.gameSystem"
-    [dropdownOptions]="Object.values(GameSystemTypesEnum)"
-    [direction]="UiInputDirectionEnum.ROW"
-  />
-  } } }
+      } 
+      @case (CategoriesAdditionalFieldsEnum.WEAPON_TYPE) {
+        <ui-input
+          [labelText]="'Pompfenart:'"
+          [type]="UiInputTypeEnum.DROPDOWN"
+          [formControlElement]="form.controls.weaponType"
+          [dropdownOptions]="Object.values(WeaponTypesEnum)"
+          [direction]="UiInputDirectionEnum.ROW"
+        />
+      } 
+      @case (CategoriesAdditionalFieldsEnum.GAME_SYSTEM) {
+        <ui-input
+          [labelText]="'Spielsystem:'"
+          [type]="UiInputTypeEnum.DROPDOWN"
+          [formControlElement]="form.controls.gameSystem"
+          [dropdownOptions]="Object.values(GameSystemTypesEnum)"
+          [direction]="UiInputDirectionEnum.ROW"
+        />
+      } 
+    } 
+  }
 
   <ui-input
     [labelText]="'Kommentar:'"

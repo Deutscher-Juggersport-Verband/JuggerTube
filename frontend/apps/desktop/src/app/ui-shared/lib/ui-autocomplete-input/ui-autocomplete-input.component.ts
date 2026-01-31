@@ -21,6 +21,8 @@ import { NewOptionConfig, NewOptionFieldConfig } from './new-option-config';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
+import { CreateNewObjectTypesEnum } from 'libs/data-domain/video-data/src/lib/enums/create-new-object-types.enum';
+import { VideoFormService } from 'libs/business-domain/video/src/lib/services/video-form.service';
 
 type OptionType =
   | TournamentApiResponseModel
@@ -44,6 +46,9 @@ export class UiAutocompleteInputComponent implements OnInit {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef$: DestroyRef = inject(DestroyRef);
 
+  private readonly videoFormService: VideoFormService =
+      inject(VideoFormService);
+
   @Input() public formControlElement!: FormControl;
   @Input() public options: OptionType[] = [];
   @Input() public displayField: DisplayFieldType = 'name';
@@ -57,6 +62,7 @@ export class UiAutocompleteInputComponent implements OnInit {
   @Input() public infoButtonContent?: string;
 
   @Input() public newOptionConfig?: NewOptionConfig;
+  @Input() public newOptionElementType?: CreateNewObjectTypesEnum;
   public showNewFields: boolean = false;
 
   public filteredOptions: OptionType[] = [];
@@ -113,9 +119,9 @@ export class UiAutocompleteInputComponent implements OnInit {
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
     this.showNewFields = false;
-    //this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
-      //field.formControlElement.reset()
-    //);
+    this.videoFormService.changeFormRequirementsToExistingObject(
+      this.newOptionElementType!
+    );
   }
 
   public onInputFocus(): void {
@@ -130,13 +136,12 @@ export class UiAutocompleteInputComponent implements OnInit {
   }
 
   public onAddNewOption(): void {
-    this.formControlElement.setErrors([]);
-    this.formControlElement.markAsPristine();
-    this.formControlElement.markAsUntouched();
-    this.showNewFields = true;
-    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
-      field.formControlElement.reset()
+    this.videoFormService.changeFormRequirementsToCreateNewObject(
+      this.newOptionElementType!
     );
+
+    this.showNewFields = true;
+
     this.newOptionConfig?.prefillField?.setValue(this.searchControl.value);
     this.cdr.detectChanges();
   }

@@ -1,15 +1,15 @@
 <div class="input-container {{ direction }}">
   @if (labelText) {
-  <div class="label-row">
-    <label for="{{ labelText }}">{{ labelText }}</label>
+    <div class="label-row">
+      <label for="{{ labelText }}">{{ labelText }}</label>
 
-    @if (infoButtonHeadline) {
-    <ui-info-button>
-      <p class="i-headline">{{ infoButtonHeadline }}</p>
-      <p>{{ infoButtonContent }}</p>
-    </ui-info-button>
-    }
-  </div>
+      @if (infoButtonHeadline) {
+        <ui-info-button>
+          <p class="i-headline">{{ infoButtonHeadline }}</p>
+          <p>{{ infoButtonContent }}</p>
+        </ui-info-button>
+      }
+    </div>
   }
   <div class="input-field">
     <input
@@ -22,43 +22,44 @@
     />
 
     @if (showDropdown) {
-    <div class="dropdown">
-      @if (filteredOptions.length > 0) { @for (option of filteredOptions; track
-      option[valueField]) {
-      <div class="option" (click)="onOptionSelect(option)">
-        {{ option[displayField] }}
+      <div class="dropdown">
+        @if (filteredOptions.length > 0) { 
+          @for (option of filteredOptions; track option[valueField]) {
+            <div class="option" (click)="onOptionSelect(option)">
+              {{ option[displayField] }}
+            </div>
+          } 
+        } 
+        @if (!hasExactMatch) {
+          <div class="option no-results">
+            <span class="add-new" (click)="onAddNewOption()">
+              "{{ searchControl.value }}" neu hinzufügen
+            </span>
+          </div>
+        }
       </div>
-      } } @if (!hasExactMatch) {
-      <div class="option no-results">
-        <span class="add-new" (click)="onAddNewOption()">
-          "{{ searchControl.value }}" neu hinzufügen
-        </span>
-      </div>
-      }
-    </div>
     }
   </div>
 </div>
 
-@if (formControlElement.touched && formControlElement.invalid &&
-formControlElement.errors) {
-<span class="error-message">
-  @if (formControlElement.errors['required'] ||
-  formControlElement.errors['notZero']) { Dieses Feld ist erforderlich. }
-</span>
-} @if (showNewFields && newOptionConfig) {
-<div class="new-fields">
-  <p>
-    {{ newOptionConfig.labelText }}
-  </p>
+@if (formControlElement.touched && formControlElement.invalid && formControlElement.errors) {
+  <span class="error-message">
+    @if (formControlElement.errors['required'] || formControlElement.errors['notZero']) { Dieses Feld ist erforderlich. }
+  </span>
+} 
+@if (showNewFields && newOptionConfig) {
+  <div class="new-fields">
+    <p>
+      {{ newOptionConfig.labelText }}
+    </p>
 
-  @for (field of newOptionConfig.fields; track $index) {
-  <ui-input
-    [labelText]="field.labelText"
-    [type]="field.type"
-    [formControlElement]="field.formControlElement"
-    [direction]="field.direction"
-  />
-  }
-</div>
+    @for (field of newOptionConfig.fields; track $index) {
+      <ui-input
+        [labelText]="field.labelText"
+        [type]="field.type"
+        [formControlElement]="field.formControlElement"
+        [direction]="field.direction"
+      />
+    }
+  </div>
 }

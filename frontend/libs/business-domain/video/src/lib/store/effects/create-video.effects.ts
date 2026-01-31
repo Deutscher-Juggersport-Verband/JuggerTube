@@ -11,8 +11,8 @@ import {
   createVideoFailure,
   createVideoSuccess,
 } from '../actions/videos.actions';
-import { ToastService, VideoFormService } from '@frontend/video';
-import { VideosApiClient } from '@frontend/video-data';
+import { ToastService, VideoCreationErrorMessagesConstants, VideoFormService } from '@frontend/video';
+import { VideoCreationErrorTypesEnum, VideosApiClient } from '@frontend/video-data';
 
 @Injectable()
 export class CreateVideoEffects {
@@ -32,7 +32,16 @@ export class CreateVideoEffects {
             return createVideoSuccess({ response });
           }),
           catchError((error) => {
-            this.toastService.showError('Fehler beim Erstellen des Videos.');
+            switch (error?.error) {
+              case 'Video with this name already exists':
+                this.toastService.showError(VideoCreationErrorMessagesConstants.nameAlreadyExists);
+                break;
+              case 'Video with this link already exists':
+                this.toastService.showError(VideoCreationErrorMessagesConstants.linkAlreadyExists);
+                break;
+              default:
+                this.toastService.showError(VideoCreationErrorMessagesConstants.default);
+            }
             return of(createVideoFailure({ error }));
           })
         );

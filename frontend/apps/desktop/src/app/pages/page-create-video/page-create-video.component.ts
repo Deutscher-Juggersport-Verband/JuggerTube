@@ -25,13 +25,15 @@ import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentsDataService } from '@frontend/tournament';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
 import {
-  AdditionalFieldsEnum,
   ToastService,
   VideoFormModel,
   VideoFormService,
   VideosDataService,
 } from '@frontend/video';
 import {
+  CategoriesAdditionalFieldsConfig,
+  CategoriesAdditionalFieldsEnum,
+  CreateNewObjectTypesEnum,
   CreateVideoRequest,
   GameSystemTypesEnum,
   VideoCategoriesEnum,
@@ -71,8 +73,8 @@ export class PageCreateVideoComponent {
 
   protected readonly form: FormGroup<VideoFormModel> =
     this.videoFormService.create();
-  protected additionalFields$: Signal<AdditionalFieldsEnum[]> =
-    this.videoFormService.additionalFields$;
+  protected categoriesAdditionalFieldsConfig: Signal<CategoriesAdditionalFieldsConfig[]> =
+    this.videoFormService.categoriesAdditionalFieldsConfig;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
@@ -82,7 +84,8 @@ export class PageCreateVideoComponent {
   protected readonly VideoCategoriesEnum = VideoCategoriesEnum;
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
   protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
-  protected readonly AdditionalFieldsEnum = AdditionalFieldsEnum;
+  protected readonly CategoriesAdditionalFieldsEnum = CategoriesAdditionalFieldsEnum;
+  protected readonly CreateNewObjectTypesEnum = CreateNewObjectTypesEnum;
 
   protected readonly channelNewOptionConfig = channelNewOptionConfig;
   protected readonly tournamentNewOptionConfig = tournamentNewOptionConfig;
@@ -93,20 +96,20 @@ export class PageCreateVideoComponent {
   public logFormErrors(
   form: FormGroup | FormArray,
   path: string = ''
-): void {
-  Object.entries(form.controls).forEach(([key, control]) => {
-    const currentPath = path ? `${path}.${key}` : key;
+  ): void {
+    Object.entries(form.controls).forEach(([key, control]) => {
+      const currentPath = path ? `${path}.${key}` : key;
 
-    if (control instanceof FormGroup || control instanceof FormArray) {
-      this.logFormErrors(control, currentPath);
-    } else if (control.invalid) {
-      console.log('❌ INVALID:', currentPath);
-      console.log('   status:', control.status);
-      console.log('   errors:', control.errors);
-      console.log('   value:', control.value);
-    }
-  });
-}
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.logFormErrors(control, currentPath);
+      } else if (control.invalid) {
+        console.log('❌ INVALID:', currentPath);
+        console.log('   status:', control.status);
+        console.log('   errors:', control.errors);
+        console.log('   value:', control.value);
+      }
+    });
+  }
 
   public onSubmit(): void {
     if (!this.form.valid) {

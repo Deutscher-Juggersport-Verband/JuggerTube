@@ -8,72 +8,101 @@ import {
   notZeroValidator,
   updateAllControlsValidity,
 } from '../../../../../../apps/desktop/src/app/utils/form-utils';
-import { determineAdditionalFieldsRule } from '../rules/determineAdditionalFields.rule';
 import { differentTeamsValidator } from '@frontend/team';
 import {
-  GameSystemTypesEnum,
+  CategoriesAdditionalFieldsConfig,
+  CreateNewObjectsAdditionalFieldsConfig,
+  CreateNewObjectTypesEnum,
+  ObjectsIdFieldMap,
   VideoCategoriesEnum,
-  WeaponTypesEnum,
+  VideoFormAllAdditionalFields,
+  VideoFormModelFieldsEnum,
 } from '@frontend/video-data';
-
-export enum AdditionalFieldsEnum {
-  GAME_SYSTEM = 'gameSystem',
-  WEAPON_TYPE = 'weaponType',
-  TOPIC = 'topic',
-  GUESTS = 'guests',
-  TEAMS = 'teams',
-  TOURNAMENT = 'tournament',
-}
-
-export type VideoFormModel = {
-  name: FormControl<string>;
-  videoLink: FormControl<string>;
-  channelId: FormControl<number>;
-  category: FormControl<VideoCategoriesEnum | null>;
-  uploadDate: FormControl<string>;
-  dateOfRecording: FormControl<string>;
-  topic: FormControl<string | null>;
-  guests: FormControl<string | null>;
-  weaponType: FormControl<WeaponTypesEnum | null>;
-  gameSystem: FormControl<GameSystemTypesEnum | null>;
-  tournamentId: FormControl<number | null>;
-  teamOneId: FormControl<number | null>;
-  teamTwoId: FormControl<number | null>;
-  teamOneCity: FormControl<string | null>;
-  teamTwoCity: FormControl<string | null>;
-  teamOneMix: FormControl<boolean | null>;
-  teamTwoMix: FormControl<boolean | null>;
-  comment: FormControl<string | null>;
-  tournamentCity: FormControl<string | null>;
-  tournamentStartDate: FormControl<string | null>;
-  tournamentEndDate: FormControl<string | null>;
-  tournamentAddress: FormControl<string | null>;
-};
+import { VideoFormModel } from '../models/video-form.model';
 
 @Injectable({ providedIn: 'root' })
 export class VideoFormService {
   private readonly destroyRef$: DestroyRef = inject(DestroyRef);
 
   private currentForm: FormGroup<VideoFormModel> | null = null;
-  private readonly additionalFieldsSubject: BehaviorSubject<
-    AdditionalFieldsEnum[]
-  > = new BehaviorSubject<AdditionalFieldsEnum[]>([]);
-
-  public additionalFields$: Signal<AdditionalFieldsEnum[]>;
+  private readonly categoriesAdditionalFieldsSubject: BehaviorSubject<
+    CategoriesAdditionalFieldsConfig[]
+  > = new BehaviorSubject<CategoriesAdditionalFieldsConfig[]>([]);
+  public categoriesAdditionalFieldsConfig: Signal<CategoriesAdditionalFieldsConfig[]>;
 
   constructor() {
-    this.additionalFields$ = toSignal(this.additionalFieldsSubject, {
+    this.categoriesAdditionalFieldsConfig = toSignal(this.categoriesAdditionalFieldsSubject, {
       initialValue: [],
     });
   }
 
   public create(): FormGroup<VideoFormModel> {
-    this.currentForm ??= this.setupForm();
+    this.currentForm ??= this.setupBaseForm();
     this.setupCategorySubscription();
     return this.currentForm;
   }
 
-  private setupForm(): FormGroup<VideoFormModel> {
+  public changeFormRequirementsToCreateNewObject(objectType: CreateNewObjectTypesEnum): void {
+    if (!this.currentForm) return;
+
+    const existingObjectField = ObjectsIdFieldMap[objectType];
+    if (existingObjectField) {
+      this.currentForm?.controls[existingObjectField].removeValidators(Validators.required);
+      this.currentForm?.controls[existingObjectField].reset();
+      this.currentForm?.controls[existingObjectField].setErrors([]);
+      this.currentForm?.controls[existingObjectField].markAsPristine();
+      this.currentForm?.controls[ObjectsIdFieldMap[objectType]].markAsUntouched();  
+    }
+
+    CreateNewObjectsAdditionalFieldsConfig[objectType].forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control) {
+        control.setValidators(Validators.required);
+      }
+    });
+
+    updateAllControlsValidity(this.currentForm);
+
+    //debugging: Ausgabe aller Felder mit Validatoren
+    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
+    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control && control.validator) {
+        allFieldsWithValidators.push(field);
+      }
+    });
+
+    console.log('✅ Aktuelle Felder mit Validatoren nach Erstellung von neuem Objekt:', allFieldsWithValidators);
+
+  };
+
+  public changeFormRequirementsToExistingObject(objectType: CreateNewObjectTypesEnum): void {
+    if (!this.currentForm) return;
+
+    ObjectsIdFieldMap[objectType] && this.currentForm?.controls[ObjectsIdFieldMap[objectType]].setValidators(Validators.required);
+
+    CreateNewObjectsAdditionalFieldsConfig[objectType].forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control) {
+        control.removeValidators(Validators.required);
+      }
+    });
+
+    updateAllControlsValidity(this.currentForm);
+
+    //debugging: Ausgabe aller Felder mit Validatoren
+    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
+    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control && control.validator) {
+        allFieldsWithValidators.push(field);
+      }
+    });
+
+    console.log('✅ Aktuelle Felder mit Validatoren nach Auswahl von existierendem Objekt:', allFieldsWithValidators);
+  }
+
+  private setupBaseForm(): FormGroup<VideoFormModel> {
     return new FormGroup<VideoFormModel>(
       {
         name: new FormControl(
@@ -91,7 +120,7 @@ export class VideoFormService {
           }
         ),
         channelId: new FormControl(
-          { value: 0, disabled: false },
+          { value: null, disabled: false },
           {
             nonNullable: true,
             validators: [Validators.required, notZeroValidator],
@@ -208,7 +237,7 @@ export class VideoFormService {
             nonNullable: true,
           }
         ),
-        tournamentAddress: new FormControl(
+        channelLink: new FormControl(
           { value: null, disabled: false },
           {
             nonNullable: true,
@@ -225,101 +254,60 @@ export class VideoFormService {
     this.currentForm.controls.category.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef$))
       .subscribe((value: VideoCategoriesEnum | null) => {
-        this.additionalFieldsSubject.next(
-          value ? determineAdditionalFieldsRule(value) : []
+        this.categoriesAdditionalFieldsSubject.next(
+          value ? CategoriesAdditionalFieldsConfig[value] : []
         );
 
-        this.updateFormValidation();
+        this.updateFormValidationAfterCategoryChange(value);
       });
   }
 
-  private updateFormValidation(): void {
-    this.clearAdditionalFieldsValidators();
+  private updateFormValidationAfterCategoryChange(category: VideoCategoriesEnum | null): void {
+    this.clearCategoriesOptionalFieldsValidators();
 
-    this.addFittingAdditionalFieldsValidators();
+    this.addFittingCategoriesOptionalFieldsValidators(category);
 
     if (!this.currentForm) return;
     updateAllControlsValidity(this.currentForm);
-  }
 
-  private clearAdditionalFieldsValidators(): void {
-    if (!this.currentForm) return;
-
-    this.currentForm.controls.topic.clearValidators();
-    this.currentForm.controls.guests.clearValidators();
-    this.currentForm.controls.weaponType.clearValidators();
-    this.currentForm.controls.gameSystem.clearValidators();
-    this.currentForm.controls.tournamentId.clearValidators();
-    this.currentForm.controls.teamOneId.clearValidators();
-    this.currentForm.controls.teamTwoId.clearValidators();
-    this.currentForm.controls.teamOneCity.clearValidators();
-    this.currentForm.controls.teamTwoCity.clearValidators();
-    this.currentForm.controls.tournamentCity.clearValidators();
-    this.currentForm.controls.tournamentStartDate.clearValidators();
-    this.currentForm.controls.tournamentEndDate.clearValidators();
-    this.currentForm.controls.tournamentAddress.clearValidators();
-  }
-
-  private addFittingAdditionalFieldsValidators(): void {
-    this.additionalFields$().forEach((field: AdditionalFieldsEnum) => {
-      if (!this.currentForm) return;
-
-      switch (field) {
-        case AdditionalFieldsEnum.TOPIC:
-          this.currentForm.controls.topic.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.GUESTS:
-          this.currentForm.controls.guests.addValidators(Validators.required);
-          break;
-        case AdditionalFieldsEnum.WEAPON_TYPE:
-          this.currentForm.controls.weaponType.addValidators(
-            Validators.required
-          );
-          break;
-        case AdditionalFieldsEnum.GAME_SYSTEM:
-          this.currentForm.controls.gameSystem.addValidators(
-            Validators.required
-          );
-          break;
-        case AdditionalFieldsEnum.TOURNAMENT:
-          this.currentForm.controls.tournamentId.addValidators(
-            Validators.required
-          );
-          //if (this.currentForm.controls.teamOneCity.value !== '') {
-            //this.currentForm.controls.tournamentCity.addValidators(
-              //Validators.required
-            //);
-            //this.currentForm.controls.tournamentStartDate.addValidators(
-              //Validators.required
-            //);
-            //this.currentForm.controls.tournamentEndDate.addValidators(
-              //Validators.required
-            //);
-            //this.currentForm.controls.tournamentAddress.addValidators(
-             // Validators.required
-            //);
-          //}
-          break;
-        case AdditionalFieldsEnum.TEAMS:
-          this.currentForm.controls.teamOneId.addValidators([
-            Validators.required,
-          ]);
-          this.currentForm.controls.teamTwoId.addValidators([
-            Validators.required,
-          ]);
-          this.currentForm.addValidators(differentTeamsValidator());
-          if (this.currentForm.controls.teamOneCity.value !== '') {
-            this.currentForm.controls.teamOneCity.addValidators(
-              Validators.required
-            );
-          }
-          if (this.currentForm.controls.teamTwoCity.value !== '') {
-            this.currentForm.controls.teamTwoCity.addValidators(
-              Validators.required
-            );
-          }
-          break;
+    //debugging: Ausgabe aller Felder mit Validatoren
+    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
+    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control && control.validator) {
+        allFieldsWithValidators.push(field);
       }
     });
+
+    console.log('✅ Aktuelle Felder mit Validatoren nach Kategoriewechsel:', allFieldsWithValidators);
+  }
+
+  private clearCategoriesOptionalFieldsValidators(): void {
+    if (!this.currentForm) return;
+
+    Object.values(VideoFormAllAdditionalFields).forEach((field) => {
+      const control = this.currentForm?.get(field);
+      if (control) {
+        control.clearValidators();
+      }
+    });
+  }
+
+  private addFittingCategoriesOptionalFieldsValidators(category: VideoCategoriesEnum | null): void {
+    if (!this.currentForm || !category) {
+      return
+    };
+
+    switch (category) {
+      case VideoCategoriesEnum.MATCH:
+        this.currentForm?.controls.tournamentId.addValidators(Validators.required);
+        this.currentForm?.controls.gameSystem.addValidators(Validators.required);
+        this.currentForm?.controls.teamOneId.addValidators(Validators.required);
+        this.currentForm?.controls.teamTwoId.addValidators(Validators.required);
+        break;
+      case VideoCategoriesEnum.SPARBUILDING:
+        this.currentForm?.controls.weaponType.addValidators(Validators.required);
+        break;
+    }
   }
 }
