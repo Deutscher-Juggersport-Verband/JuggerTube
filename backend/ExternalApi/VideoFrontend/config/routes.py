@@ -43,7 +43,7 @@ def get_pending_video_overview() -> Response:
 
 @video_frontend.route('/create-video',
                       methods=['POST'], endpoint='create-video')
-# @limiter.limit('45 per day, 15 per hour')
+@limiter.limit('45 per day, 15 per hour')
 @jwt_required()
 @CreateVideoInputFilter.validate()
 def create_video() -> Response:
