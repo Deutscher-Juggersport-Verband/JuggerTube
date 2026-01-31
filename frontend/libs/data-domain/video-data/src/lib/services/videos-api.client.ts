@@ -4,13 +4,12 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
 import { VideoCategoriesEnum } from '../enums/video-categories.enum';
-import { WeaponTypesEnum } from '../enums/weapon-types.enum';
 import {
   PaginatedVideosApiResponseModel,
   VideoApiResponseModel,
 } from '../models/video-api-response.model';
+import { CreateVideoRequestModel } from '../models/create-video-request.model';
 
 export interface ChannelModel {
   id: number;
@@ -21,33 +20,6 @@ export interface ChannelModel {
 export interface CreateChannelRequest {
   name: string;
   link: string;
-}
-
-export interface CreateVideoRequest {
-  name: string;
-  videoLink: string;
-  category: VideoCategoriesEnum;
-  uploadDate: string;
-  dateOfRecording: string;
-  topic?: string;
-  guests?: string;
-  weaponType?: WeaponTypesEnum | null;
-  gameSystem?: GameSystemTypesEnum | null;
-  channelId?: number;
-  channelName?: string;
-  channelLink?: string;
-  tournamentId?: number;
-  tournamentName?: string;
-  tournamentCity?: string;
-  tournamentStartDate?: string;
-  tournamentEndDate?: string;
-  teamOneId?: number;
-  teamOneName?: string;
-  teamOneCity?: string;
-  teamTwoId?: number;
-  teamTwoName?: string;
-  teamTwoCity?: string;
-  comment?: string;
 }
 
 export type SortOption =
@@ -130,9 +102,8 @@ export class VideosApiClient {
   }
 
   public create(
-    videoData: CreateVideoRequest
+    videoData: CreateVideoRequestModel
   ): Observable<{ id: number; message: string }> {
-    console.log('Creating video with data 3:', videoData);
     return this.httpClient
       .post<{ id: number; message: string }>(
         '/api/video-frontend/create-video',

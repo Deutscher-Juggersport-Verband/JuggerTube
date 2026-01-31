@@ -49,7 +49,8 @@ export class UiAutocompleteInputComponent implements OnInit {
   private readonly videoFormService: VideoFormService =
       inject(VideoFormService);
 
-  @Input() public formControlElement!: FormControl;
+  @Input() public idFormControlElement!: FormControl;
+
   @Input() public options: OptionType[] = [];
   @Input() public displayField: DisplayFieldType = 'name';
   @Input() public valueField: ValueFieldType = 'id';
@@ -61,6 +62,7 @@ export class UiAutocompleteInputComponent implements OnInit {
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
 
+  @Input() public nameFormControlElement?: FormControl;
   @Input() public newOptionConfig?: NewOptionConfig;
   @Input() public newOptionElementType?: CreateNewObjectTypesEnum;
   public showNewFields: boolean = false;
@@ -115,7 +117,7 @@ export class UiAutocompleteInputComponent implements OnInit {
   }
 
   public onOptionSelect(option: OptionType): void {
-    this.formControlElement.setValue(option[this.valueField]);
+    this.idFormControlElement.setValue(option[this.valueField]);
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
     this.showNewFields = false;
@@ -136,6 +138,10 @@ export class UiAutocompleteInputComponent implements OnInit {
   }
 
   public onAddNewOption(): void {
+    if (!this.nameFormControlElement) {
+      return;
+    }
+    this.nameFormControlElement.setValue(this.searchControl.value);
     this.videoFormService.changeFormRequirementsToCreateNewObject(
       this.newOptionElementType!
     );

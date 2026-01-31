@@ -16,7 +16,7 @@
       type="text"
       [formControl]="searchControl"
       [placeholder]="placeholder"
-      [class.invalid]="formControlElement.touched && formControlElement.invalid"
+      [class.invalid]="showNewFields ? (nameFormControlElement?.touched && nameFormControlElement?.invalid) : (idFormControlElement.touched && idFormControlElement.invalid)"
       (focus)="onInputFocus()"
       (blur)="onInputBlur()"
     />
@@ -42,9 +42,11 @@
   </div>
 </div>
 
-@if (formControlElement.touched && formControlElement.invalid && formControlElement.errors) {
+@if ((showNewFields && nameFormControlElement?.touched && nameFormControlElement?.invalid && nameFormControlElement?.errors) || (!showNewFields && idFormControlElement.touched && idFormControlElement.invalid && idFormControlElement.errors)) {
   <span class="error-message">
-    @if (formControlElement.errors['required'] || formControlElement.errors['notZero']) { Dieses Feld ist erforderlich. }
+    @if ((idFormControlElement && (idFormControlElement.errors?.['required'] || idFormControlElement.errors?.['notZero'])) || (nameFormControlElement && nameFormControlElement.errors?.['required'])) {
+      Dieses Feld ist erforderlich. 
+    }
   </span>
 } 
 @if (showNewFields && newOptionConfig) {

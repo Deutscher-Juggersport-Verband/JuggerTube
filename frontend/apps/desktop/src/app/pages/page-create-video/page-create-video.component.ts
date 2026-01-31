@@ -34,7 +34,7 @@ import {
   CategoriesAdditionalFieldsConfig,
   CategoriesAdditionalFieldsEnum,
   CreateNewObjectTypesEnum,
-  CreateVideoRequest,
+  CreateVideoRequestModel,
   GameSystemTypesEnum,
   VideoCategoriesEnum,
   WeaponTypesEnum,
@@ -130,7 +130,7 @@ export class PageCreateVideoComponent {
 
     console.log('Form Value 1:', formValue);
 
-    this.videosDataService.create(formValue as CreateVideoRequest);
+    this.videosDataService.create(formValue as CreateVideoRequestModel);
   }
 
   public sameTeamValidationError(): boolean {

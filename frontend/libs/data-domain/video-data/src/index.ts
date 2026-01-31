@@ -11,6 +11,7 @@ export * from './lib/enums/categories-additional-fields.enum';
 export * from './lib/models/pending-video.model';
 export * from './lib/models/video-api-response.model';
 export * from './lib/models/video-status.model';
+export * from './lib/models/create-video-request.model';
 
 export * from './lib/services/videos-api.client';
 

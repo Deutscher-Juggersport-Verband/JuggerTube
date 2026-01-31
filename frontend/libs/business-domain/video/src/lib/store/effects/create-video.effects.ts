@@ -12,7 +12,7 @@ import {
   createVideoSuccess,
 } from '../actions/videos.actions';
 import { ToastService, VideoCreationErrorMessagesConstants, VideoFormService } from '@frontend/video';
-import { VideoCreationErrorTypesEnum, VideosApiClient } from '@frontend/video-data';
+import { VideosApiClient } from '@frontend/video-data';
 
 @Injectable()
 export class CreateVideoEffects {

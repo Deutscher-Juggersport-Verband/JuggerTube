@@ -44,6 +44,12 @@ export class UiInputComponent {
 
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
 
+  constructor() {
+    if (this.formControlElement && this.formControlElement.touched !== undefined) {
+      console.log(this.formControlElement.touched)
+    }
+  }
+
   public onToggleChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.valueChange.emit(target.checked);

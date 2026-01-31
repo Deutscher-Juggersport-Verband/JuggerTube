@@ -7,17 +7,21 @@ export type CreateNewObjectsAdditionalFieldsConfigType = {
 
 export const CreateNewObjectsAdditionalFieldsConfig: CreateNewObjectsAdditionalFieldsConfigType = {
   [CreateNewObjectTypesEnum.CHANNEL]: [
+    VideoFormModelFieldsEnum.CHANNEL_NAME,
     VideoFormModelFieldsEnum.CHANNEL_LINK,
   ],
   [CreateNewObjectTypesEnum.TEAM_ONE]: [
+    VideoFormModelFieldsEnum.TEAM_ONE_NAME,
     VideoFormModelFieldsEnum.TEAM_ONE_CITY,
     VideoFormModelFieldsEnum.TEAM_ONE_MIX,
   ],
   [CreateNewObjectTypesEnum.TEAM_TWO]: [
+    VideoFormModelFieldsEnum.TEAM_TWO_NAME,
     VideoFormModelFieldsEnum.TEAM_TWO_CITY,
     VideoFormModelFieldsEnum.TEAM_TWO_MIX,
   ],
   [CreateNewObjectTypesEnum.TOURNAMENT]: [
+    VideoFormModelFieldsEnum.TOURNAMENT_NAME,
     VideoFormModelFieldsEnum.TOURNAMENT_CITY,
     VideoFormModelFieldsEnum.TOURNAMENT_START_DATE,
     VideoFormModelFieldsEnum.TOURNAMENT_END_DATE,

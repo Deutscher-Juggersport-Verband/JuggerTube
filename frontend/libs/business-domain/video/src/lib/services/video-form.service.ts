@@ -243,6 +243,30 @@ export class VideoFormService {
             nonNullable: true,
           }
         ),
+        channelName: new FormControl(
+          { value: null, disabled: false },
+          {
+            nonNullable: true,
+          }
+        ),
+        tournamentName: new FormControl(
+          { value: null, disabled: false },
+          {
+            nonNullable: true,
+          }
+        ),
+        teamOneName: new FormControl(
+          { value: null, disabled: false },
+          {
+            nonNullable: true,
+          }
+        ),
+        teamTwoName: new FormControl(
+          { value: null, disabled: false },
+          {
+            nonNullable: true,
+          }
+        ),
       },
       { validators: [differentTeamsValidator()] }
     );

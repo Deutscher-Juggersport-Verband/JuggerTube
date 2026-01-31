@@ -17,7 +17,8 @@
 
   <ui-autocomplete-input
     [labelText]="'Channel:'"
-    [formControlElement]="form.controls.channelId"
+    [idFormControlElement]="form.controls.channelId"
+    [nameFormControlElement]="form.controls.channelName"
     [options]="channels()"
     [displayField]="'name'"
     [valueField]="'id'"
@@ -70,7 +71,8 @@
       @case (CategoriesAdditionalFieldsEnum.TOURNAMENT) {
         <ui-autocomplete-input
           [labelText]="'Turnier: '"
-          [formControlElement]="form.controls.tournamentId"
+          [idFormControlElement]="form.controls.tournamentId"
+          [nameFormControlElement]="form.controls.tournamentName"
           [options]="tournaments()"
           [displayField]="'name'"
           [valueField]="'id'"
@@ -83,7 +85,8 @@
       @case (CategoriesAdditionalFieldsEnum.TEAMS) {
         <ui-autocomplete-input
           [labelText]="'Team 1:'"
-          [formControlElement]="form.controls.teamOneId"
+          [idFormControlElement]="form.controls.teamOneId"
+          [nameFormControlElement]="form.controls.teamOneName"
           [options]="teams()"
           [displayField]="'name'"
           [valueField]="'id'"
@@ -96,7 +99,8 @@
         <div>
           <ui-autocomplete-input
             [labelText]="'Team 2:'"
-            [formControlElement]="form.controls.teamTwoId"
+            [idFormControlElement]="form.controls.teamTwoId"
+            [nameFormControlElement]="form.controls.teamTwoName"
             [options]="teams()"
             [displayField]="'name'"
             [valueField]="'id'"
