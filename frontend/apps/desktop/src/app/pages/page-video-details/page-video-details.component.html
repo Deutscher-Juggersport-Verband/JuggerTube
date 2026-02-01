@@ -28,8 +28,8 @@
       <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
       }
       <div>
-        <span>Upload: {{ video.uploadDate | date : 'dd.MM.YYYY' }}</span>
-        <span>Aufnahme: {{ video.dateOfRecording | date : 'dd.MM.YYYY' }}</span>
+        <span>Upload: {{ video.uploadDate | date : 'dd.MM.yyyy' }}</span>
+        <span>Aufnahme: {{ video.dateOfRecording | date : 'dd.MM.yyyy' }}</span>
       </div>
     </div>
   </main>
@@ -60,9 +60,9 @@
       >
         <p>{{ video.tournament.city }}</p>
         <p>
-          Startdatum: {{ video.tournament.startDate | date : 'dd.MM.YYYY' }}
+          Startdatum: {{ video.tournament.startDate | date : 'dd.MM.yyyy' }}
         </p>
-        <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.YYYY' }}</p>
+        <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.yyyy' }}</p>
         <a
           href="{{ video.tournament.jtrLink }}"
           target="_blank"
