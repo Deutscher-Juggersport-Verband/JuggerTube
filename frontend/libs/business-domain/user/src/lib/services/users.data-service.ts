@@ -1,4 +1,4 @@
-import { inject, Injectable, Signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from '@frontend/user-data';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
