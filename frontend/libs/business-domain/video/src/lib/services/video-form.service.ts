@@ -70,6 +70,7 @@ export class VideoFormService {
     CreateNewEntityAdditionalFieldsConfig[entityType].forEach((field) => {
       const control = this.currentForm?.get(field);
       if (control) {
+        control.setValue(null);
         control.clearValidators();
         control.updateValueAndValidity();
       }

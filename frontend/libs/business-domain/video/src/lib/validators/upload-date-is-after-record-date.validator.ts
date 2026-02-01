@@ -23,15 +23,10 @@ export function uploadDateIsAfterRecordDateValidator(): ValidatorFn {
     const uploadDate = uploadDateControl.value;
     const dateOfRecording = dateOfRecordingControl.value;
 
-    console.log('uploadDate', uploadDate);
-    console.log('dateOfRecording', dateOfRecording);
-
     // Only validate if both teams have non-zero values
     if (!uploadDate || !dateOfRecording) {
       return null;
     }
-
-    console.log('uploadDateIsBeforeRecordDate', uploadDate < dateOfRecording);
 
     return uploadDate < dateOfRecording ? { uploadDateIsBeforeRecordDate: true } : null;
   };
