@@ -21,8 +21,8 @@ import { NewOptionConfig } from './new-option-config';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
-import { VideoFormService } from 'libs/business-domain/video/src/lib/services/video-form.service';
 import { CreateNewEntityTypesEnum } from '@frontend/video-data';
+import { VideoFormService } from 'libs/business-domain/video/src/lib/services/video-form.service';
 
 type OptionType =
   | TournamentApiResponseModel

@@ -1,4 +1,4 @@
-import { WeaponTypesEnum } from "../enums/weapon-types.enum";
+import { WeaponTypesEnum } from '../enums/weapon-types.enum';
 
 export const VideoWeaponTypesDropdownOptions = [
     { value: WeaponTypesEnum.CHAIN, name: 'Kette' },

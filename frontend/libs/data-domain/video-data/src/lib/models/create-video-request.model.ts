@@ -1,6 +1,6 @@
-import { GameSystemTypesEnum } from "../enums/game-system-types.enum";
-import { VideoCategoriesEnum } from "../enums/video-categories.enum";
-import { WeaponTypesEnum } from "../enums/weapon-types.enum";
+import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
+import { VideoCategoriesEnum } from '../enums/video-categories.enum';
+import { WeaponTypesEnum } from '../enums/weapon-types.enum';
 
 export interface CreateVideoRequestModel {
   name: string;

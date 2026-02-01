@@ -1,5 +1,5 @@
-import { CreateNewEntityTypesEnum } from "../enums/create-new-entity-types.enum";
-import { VideoFormModelFieldsEnum } from "../enums/video-form-model-fields.enum";
+import { CreateNewEntityTypesEnum } from '../enums/create-new-entity-types.enum';
+import { VideoFormModelFieldsEnum } from '../enums/video-form-model-fields.enum';
 
 export type CreateNewEntityAdditionalFieldsConfigType = {
   [key in CreateNewEntityTypesEnum]: VideoFormModelFieldsEnum[];

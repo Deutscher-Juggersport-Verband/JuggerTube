@@ -1,5 +1,5 @@
-import { CategoriesAdditionalFieldsEnum } from "../enums/categories-additional-fields.enum";
-import { VideoCategoriesEnum } from "../enums/video-categories.enum";
+import { CategoriesAdditionalFieldsEnum } from '../enums/categories-additional-fields.enum';
+import { VideoCategoriesEnum } from '../enums/video-categories.enum';
 
 export type CategoriesAdditionalFieldsConfig = {
   field: CategoriesAdditionalFieldsEnum;

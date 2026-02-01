@@ -1,4 +1,4 @@
-import { VideoCategoriesEnum } from "../enums/video-categories.enum";
+import { VideoCategoriesEnum } from '../enums/video-categories.enum';
 
 export const VideoCategoriesDropdownOptions = [
     { value: VideoCategoriesEnum.AWARDS, name: 'Siegerehrung' },

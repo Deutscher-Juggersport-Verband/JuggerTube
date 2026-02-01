@@ -1,4 +1,4 @@
-import { GameSystemTypesEnum } from "../enums/game-system-types.enum";
+import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
 
 export const VideoGameSystemDropdownOptions = [
     { value: GameSystemTypesEnum.NRW, name: 'NRW' },

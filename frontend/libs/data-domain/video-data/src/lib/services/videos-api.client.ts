@@ -5,11 +5,11 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { VideoCategoriesEnum } from '../enums/video-categories.enum';
+import { CreateVideoRequestModel } from '../models/create-video-request.model';
 import {
   PaginatedVideosApiResponseModel,
   VideoApiResponseModel,
 } from '../models/video-api-response.model';
-import { CreateVideoRequestModel } from '../models/create-video-request.model';
 
 export interface ChannelModel {
   id: number;

@@ -8,6 +8,8 @@ import {
   notZeroValidator,
   updateAllControlsValidity,
 } from '../../../../../../apps/desktop/src/app/utils/form-utils';
+import { VideoFormModel } from '../models/video-form.model';
+import { dateIsNotInFutureValidator, differentTeamsValidator, uploadDateIsAfterRecordDateValidator } from '@frontend/video';
 import {
   CategoriesAdditionalFieldsConfig,
   CreateNewEntityAdditionalFieldsConfig,
@@ -16,8 +18,6 @@ import {
   VideoCategoriesEnum,
   VideoFormAllAdditionalFields,
 } from '@frontend/video-data';
-import { VideoFormModel } from '../models/video-form.model';
-import { dateIsNotInFutureValidator, differentTeamsValidator, uploadDateIsAfterRecordDateValidator } from '@frontend/video';
 
 @Injectable({ providedIn: 'root' })
 export class VideoFormService {

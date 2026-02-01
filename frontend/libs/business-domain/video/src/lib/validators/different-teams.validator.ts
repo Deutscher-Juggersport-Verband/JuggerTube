@@ -4,6 +4,7 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
+
 import { VideoFormModelFieldsEnum } from '@frontend/video-data';
 
 export function differentTeamsValidator(): ValidatorFn {

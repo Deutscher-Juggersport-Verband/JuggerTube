@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 
 import { UserRoleEnum } from '../enums/role-type.enum';
 import { User, UserShort } from '../models/user-data.model';
 import { convertFileToBase64Rule } from '@frontend/user';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',

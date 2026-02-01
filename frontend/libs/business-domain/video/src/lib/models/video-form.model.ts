@@ -1,5 +1,6 @@
-import { FormControl } from "@angular/forms";
-import { GameSystemTypesEnum, VideoCategoriesEnum, VideoFormModelFieldsEnum, WeaponTypesEnum } from "@frontend/video-data";
+import { FormControl } from '@angular/forms';
+
+import { GameSystemTypesEnum, VideoCategoriesEnum, VideoFormModelFieldsEnum, WeaponTypesEnum } from '@frontend/video-data';
 
 export type VideoFormModel = {
   [VideoFormModelFieldsEnum.NAME]: FormControl<string>;
