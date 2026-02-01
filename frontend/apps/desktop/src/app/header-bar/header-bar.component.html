@@ -5,13 +5,13 @@
 
 <div class="user-row">
   @if (isAuthenticated$ | async) {
-  <img
-    [src]="(currentUser$ | async)?.pictureUrl"
-    alt=""
-    [routerLink]="['user-details']"
-  />
-  <span tabindex="0" (click)="logout()">Logout</span>
+    <img
+      [src]="(currentUser$ | async)?.pictureUrl"
+      alt=""
+      [routerLink]="['user-details']"
+    />
+    <span tabindex="0" (click)="logout()">Logout</span>
   } @else {
-  <span [routerLink]="['login']">Login</span>
+    <span [routerLink]="['login']">Login</span>
   }
 </div>

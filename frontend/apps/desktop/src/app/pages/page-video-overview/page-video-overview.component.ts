@@ -1,4 +1,4 @@
-
+import { CommonModule } from '@angular/common';
 import { Component, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -14,9 +14,11 @@ import {
   VideoApiResponseModel,
   VideoFilterOptions,
 } from '@frontend/video-data';
+import { UserContextService } from '@frontend/user';
 
 @Component({
   imports: [
+    CommonModule,
     VideoTileComponent,
     SearchVideoTileComponent,
     RouterLink,
@@ -30,7 +32,9 @@ import {
 export class PageVideoOverviewComponent {
   private readonly videosDataService: VideosDataService =
     inject(VideosDataService);
+  private readonly userContextService: UserContextService = inject(UserContextService);
 
+  protected readonly currentUser$ = this.userContextService.currentUser$;
   public readonly paginatedVideos: Signal<VideoApiResponseModel[]>;
   public readonly totalVideos: Signal<number>;
   public readonly pageSizeOptions = [5, 10, 25, 50];
@@ -40,6 +44,8 @@ export class PageVideoOverviewComponent {
   public currentFilters: WritableSignal<VideoFilterOptions> = signal({
     sort: 'upload_date_desc',
   });
+
+  public readonly showAddVideoButton$ = this.userContextService.canCreateVideo$;
 
   public readonly UiInputTypeEnum = UiInputTypeEnum;
   public readonly sortFormControl = new FormControl('Upload: Neueste zuerst');
