@@ -8,17 +8,16 @@ import {
   notZeroValidator,
   updateAllControlsValidity,
 } from '../../../../../../apps/desktop/src/app/utils/form-utils';
-import { differentTeamsValidator } from '@frontend/team';
 import {
   CategoriesAdditionalFieldsConfig,
-  CreateNewObjectsAdditionalFieldsConfig,
-  CreateNewObjectTypesEnum,
-  ObjectsIdFieldMap,
+  CreateNewEntityAdditionalFieldsConfig,
+  CreateNewEntityTypesEnum,
+  EntityIdFieldMap,
   VideoCategoriesEnum,
   VideoFormAllAdditionalFields,
-  VideoFormModelFieldsEnum,
 } from '@frontend/video-data';
 import { VideoFormModel } from '../models/video-form.model';
+import { dateIsNotInFutureValidator, differentTeamsValidator, uploadDateIsAfterRecordDateValidator } from '@frontend/video';
 
 @Injectable({ providedIn: 'root' })
 export class VideoFormService {
@@ -42,64 +41,47 @@ export class VideoFormService {
     return this.currentForm;
   }
 
-  public changeFormRequirementsToCreateNewObject(objectType: CreateNewObjectTypesEnum): void {
+  public changeFormRequirementsToCreateNewEntity(entityType: CreateNewEntityTypesEnum): void {
     if (!this.currentForm) return;
 
-    const existingObjectField = ObjectsIdFieldMap[objectType];
-    if (existingObjectField) {
-      this.currentForm?.controls[existingObjectField].removeValidators(Validators.required);
-      this.currentForm?.controls[existingObjectField].reset();
-      this.currentForm?.controls[existingObjectField].setErrors([]);
-      this.currentForm?.controls[existingObjectField].markAsPristine();
-      this.currentForm?.controls[ObjectsIdFieldMap[objectType]].markAsUntouched();  
+    const existingEntityIdFieldName = EntityIdFieldMap[entityType];
+    const existingEntityFieldControl = this.currentForm?.get(existingEntityIdFieldName)
+    if (existingEntityFieldControl) {
+      existingEntityFieldControl.clearValidators();
+      existingEntityFieldControl.reset();
+      existingEntityFieldControl.setErrors([]);
+      existingEntityFieldControl.markAsPristine();
+      existingEntityFieldControl.markAsUntouched();
+      existingEntityFieldControl.updateValueAndValidity();
     }
 
-    CreateNewObjectsAdditionalFieldsConfig[objectType].forEach((field) => {
+    CreateNewEntityAdditionalFieldsConfig[entityType].forEach((field) => {
       const control = this.currentForm?.get(field);
       if (control) {
-        control.setValidators(Validators.required);
+        control.addValidators(Validators.required);
+        control.updateValueAndValidity();
       }
     });
-
-    updateAllControlsValidity(this.currentForm);
-
-    //debugging: Ausgabe aller Felder mit Validatoren
-    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
-    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
-      const control = this.currentForm?.get(field);
-      if (control && control.validator) {
-        allFieldsWithValidators.push(field);
-      }
-    });
-
-    console.log('✅ Aktuelle Felder mit Validatoren nach Erstellung von neuem Objekt:', allFieldsWithValidators);
-
   };
 
-  public changeFormRequirementsToExistingObject(objectType: CreateNewObjectTypesEnum): void {
+  public changeFormRequirementsToExistingEntity(entityType: CreateNewEntityTypesEnum): void {
     if (!this.currentForm) return;
 
-    ObjectsIdFieldMap[objectType] && this.currentForm?.controls[ObjectsIdFieldMap[objectType]].setValidators(Validators.required);
-
-    CreateNewObjectsAdditionalFieldsConfig[objectType].forEach((field) => {
+    CreateNewEntityAdditionalFieldsConfig[entityType].forEach((field) => {
       const control = this.currentForm?.get(field);
       if (control) {
-        control.removeValidators(Validators.required);
+        control.clearValidators();
+        control.updateValueAndValidity();
       }
     });
 
-    updateAllControlsValidity(this.currentForm);
+    const existingEntityIdFieldName = EntityIdFieldMap[entityType];
+    const existingEntityFieldControl = this.currentForm?.get(existingEntityIdFieldName)
 
-    //debugging: Ausgabe aller Felder mit Validatoren
-    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
-    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
-      const control = this.currentForm?.get(field);
-      if (control && control.validator) {
-        allFieldsWithValidators.push(field);
-      }
-    });
-
-    console.log('✅ Aktuelle Felder mit Validatoren nach Auswahl von existierendem Objekt:', allFieldsWithValidators);
+    if (existingEntityFieldControl) {
+      existingEntityFieldControl.addValidators(Validators.required);
+      existingEntityFieldControl.updateValueAndValidity();
+    }
   }
 
   private setupBaseForm(): FormGroup<VideoFormModel> {
@@ -137,14 +119,14 @@ export class VideoFormService {
           { value: '', disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
+            validators: [Validators.required, dateIsNotInFutureValidator()],
           }
         ),
         dateOfRecording: new FormControl(
           { value: '', disabled: false },
           {
             nonNullable: true,
-            validators: [Validators.required],
+            validators: [Validators.required, dateIsNotInFutureValidator()],
           }
         ),
         topic: new FormControl(
@@ -202,13 +184,13 @@ export class VideoFormService {
           }
         ),
         teamOneMix: new FormControl(
-          { value: null, disabled: false },
+          { value: false, disabled: false },
           {
             nonNullable: true,
           }
         ),
         teamTwoMix: new FormControl(
-          { value: null, disabled: false },
+          { value: false, disabled: false },
           {
             nonNullable: true,
           }
@@ -268,7 +250,7 @@ export class VideoFormService {
           }
         ),
       },
-      { validators: [differentTeamsValidator()] }
+      { validators: [differentTeamsValidator(), uploadDateIsAfterRecordDateValidator()] }
     );
   }
 
@@ -293,17 +275,6 @@ export class VideoFormService {
 
     if (!this.currentForm) return;
     updateAllControlsValidity(this.currentForm);
-
-    //debugging: Ausgabe aller Felder mit Validatoren
-    const allFieldsWithValidators: VideoFormModelFieldsEnum[] = [];
-    Object.values(VideoFormModelFieldsEnum).forEach((field) => {
-      const control = this.currentForm?.get(field);
-      if (control && control.validator) {
-        allFieldsWithValidators.push(field);
-      }
-    });
-
-    console.log('✅ Aktuelle Felder mit Validatoren nach Kategoriewechsel:', allFieldsWithValidators);
   }
 
   private clearCategoriesOptionalFieldsValidators(): void {

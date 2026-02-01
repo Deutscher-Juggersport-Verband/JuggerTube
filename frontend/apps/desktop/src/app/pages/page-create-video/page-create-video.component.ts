@@ -1,6 +1,6 @@
 
 import { Component, inject, Signal } from '@angular/core';
-import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {
   initConfig,
@@ -33,10 +33,13 @@ import {
 import {
   CategoriesAdditionalFieldsConfig,
   CategoriesAdditionalFieldsEnum,
-  CreateNewObjectTypesEnum,
+  CreateNewEntityTypesEnum,
   CreateVideoRequestModel,
   GameSystemTypesEnum,
+  VideoCategoriesDropdownOptions,
   VideoCategoriesEnum,
+  VideoGameSystemDropdownOptions,
+  VideoWeaponTypesDropdownOptions,
   WeaponTypesEnum,
 } from '@frontend/video-data';
 
@@ -73,6 +76,11 @@ export class PageCreateVideoComponent {
 
   protected readonly form: FormGroup<VideoFormModel> =
     this.videoFormService.create();
+  public channelInputSearchControl = new FormControl('');
+  public tournamentInputSearchControl = new FormControl('');
+  public teamOneInputSearchControl = new FormControl('');
+  public teamTwoInputSearchControl = new FormControl('');
+
   protected categoriesAdditionalFieldsConfig: Signal<CategoriesAdditionalFieldsConfig[]> =
     this.videoFormService.categoriesAdditionalFieldsConfig;
 
@@ -85,7 +93,10 @@ export class PageCreateVideoComponent {
   protected readonly WeaponTypesEnum = WeaponTypesEnum;
   protected readonly GameSystemTypesEnum = GameSystemTypesEnum;
   protected readonly CategoriesAdditionalFieldsEnum = CategoriesAdditionalFieldsEnum;
-  protected readonly CreateNewObjectTypesEnum = CreateNewObjectTypesEnum;
+  protected readonly CreateNewEntityTypesEnum = CreateNewEntityTypesEnum;
+  protected readonly VideoCategoriesDropdownOptions = VideoCategoriesDropdownOptions;
+  protected readonly VideoGameSystemDropdownOptions = VideoGameSystemDropdownOptions;
+  protected readonly VideoWeaponTypesDropdownOptions = VideoWeaponTypesDropdownOptions;
 
   protected readonly channelNewOptionConfig = channelNewOptionConfig;
   protected readonly tournamentNewOptionConfig = tournamentNewOptionConfig;
@@ -102,18 +113,12 @@ export class PageCreateVideoComponent {
 
       if (control instanceof FormGroup || control instanceof FormArray) {
         this.logFormErrors(control, currentPath);
-      } else if (control.invalid) {
-        console.log('❌ INVALID:', currentPath);
-        console.log('   status:', control.status);
-        console.log('   errors:', control.errors);
-        console.log('   value:', control.value);
       }
     });
   }
 
   public onSubmit(): void {
     if (!this.form.valid) {
-      console.log(this.form.status);
       this.logFormErrors(this.form);
       markAllFieldsAsTouched(this.form);
       this.toastService.showError(
@@ -128,12 +133,19 @@ export class PageCreateVideoComponent {
       return;
     }
 
-    console.log('Form Value 1:', formValue);
+    this.channelInputSearchControl.setValue('');
+    this.tournamentInputSearchControl.setValue('');
+    this.teamOneInputSearchControl.setValue('');
+    this.teamTwoInputSearchControl.setValue('');
 
     this.videosDataService.create(formValue as CreateVideoRequestModel);
   }
 
   public sameTeamValidationError(): boolean {
     return this.form.touched && this.form.hasError('sameTeam');
+  }
+
+  public uploadDateIsBeforeRecordDateError(): boolean {
+    return this.form.touched && this.form.hasError('uploadDateIsBeforeRecordDate');
   }
 }

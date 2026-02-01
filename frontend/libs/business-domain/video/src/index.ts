@@ -17,3 +17,7 @@ export * from './lib/store/models/videos-state.model';
 export * from './lib/constants/video-creation-error-messages.const';
 
 export * from './lib/models/video-form.model';
+
+export * from './lib/validators/date-is-not-in-future.validator'
+export * from './lib/validators/different-teams.validator'
+export * from './lib/validators/upload-date-is-after-record-date.validator'

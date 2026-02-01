@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -26,6 +25,7 @@ export enum UiInputDirectionEnum {
   templateUrl: './ui-input.component.html',
   styleUrl: './ui-input.component.less',
 })
+
 export class UiInputComponent {
   @Input() public formControlElement!: FormControl;
   @Input() public type: UiInputTypeEnum = UiInputTypeEnum.TEXT;
@@ -38,17 +38,11 @@ export class UiInputComponent {
   @Input() public infoButtonContent?: string;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  @Input() public dropdownOptions?: any[];
+  @Input() public dropdownOptions?: { name: string, value: any }[];
   @Input() public flexibleLabel: boolean = false;
   @Output() public valueChange = new EventEmitter<boolean>();
 
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
-
-  constructor() {
-    if (this.formControlElement && this.formControlElement.touched !== undefined) {
-      console.log(this.formControlElement.touched)
-    }
-  }
 
   public onToggleChange(event: Event): void {
     const target = event.target as HTMLInputElement;

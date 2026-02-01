@@ -33,9 +33,7 @@ export class LoadPaginatedVideosEffects {
           .getPaginatedVideos$(action.start, action.limit, action.filters)
           .pipe(
             map((data: PaginatedVideosApiResponseModel) => {
-              console.log('data', data);
               const convertedVideos = data.results.map((video) => this.convertDatesInVideo(video));
-              console.log('convertedVideos', convertedVideos);
               return loadPaginatedVideosActionSuccess({
                 videos: convertedVideos,
                 count: data.count,

@@ -18,9 +18,9 @@
         [formControl]="formControlElement"
         [class.invalid]="formControlElement.touched && formControlElement.invalid"
       >
-        @for (option of dropdownOptions; track option) {
-          <option [value]="option">
-            {{ option }}
+        @for (option of dropdownOptions; track option.value) {
+          <option [value]="option.value">
+            {{ option.name }}
           </option>
         }
       </select>
@@ -55,6 +55,9 @@
     } 
     @if (formControlElement.errors['minlength']) { 
       Die Eingabe ist zu kurz. Mindestlänge: {{ formControlElement.errors['minlength'].requiredLength }} Zeichen. 
+    }
+    @if (formControlElement.errors['dateIsInFuture']) { 
+      Das Datum muss in der Vergangenheit liegen. 
     }
   </span>
 }

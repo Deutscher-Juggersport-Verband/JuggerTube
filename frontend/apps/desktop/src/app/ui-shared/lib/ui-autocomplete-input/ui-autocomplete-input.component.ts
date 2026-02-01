@@ -17,12 +17,12 @@ import {
   UiInputComponent,
   UiInputDirectionEnum,
 } from '../ui-input/ui-input.component';
-import { NewOptionConfig, NewOptionFieldConfig } from './new-option-config';
+import { NewOptionConfig } from './new-option-config';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
-import { CreateNewObjectTypesEnum } from 'libs/data-domain/video-data/src/lib/enums/create-new-object-types.enum';
 import { VideoFormService } from 'libs/business-domain/video/src/lib/services/video-form.service';
+import { CreateNewEntityTypesEnum } from '@frontend/video-data';
 
 type OptionType =
   | TournamentApiResponseModel
@@ -50,6 +50,7 @@ export class UiAutocompleteInputComponent implements OnInit {
       inject(VideoFormService);
 
   @Input() public idFormControlElement!: FormControl;
+  @Input() public searchControl!: FormControl;
 
   @Input() public options: OptionType[] = [];
   @Input() public displayField: DisplayFieldType = 'name';
@@ -64,12 +65,11 @@ export class UiAutocompleteInputComponent implements OnInit {
 
   @Input() public nameFormControlElement?: FormControl;
   @Input() public newOptionConfig?: NewOptionConfig;
-  @Input() public newOptionElementType?: CreateNewObjectTypesEnum;
+  @Input() public newOptionEntityType?: CreateNewEntityTypesEnum;
   public showNewFields: boolean = false;
 
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
-  public searchControl = new FormControl('');
   public hasExactMatch = false;
 
   public ngOnInit(): void {
@@ -121,8 +121,8 @@ export class UiAutocompleteInputComponent implements OnInit {
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
     this.showNewFields = false;
-    this.videoFormService.changeFormRequirementsToExistingObject(
-      this.newOptionElementType!
+    this.videoFormService.changeFormRequirementsToExistingEntity(
+      this.newOptionEntityType!
     );
   }
 
@@ -142,8 +142,8 @@ export class UiAutocompleteInputComponent implements OnInit {
       return;
     }
     this.nameFormControlElement.setValue(this.searchControl.value);
-    this.videoFormService.changeFormRequirementsToCreateNewObject(
-      this.newOptionElementType!
+    this.videoFormService.changeFormRequirementsToCreateNewEntity(
+      this.newOptionEntityType!
     );
 
     this.showNewFields = true;

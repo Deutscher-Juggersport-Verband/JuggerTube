@@ -19,13 +19,14 @@
     [labelText]="'Channel:'"
     [idFormControlElement]="form.controls.channelId"
     [nameFormControlElement]="form.controls.channelName"
+    [searchControl]="channelInputSearchControl"
     [options]="channels()"
     [displayField]="'name'"
     [valueField]="'id'"
     [placeholder]="'Channel suchen...'"
     [direction]="UiInputDirectionEnum.ROW"
     [newOptionConfig]="initConfig(channelNewOptionConfig, form.controls)"
-    [newOptionElementType]="CreateNewObjectTypesEnum.CHANNEL"
+    [newOptionEntityType]="CreateNewEntityTypesEnum.CHANNEL"
   />
 
   <ui-input
@@ -33,7 +34,7 @@
     [type]="UiInputTypeEnum.DROPDOWN"
     [formControlElement]="form.controls.category"
     [direction]="UiInputDirectionEnum.ROW"
-    [dropdownOptions]="Object.values(VideoCategoriesEnum)"
+    [dropdownOptions]="VideoCategoriesDropdownOptions"
   />
 
   <ui-input
@@ -43,12 +44,20 @@
     [direction]="UiInputDirectionEnum.ROW"
   />
 
-  <ui-input
-    [labelText]="'Aufnahme-Datum:'"
-    [type]="UiInputTypeEnum.DATE"
-    [formControlElement]="form.controls.dateOfRecording"
-    [direction]="UiInputDirectionEnum.ROW"
-  />
+  <div>
+    <ui-input
+      [labelText]="'Aufnahme-Datum:'"
+      [type]="UiInputTypeEnum.DATE"
+      [formControlElement]="form.controls.dateOfRecording"
+      [direction]="UiInputDirectionEnum.ROW"
+    />
+
+    @if (uploadDateIsBeforeRecordDateError()) {
+      <div class="error-message">
+        Das Upload-Datum muss nach dem Aufnahme-Datum liegen.
+      </div>
+    }
+  </div>
 
   @for (config of categoriesAdditionalFieldsConfig(); track config) { 
     @switch (config.field) { 
@@ -73,13 +82,14 @@
           [labelText]="'Turnier: '"
           [idFormControlElement]="form.controls.tournamentId"
           [nameFormControlElement]="form.controls.tournamentName"
+          [searchControl]="tournamentInputSearchControl"
           [options]="tournaments()"
           [displayField]="'name'"
           [valueField]="'id'"
           [placeholder]="'Turnier suchen...'"
           [direction]="UiInputDirectionEnum.ROW"
           [newOptionConfig]="initConfig(tournamentNewOptionConfig, form.controls)"
-          [newOptionElementType]="CreateNewObjectTypesEnum.TOURNAMENT"
+          [newOptionEntityType]="CreateNewEntityTypesEnum.TOURNAMENT"
         />
       }
       @case (CategoriesAdditionalFieldsEnum.TEAMS) {
@@ -87,13 +97,14 @@
           [labelText]="'Team 1:'"
           [idFormControlElement]="form.controls.teamOneId"
           [nameFormControlElement]="form.controls.teamOneName"
+          [searchControl]="teamOneInputSearchControl"
           [options]="teams()"
           [displayField]="'name'"
           [valueField]="'id'"
           [placeholder]="'Team 1 suchen...'"
           [direction]="UiInputDirectionEnum.ROW"
           [newOptionConfig]="initConfig(teamOneNewOptionConfig, form.controls)"
-          [newOptionElementType]="CreateNewObjectTypesEnum.TEAM_ONE"
+          [newOptionEntityType]="CreateNewEntityTypesEnum.TEAM_ONE"
         />
 
         <div>
@@ -101,13 +112,14 @@
             [labelText]="'Team 2:'"
             [idFormControlElement]="form.controls.teamTwoId"
             [nameFormControlElement]="form.controls.teamTwoName"
+            [searchControl]="teamTwoInputSearchControl"
             [options]="teams()"
             [displayField]="'name'"
             [valueField]="'id'"
             [placeholder]="'Team 2 suchen...'"
             [direction]="UiInputDirectionEnum.ROW"
             [newOptionConfig]="initConfig(teamTwoNewOptionConfig, form.controls)"
-            [newOptionElementType]="CreateNewObjectTypesEnum.TEAM_TWO"
+            [newOptionEntityType]="CreateNewEntityTypesEnum.TEAM_TWO"
           />
 
           @if (sameTeamValidationError()) {
@@ -123,7 +135,7 @@
           [labelText]="'Pompfenart:'"
           [type]="UiInputTypeEnum.DROPDOWN"
           [formControlElement]="form.controls.weaponType"
-          [dropdownOptions]="Object.values(WeaponTypesEnum)"
+          [dropdownOptions]="VideoWeaponTypesDropdownOptions"
           [direction]="UiInputDirectionEnum.ROW"
         />
       } 
@@ -132,7 +144,7 @@
           [labelText]="'Spielsystem:'"
           [type]="UiInputTypeEnum.DROPDOWN"
           [formControlElement]="form.controls.gameSystem"
-          [dropdownOptions]="Object.values(GameSystemTypesEnum)"
+          [dropdownOptions]="VideoGameSystemDropdownOptions"
           [direction]="UiInputDirectionEnum.ROW"
         />
       } 

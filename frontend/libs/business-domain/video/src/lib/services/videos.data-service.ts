@@ -56,9 +56,6 @@ export class VideosDataService {
 
   public create(videoData: CreateVideoRequestModel): void {
     const strippedVideoData = Object.fromEntries(Object.entries(videoData).filter(([_, value]) => value));
-
-    console.log('Stripped Video Data 2: ', strippedVideoData);
-
     this.store$.dispatch(createVideo({ videoData: strippedVideoData as CreateVideoRequestModel}));
   }
 
