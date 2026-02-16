@@ -66,6 +66,7 @@
 
         span {
           font-size: 16px;
+          flex: 1;
         }
 
         svg {
@@ -79,10 +80,15 @@
       }
 
       .details {
+        height: auto;
         display: flex;
         flex-direction: column;
         gap: 12px;
         margin-left: 12px;
+
+        p {
+          height: auto;
+        }
 
         p:first-of-type {
           margin-top: 12px;
@@ -92,6 +98,20 @@
 
     ui-tag {
       width: fit-content;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+
+    main {
+      width: 100%;
+    }
+
+    aside {
+      width: 100%;
     }
   }
 }
