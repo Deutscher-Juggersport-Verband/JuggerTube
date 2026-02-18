@@ -4,138 +4,94 @@
 />
 
 @if (video) {
-<div class="content">
-  <main>
-    @if (isYoutubeUrl && embeddedUrl) {
-    <iframe [src]="embeddedUrl" allowfullscreen title="Video of {{video.name}}"></iframe>
-    } @else {
-    <a href="{{ video.videoLink }}">zum Video >></a>
-    }
-
-    <div class="title-row">
-      <h3>
-        {{ video.name }}
-      </h3>
-      <div>
-        <ui-tag [category]="video.category" />
-
-        <span>{{ video.gameSystem }}</span>
-      </div>
-    </div>
-
-    <div class="details-row">
-      @if (video.channel) {
-      <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
+  <div class="content">
+    <main>
+      @if (isYoutubeUrl && embeddedUrl) {
+        <iframe
+          [src]="embeddedUrl"
+          allowfullscreen
+          title="Video of {{ video.name }}"
+        ></iframe>
+      } @else {
+        <a href="{{ video.videoLink }}">zum Video >></a>
       }
-      <div>
-        <span>Upload: {{ video.uploadDate | date : 'dd.MM.y' }}</span>
-        <span>Aufnahme: {{ video.dateOfRecording | date : 'dd.MM.y' }}</span>
-      </div>
-    </div>
-  </main>
 
-  <aside>
-    @if (video.tournament) {
-    <div
-      (click)="showTournamentDetails = !showTournamentDetails"
-      class="toggle-details"
-    >
-      <div class="toggle">
-        <span>{{ video.tournament.name }}</span>
+      <div class="title-row">
+        <h3>
+          {{ video.name }}
+        </h3>
+        <div>
+          <ui-tag [category]="video.category" />
 
-        <svg
-          [class.rotated]="showTournamentDetails"
-          width="18"
-          height="18"
-          fill="currentColor"
-        >
-          <use href="assets/icons/sprite.svg#icon-arrow" />
-        </svg>
+          <span>{{ video.gameSystem }}</span>
+        </div>
       </div>
 
-      <div
-        [@slideDown]="showTournamentDetails ? 'visible' : 'hidden'"
-        [style.visibility]="showTournamentDetails ? 'visible' : 'hidden'"
-        class="details"
-      >
-        <p>{{ video.tournament.city }}</p>
-        <p>
-          Startdatum: {{ video.tournament.startDate | date : 'dd.MM.y' }}
-        </p>
-        <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.y' }}</p>
-        <a
-          href="{{ video.tournament.jtrLink }}"
-          target="_blank"
-          (click)="$event.stopPropagation()"
-          >Auf jtr besuchen</a
-        >
+      <div class="details-row">
+        @if (video.channel) {
+          <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
+        }
+        <div>
+          <span>Upload: {{ video.uploadDate | date: 'dd.MM.y' }}</span>
+          <span>Aufnahme: {{ video.dateOfRecording | date: 'dd.MM.y' }}</span>
+        </div>
       </div>
-    </div>
-    } @if (video.teamOne) {
-    <div
-      (click)="showTeamOneDetails = !showTeamOneDetails"
-      class="toggle-details"
-    >
-      <div class="toggle">
-        <span>{{ video.teamOne.name }}</span>
+    </main>
 
-        <svg
-          [class.rotated]="showTeamOneDetails"
-          width="18"
-          height="18"
-          fill="currentColor"
-        >
-          <use href="assets/icons/sprite.svg#icon-arrow" />
-        </svg>
-      </div>
+    <aside>
+      @if (video.tournament) {
+        <details-toggle [heading]="video.tournament.name">
+          <p>{{ video.tournament.city }}</p>
+          <p>Startdatum: {{ video.tournament.startDate | date: 'dd.MM.y' }}</p>
+          <p>Enddatum: {{ video.tournament.endDate | date: 'dd.MM.y' }}</p>
+          <a
+            href="{{ video.tournament.jtrLink }}"
+            target="_blank"
+            (click)="$event.stopPropagation()"
+            >Auf jtr besuchen</a
+          >
+        </details-toggle>
+      }
 
-      <div
-        [@slideDown]="showTeamOneDetails ? 'visible' : 'hidden'"
-        [style.visibility]="showTeamOneDetails ? 'visible' : 'hidden'"
-        class="details"
-      >
-        <p>{{ video.teamOne.city }}</p>
-      </div>
-    </div>
-    } @if (video.teamOne && video.teamTwo) {
-    <span>vs.</span>
-    } @if (video.teamTwo) {
-    <div
-      (click)="showTeamTwoDetails = !showTeamTwoDetails"
-      class="toggle-details"
-    >
-      <div class="toggle">
-        <span>{{ video.teamTwo.name }}</span>
+      <div class="teams">
+        @if (video.teamOne) {
+          @if (video.teamOne.city) {
+            <details-toggle [heading]="video.teamOne.name">
+              <p>{{ video.teamOne.city }}</p>
+            </details-toggle>
+          } @else {
+            <p>{{ video.teamOne.name }}</p>
+          }
+        }
 
-        <svg
-          [class.rotated]="showTeamTwoDetails"
-          width="18"
-          height="18"
-          fill="currentColor"
-        >
-          <use href="assets/icons/sprite.svg#icon-arrow" />
-        </svg>
+        @if (video.teamOne && video.teamTwo) {
+          <span>vs.</span>
+        }
+
+        @if (video.teamTwo) {
+          @if (video.teamTwo.city) {
+            <details-toggle [heading]="video.teamTwo.name">
+              <p>{{ video.teamTwo.city }}</p>
+            </details-toggle>
+          } @else {
+            <p>{{ video.teamTwo.name }}</p>
+          }
+        }
       </div>
 
-      <div
-        [@slideDown]="showTeamTwoDetails ? 'visible' : 'hidden'"
-        [style.visibility]="showTeamTwoDetails ? 'visible' : 'hidden'"
-        class="details"
-      >
-        <p>{{ video.teamTwo.city }}</p>
-      </div>
-    </div>
-    } @if (video.topic) {
-    <span>{{ video.topic }}</span>
-    } @if (video.guests) {
-    <span>{{ video.guests }}</span>
-    }
+      @if (video.topic) {
+        <span>{{ video.topic }}</span>
+      }
 
-    <ui-tag [category]="video.weaponType" />
+      @if (video.guests) {
+        <span>{{ video.guests }}</span>
+      }
 
-    @if (video.comment) {
-    <span>{{ video.comment }}</span>
-    }
-  </aside>
-</div>
+      <ui-tag [category]="video.weaponType" />
+
+      @if (video.comment) {
+        <span>{{ video.comment }}</span>
+      }
+    </aside>
+  </div>
 }

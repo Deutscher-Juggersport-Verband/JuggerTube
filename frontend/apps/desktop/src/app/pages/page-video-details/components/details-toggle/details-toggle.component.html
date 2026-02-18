@@ -1,0 +1,24 @@
+<div (click)="toggle()" class="toggle-details">
+  <div class="toggle">
+    <span>{{ heading() }}</span>
+
+    <svg
+      [class.rotated]="showDetails()"
+      width="18"
+      height="18"
+      fill="currentColor"
+    >
+      <use href="assets/icons/sprite.svg#icon-arrow" />
+    </svg>
+  </div>
+
+  @if (showDetails()) {
+    <div
+      class="details"
+      animate.enter="enter-animation"
+      animate.leave="leave-animation"
+    >
+      <ng-content />
+    </div>
+  }
+</div>

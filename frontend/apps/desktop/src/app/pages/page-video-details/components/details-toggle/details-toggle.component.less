@@ -1,0 +1,68 @@
+.toggle-details {
+  display: flex;
+  flex-direction: column;
+
+  .toggle {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-end;
+    cursor: pointer;
+
+    span {
+      font-size: 16px;
+      flex: 1;
+    }
+
+    svg {
+      display: block;
+      transition: transform 0.3s ease-in-out;
+
+      &.rotated {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .details {
+    margin-left: 12px;
+    margin-top: 12px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.enter-animation {
+  animation: slide-fade-in 300ms ease-in-out;
+}
+
+.leave-animation {
+  animation: slide-fade-out 300ms ease-in;
+}
+
+@keyframes slide-fade-in {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 100dvh;
+  }
+}
+
+@keyframes slide-fade-out {
+  from {
+    opacity: 1;
+    /* max-height: auto; */
+  }
+  10% {
+    max-height: auto;
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+  }
+}
