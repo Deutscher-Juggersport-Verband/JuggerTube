@@ -54,44 +54,34 @@
     width: 22%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
 
-    .toggle-details {
-      .toggle {
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: flex-end;
-        cursor: pointer;
+    p {
+      height: auto;
+    }
 
-        span {
-          font-size: 16px;
-        }
-
-        svg {
-          display: block;
-          transition: transform 0.3s ease-in-out;
-
-          &.rotated {
-            transform: rotate(90deg);
-          }
-        }
-      }
-
-      .details {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-left: 12px;
-
-        p:first-of-type {
-          margin-top: 12px;
-        }
-      }
+    .teams {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     ui-tag {
       width: fit-content;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+
+    main {
+      width: 100%;
+    }
+
+    aside {
+      width: 100%;
     }
   }
 }
