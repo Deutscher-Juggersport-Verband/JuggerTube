@@ -87,7 +87,9 @@
         <span>{{ video.guests }}</span>
       }
 
-      <ui-tag [category]="video.weaponType" />
+      @if (video.weaponType) {
+        <ui-tag [category]="video.weaponType" />
+      }
 
       @if (video.comment) {
         <span>{{ video.comment }}</span>
