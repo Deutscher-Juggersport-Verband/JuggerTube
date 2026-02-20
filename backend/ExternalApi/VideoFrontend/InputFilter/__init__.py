@@ -1,4 +1,6 @@
 from .CreateMultipleVideosInputFilter import CreateMultipleVideosInputFilter
 from .CreateVideoInputFilter import CreateVideoInputFilter
+from .DeleteVideoInputFilter import DeleteVideoInputFilter
+from .EditVideoInputFilter import EditVideoInputFilter
 from .GetPaginatedVideosInputFilter import GetPaginatedVideosInputFilter
 from .UpdatePendingVideoStatusInputFilter import UpdatePendingVideoStatusInputFilter

@@ -1,5 +1,7 @@
 from .CreateMultipleVideosHandler import CreateMultipleVideosHandler
 from .CreateVideoHandler import CreateVideoHandler
+from .DeleteVideoHandler import DeleteVideoHandler
+from .EditVideoHandler import EditVideoHandler
 from .GetPaginatedVideosHandler import GetPaginatedVideosHandler
 from .GetPendingVideoOverviewHandler import GetPendingVideoOverviewHandler
 from .GetVideoOverviewHandler import GetVideoOverviewHandler

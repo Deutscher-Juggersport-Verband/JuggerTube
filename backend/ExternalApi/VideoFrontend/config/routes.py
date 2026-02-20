@@ -1,11 +1,13 @@
 from flask import Blueprint
 from flask_jwt_extended import jwt_required
 
-from config import cache, jwt_privileged_required, limiter
+from config import cache, jwt_admin_required, jwt_privileged_required, limiter
 from DataDomain.Model import Response
 from ExternalApi.VideoFrontend.Handler import (
     CreateMultipleVideosHandler,
     CreateVideoHandler,
+    DeleteVideoHandler,
+    EditVideoHandler,
     GetPaginatedVideosHandler,
     GetPendingVideoOverviewHandler,
     GetVideoOverviewHandler,
@@ -14,6 +16,8 @@ from ExternalApi.VideoFrontend.Handler import (
 from ExternalApi.VideoFrontend.InputFilter import (
     CreateMultipleVideosInputFilter,
     CreateVideoInputFilter,
+    DeleteVideoInputFilter,
+    EditVideoInputFilter,
     GetPaginatedVideosInputFilter,
     UpdatePendingVideoStatusInputFilter,
 )
@@ -64,3 +68,19 @@ def create_multiple_videos() -> Response:
 @UpdatePendingVideoStatusInputFilter.validate()
 def update_pending_video_status() -> Response:
     return UpdatePendingVideoStatusHandler.handle()
+
+
+@video_frontend.route('/edit-video',
+                      methods=['PUT'], endpoint='edit-video')
+@jwt_admin_required()
+@EditVideoInputFilter.validate()
+def edit_video() -> Response:
+    return EditVideoHandler.handle()
+
+
+@video_frontend.route('/delete-video',
+                      methods=['DELETE'], endpoint='delete-video')
+@jwt_admin_required()
+@DeleteVideoInputFilter.validate()
+def delete_video() -> Response:
+    return DeleteVideoHandler.handle()
