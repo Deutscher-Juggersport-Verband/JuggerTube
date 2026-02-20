@@ -56,16 +56,16 @@ def create_app() -> Flask:
         'script-src': ["'self'", "'unsafe-inline'"],
         'style-src': ["'self'", "'unsafe-inline'"],
         'img-src': ["'self'"],
-    })
+    }, force_https=os.getenv('FLASK_ENV') == 'production')
 
     Compress(app)
+
+    JWTManager(app)
 
     return app
 
 
 app = create_app()
-
-jwt = JWTManager(app)
 
 redis = Redis(
     host=app.config['CACHE_REDIS_HOST'],
