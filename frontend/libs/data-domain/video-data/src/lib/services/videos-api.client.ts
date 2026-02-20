@@ -172,4 +172,18 @@ export class VideosApiClient {
         })
       );
   }
+
+  public delete(videoId: number): Observable<{ id: number; message: string }> {
+    return this.httpClient
+      .delete<{ id: number; message: string }>(
+        '/api/video-frontend/delete-video',
+        { body: { videoId } }
+      )
+      .pipe(
+        catchError((error) => {
+          console.error('Error deleting video:', error);
+          return throwError(() => error);
+        })
+      );
+  }
 }

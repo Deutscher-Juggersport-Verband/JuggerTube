@@ -36,6 +36,13 @@
           <span>Aufnahme: {{ video.dateOfRecording | date: 'dd.MM.y' }}</span>
         </div>
       </div>
+
+      @if (user()?.role === UserRoleEnum.ADMIN) {
+        <div class="admin-area">
+          <h4>Danger Zone!</h4>
+          <button (click)="onDeleteVideo()">Delete video</button>
+        </div>
+      }
     </main>
 
     <aside>

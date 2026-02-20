@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngrx/store';
 
 import { UiRedirectComponent, UiTagComponent } from '../../ui-shared';
 import {
@@ -8,7 +11,9 @@ import {
   isYoutubeUrl,
   VideosDataService,
 } from '@frontend/video';
-import { VideoApiResponseModel } from '@frontend/video-data';
+import { VideoApiResponseModel, VideosApiClient } from '@frontend/video-data';
+import { userDetailsSelector } from '@frontend/user';
+import { UserRoleEnum } from '@frontend/user-data';
 import { DetailsToggleComponent } from './components/details-toggle/details-toggle.component';
 import { DatePipe } from '@angular/common';
 
@@ -25,8 +30,11 @@ import { DatePipe } from '@angular/common';
 })
 export class PageVideoDetailsComponent {
   private readonly route: ActivatedRoute = inject(ActivatedRoute);
+  private readonly router: Router = inject(Router);
+  private readonly store: Store = inject(Store);
   private readonly videosDataService: VideosDataService =
     inject(VideosDataService);
+  private readonly videosApiClient: VideosApiClient = inject(VideosApiClient);
 
   public video: VideoApiResponseModel | undefined =
     this.videosDataService.getVideoById(
@@ -36,4 +44,14 @@ export class PageVideoDetailsComponent {
   public embeddedUrl: SafeResourceUrl | null = getEmbeddedUrlRule(
     this.video?.videoLink ?? '',
   );
+
+  protected readonly user = toSignal(this.store.select(userDetailsSelector));
+  protected readonly UserRoleEnum = UserRoleEnum;
+
+  public onDeleteVideo(): void {
+    if (!this.video) return;
+    this.videosApiClient.delete(this.video.id).subscribe(() => {
+      this.router.navigate(['/video-overview']);
+    });
+  }
 }
