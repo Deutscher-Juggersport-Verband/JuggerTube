@@ -49,13 +49,13 @@ export class PageVideoOverviewComponent {
 
   public readonly UiInputTypeEnum = UiInputTypeEnum;
   public readonly sortFormControl = new FormControl('Upload: Neueste zuerst');
-  public readonly sortDropdownOptions: string[] = [
-    'Name A-Z',
-    'Name Z-A',
-    'Aufnahme: Neueste zuerst',
-    'Aufnahme: Älteste zuerst',
-    'Upload: Neueste zuerst',
-    'JuggerTube: Neueste zuerst',
+  public readonly sortDropdownOptions = [
+    { value: 'Name A-Z', name: 'Name A-Z' },
+    { value: 'Name Z-A', name: 'Name Z-A' },
+    { value: 'Aufnahme: Neueste zuerst', name: 'Aufnahme: Neueste zuerst' },
+    { value: 'Aufnahme: Älteste zuerst', name: 'Aufnahme: Älteste zuerst' },
+    { value: 'Upload: Neueste zuerst', name: 'Upload: Neueste zuerst' },
+    { value: 'JuggerTube: Neueste zuerst', name: 'JuggerTube: Neueste zuerst' },
   ];
 
   private readonly STORAGE_KEY_SORT = 'jt.videoOverview.sort';

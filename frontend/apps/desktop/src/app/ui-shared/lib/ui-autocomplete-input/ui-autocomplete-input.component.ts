@@ -17,10 +17,12 @@ import {
   UiInputComponent,
   UiInputDirectionEnum,
 } from '../ui-input/ui-input.component';
-import { NewOptionConfig, NewOptionFieldConfig } from './new-option-config';
+import { NewOptionConfig } from './new-option-config';
 import { ChannelApiResponseModel } from '@frontend/channel-data';
 import { TeamApiResponseModel } from '@frontend/team-data';
 import { TournamentApiResponseModel } from '@frontend/tournament-data';
+import { CreateNewEntityTypesEnum } from '@frontend/video-data';
+import { VideoFormService } from 'libs/business-domain/video/src/lib/services/video-form.service';
 
 type OptionType =
   | TournamentApiResponseModel
@@ -44,7 +46,12 @@ export class UiAutocompleteInputComponent implements OnInit {
   private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef$: DestroyRef = inject(DestroyRef);
 
-  @Input() public formControlElement!: FormControl;
+  private readonly videoFormService: VideoFormService =
+      inject(VideoFormService);
+
+  @Input() public idFormControlElement!: FormControl;
+  @Input() public searchControl!: FormControl;
+
   @Input() public options: OptionType[] = [];
   @Input() public displayField: DisplayFieldType = 'name';
   @Input() public valueField: ValueFieldType = 'id';
@@ -56,12 +63,13 @@ export class UiAutocompleteInputComponent implements OnInit {
   @Input() public infoButtonHeadline?: string;
   @Input() public infoButtonContent?: string;
 
+  @Input() public nameFormControlElement?: FormControl;
   @Input() public newOptionConfig?: NewOptionConfig;
+  @Input() public newOptionEntityType?: CreateNewEntityTypesEnum;
   public showNewFields: boolean = false;
 
   public filteredOptions: OptionType[] = [];
   public showDropdown = false;
-  public searchControl = new FormControl('');
   public hasExactMatch = false;
 
   public ngOnInit(): void {
@@ -109,12 +117,12 @@ export class UiAutocompleteInputComponent implements OnInit {
   }
 
   public onOptionSelect(option: OptionType): void {
-    this.formControlElement.setValue(option[this.valueField]);
+    this.idFormControlElement.setValue(option[this.valueField]);
     this.searchControl.setValue(option[this.displayField]);
     this.showDropdown = false;
     this.showNewFields = false;
-    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
-      field.formControlElement.reset()
+    this.videoFormService.changeFormRequirementsToExistingEntity(
+      this.newOptionEntityType!
     );
   }
 
@@ -130,13 +138,16 @@ export class UiAutocompleteInputComponent implements OnInit {
   }
 
   public onAddNewOption(): void {
-    this.formControlElement.setErrors([]);
-    this.formControlElement.markAsPristine();
-    this.formControlElement.markAsUntouched();
-    this.showNewFields = true;
-    this.newOptionConfig?.fields.map((field: NewOptionFieldConfig) =>
-      field.formControlElement.reset()
+    if (!this.nameFormControlElement) {
+      return;
+    }
+    this.nameFormControlElement.setValue(this.searchControl.value);
+    this.videoFormService.changeFormRequirementsToCreateNewEntity(
+      this.newOptionEntityType!
     );
+
+    this.showNewFields = true;
+
     this.newOptionConfig?.prefillField?.setValue(this.searchControl.value);
     this.cdr.detectChanges();
   }

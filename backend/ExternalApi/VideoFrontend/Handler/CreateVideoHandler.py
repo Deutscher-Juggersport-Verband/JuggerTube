@@ -32,13 +32,19 @@ class CreateVideoHandler:
 
             video = CreateVideoHandler._create_base_video(data)
 
-            if VideoRepository.checkIfVideoNameAlreadyExistsk(
-                    video.name) or VideoRepository.checkIfVideoLinkAlreadyExists(
-                    video.video_link):
+            if VideoRepository.checkIfVideoNameAlreadyExists(
+                    video.name):
                 return Response(
                     response='Video with this name already exists',
                     status=400
                 )
+            if VideoRepository.checkIfVideoLinkAlreadyExists(
+                    video.video_link):
+                return Response(
+                    response='Video with this link already exists',
+                    status=400
+                )
+
 
             CreateVideoHandler._handle_category_specific_data(video, data)
 
@@ -74,7 +80,7 @@ class CreateVideoHandler:
     def _create_base_video(data: dict) -> Videos:
         """Create a video with base properties"""
         video = Videos()
-        video.channel_id = CreateVideoHandler._handle_channel_data(data.get('channel'))
+        video.channel_id = data.get('channelId')
 
         if not video.channel_id:
             logging.error(f"Channel not found: {channel}")

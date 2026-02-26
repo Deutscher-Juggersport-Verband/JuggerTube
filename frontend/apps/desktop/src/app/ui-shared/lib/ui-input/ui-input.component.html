@@ -1,52 +1,63 @@
 <div class="input-container {{ direction }}">
   @if (labelText) {
-  <div class="label-row">
-    <label for="{{ labelText }}">{{ labelText }}</label>
+    <div class="label-row">
+      <label for="{{ labelText }}">{{ labelText }}</label>
 
-    @if (infoButtonHeadline) {
-    <ui-info-button>
-      <p class="i-headline">{{ infoButtonHeadline }}</p>
-      <p>{{ infoButtonContent }}</p>
-    </ui-info-button>
-    }
-  </div>
-  } @switch (type) { @case (UiInputTypeEnum.DROPDOWN) {
-  <select
-    id="{{ labelText }}"
-    [formControl]="formControlElement"
-    [class.invalid]="formControlElement.touched && formControlElement.invalid"
-  >
-    @for (option of dropdownOptions; track option) {
-    <option [value]="option">
-      {{ option }}
-    </option>
-    }
-  </select>
-  } @case (UiInputTypeEnum.TOGGLE) {
-  <input
-    id="{{ labelText }}"
-    type="checkbox"
-    [formControl]="formControlElement"
-    [class.invalid]="formControlElement.touched && formControlElement.invalid"
-    (change)="onToggleChange($event)"
-  />
-  } @default {
-  <input
-    id="{{ labelText }}"
-    [type]="type"
-    [placeholder]="placeholder"
-    [formControl]="formControlElement"
-    [class.invalid]="formControlElement.touched && formControlElement.invalid"
-  />
-  } }
+      @if (infoButtonHeadline) {
+        <ui-info-button>
+          <p class="i-headline">{{ infoButtonHeadline }}</p>
+          <p>{{ infoButtonContent }}</p>
+        </ui-info-button>
+      }
+    </div>
+  } 
+  @switch (type) { 
+    @case (UiInputTypeEnum.DROPDOWN) {
+      <select
+        id="{{ labelText }}"
+        [formControl]="formControlElement"
+        [class.invalid]="formControlElement.touched && formControlElement.invalid"
+      >
+        @for (option of dropdownOptions; track option.value) {
+          <option [value]="option.value">
+            {{ option.name }}
+          </option>
+        }
+      </select>
+    } 
+    @case (UiInputTypeEnum.TOGGLE) {
+      <input
+        id="{{ labelText }}"
+        type="checkbox"
+        [formControl]="formControlElement"
+        [class.invalid]="formControlElement.touched && formControlElement.invalid"
+        (change)="onToggleChange($event)"
+      />
+    } 
+    @default {
+      <input
+        id="{{ labelText }}"
+        [type]="type"
+        [placeholder]="placeholder"
+        [formControl]="formControlElement"
+        [class.invalid]="(formControlElement && formControlElement.touched !== undefined && formControlElement.touched) && formControlElement.invalid"
+      />
+    } 
+  }
 </div>
-@if (formControlElement.touched && formControlElement.invalid &&
-formControlElement.errors) {
-<span class="error-message">
-  @if (formControlElement.errors['required']) { Dieses Feld ist erforderlich. }
-  @if (formControlElement.errors['email']) { Bitte geben Sie eine gültige
-  E-Mail-Adresse ein. } @if (formControlElement.errors['minlength']) { Die
-  Eingabe ist zu kurz. Mindestlänge:
-  {{ formControlElement.errors['minlength'].requiredLength }} Zeichen. }
-</span>
+@if ((formControlElement && formControlElement.touched !== undefined && formControlElement.touched) && formControlElement.invalid && formControlElement.errors) {
+  <span class="error-message">
+    @if (formControlElement.errors['required']) { 
+      Dieses Feld ist erforderlich. 
+    }
+    @if (formControlElement.errors['email']) { 
+      Bitte geben Sie eine gültige E-Mail-Adresse ein. 
+    } 
+    @if (formControlElement.errors['minlength']) { 
+      Die Eingabe ist zu kurz. Mindestlänge: {{ formControlElement.errors['minlength'].requiredLength }} Zeichen. 
+    }
+    @if (formControlElement.errors['dateIsInFuture']) { 
+      Das Datum muss in der Vergangenheit liegen. 
+    }
+  </span>
 }

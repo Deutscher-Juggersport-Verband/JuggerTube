@@ -4,9 +4,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { GameSystemTypesEnum } from '../enums/game-system-types.enum';
 import { VideoCategoriesEnum } from '../enums/video-categories.enum';
-import { WeaponTypesEnum } from '../enums/weapon-types.enum';
+import { CreateVideoRequestModel } from '../models/create-video-request.model';
 import {
   PaginatedVideosApiResponseModel,
   VideoApiResponseModel,
@@ -21,37 +20,6 @@ export interface ChannelModel {
 export interface CreateChannelRequest {
   name: string;
   link: string;
-}
-
-export interface CreateVideoRequest {
-  name: string;
-  videoLink: string;
-  channelLink: string;
-  category: VideoCategoriesEnum;
-  uploadDate: string;
-  dateOfRecording: string;
-  topic?: string;
-  guests?: string;
-  weaponType?: WeaponTypesEnum | null;
-  gameSystem?: GameSystemTypesEnum | null;
-  tournament?: {
-    id?: number;
-    name?: string;
-    city?: string;
-    startDate?: string;
-    endDate?: string;
-  };
-  teamOne?: {
-    id?: number;
-    name?: string;
-    city?: string;
-  };
-  teamTwo?: {
-    id?: number;
-    name?: string;
-    city?: string;
-  };
-  comment?: string;
 }
 
 export type SortOption =
@@ -134,7 +102,7 @@ export class VideosApiClient {
   }
 
   public create(
-    videoData: CreateVideoRequest
+    videoData: CreateVideoRequestModel
   ): Observable<{ id: number; message: string }> {
     return this.httpClient
       .post<{ id: number; message: string }>(
