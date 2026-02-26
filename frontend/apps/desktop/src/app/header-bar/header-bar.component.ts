@@ -1,14 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-import { Observable } from 'rxjs';
-
-import { Store } from '@ngrx/store';
-
-import { SingletonGetter } from '@frontend/cache';
-import { userDetailsSelector } from '@frontend/user';
-import { SessionService, User } from '@frontend/user-data';
+import { UserContextService } from '@frontend/user';
+import { SessionService } from '@frontend/user-data';
 
 @Component({
   selector: 'header-bar',
@@ -19,12 +13,11 @@ import { SessionService, User } from '@frontend/user-data';
 })
 export class HeaderBarComponent {
   private readonly sessionService: SessionService = inject(SessionService);
+  private readonly userContextService: UserContextService = inject(UserContextService);
   protected isAuthenticated$ = this.sessionService.token$;
-  protected logout = this.sessionService.clearSession.bind(this.sessionService);
-  private readonly store$: Store = inject(Store);
+  protected readonly currentUser$ = this.userContextService.currentUser$;
 
-  @SingletonGetter()
-  public get currentUser$(): Observable<User | null> {
-    return this.store$.select(userDetailsSelector);
+  protected logout() {
+    this.userContextService.logoutUser();
   }
 }

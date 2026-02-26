@@ -7,6 +7,7 @@ enum UserDetailsActionNamesEnum {
   LoadUserDetails = `[${userDetailsFeatureKey}] Load User Details`,
   LoadUserDetailsFailed = `[${userDetailsFeatureKey}] Load User Details Failed`,
   LoadUserDetailsSuccess = `[${userDetailsFeatureKey}] Load User Details Success`,
+  ClearUserData = `[${userDetailsFeatureKey}] Clear User Data`,
 }
 
 export const loadUserDetailsDataAction = createAction(
@@ -23,3 +24,5 @@ export const loadUserDetailsDataActionFailed = createAction(
   UserDetailsActionNamesEnum.LoadUserDetailsFailed,
   props<{ error: string }>()
 );
+
+export const clearUserDetailsAction = createAction(UserDetailsActionNamesEnum.ClearUserData);
