@@ -21,7 +21,65 @@
   </div>
 </div>
 
-<form [formGroup]="form">
+<ui-button (click)="onChangeMail()"
+  [text]="'Mail Adresse ändern'"
+  [color]="UiButtonColorEnum.SECONDARY"
+/>
+<ui-button (click)="onChangePassword()"
+  [text]="'Passwort ändern'"
+  [color]="UiButtonColorEnum.SECONDARY"
+/>
+<ui-button (click)="onDelete()"
+  [text]="'Account löschen'"
+  [color]="UiButtonColorEnum.SECONDARY"
+/>
+
+@if (showChangeMailForm) {
+  <form [formGroup]="updateMailForm">
+    <ui-input
+      [labelText]="'Email *'"
+      [type]="UiInputTypeEnum.EMAIL"
+      [formControlElement]="updateMailForm.controls.email"
+      [placeholder]="user.email"
+    />
+  </form>
+
+  <ui-button
+      (click)="onChangeMailSubmit()"
+      [text]="'speichern'"
+      [color]="UiButtonColorEnum.PRIMARY"
+    />
+
+    <ui-button
+      (click)="onCancelChangeMail()"
+      [text]="'abbrechen'"
+      [color]="UiButtonColorEnum.PRIMARY"
+    />
+}
+
+@if (showChangePasswordForm) {
+  <form [formGroup]="updatePasswordForm">
+    <ui-input
+      [labelText]="'Passwort *'"
+      [type]="UiInputTypeEnum.PASSWORD"
+      [formControlElement]="updatePasswordForm.controls.password"
+    />
+  </form>
+
+  <ui-button
+      (click)="onChangePasswordSubmit()"
+      [text]="'speichern'"
+      [color]="UiButtonColorEnum.PRIMARY"
+    />
+
+    <ui-button
+      (click)="onCancelChangePassword()"
+      [text]="'abbrechen'"
+      [color]="UiButtonColorEnum.PRIMARY"
+    />
+}
+
+<!-- <form [formGroup]="form">
   <ui-input
     [labelText]="'Email *'"
     [type]="UiInputTypeEnum.EMAIL"
@@ -60,8 +118,8 @@
       [color]="UiButtonColorEnum.PRIMARY"
     />
   </div>
-</form>
-@if (isAdmin | async) {
+</form> -->
+@if (user.role === UserRoleEnum.ADMIN) {
 <div class="seperator"></div>
 <admin-panel [currentUser]="(user$ | async)!" />
 } } @else {

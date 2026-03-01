@@ -1,11 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
-
-import { Store } from '@ngrx/store';
 
 import {
   UiButtonColorEnum,
@@ -15,15 +12,13 @@ import {
 } from '../../ui-shared';
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
-import { SingletonGetter } from '@frontend/cache';
-import { updateUserForm, userDetailsSelector } from '@frontend/user';
+import { updateMailForm, updatePasswordForm, UsersDataService } from '@frontend/user';
 import {
-  UpdateRequestBody,
-  UpdateResponse,
   User,
-  UserApiClient,
-  UserDataClient,
+  UserRoleEnum,
 } from '@frontend/user-data';
+import { Actions } from '@ngrx/effects';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -38,47 +33,76 @@ import {
   styleUrl: './page-user-details.component.less',
 })
 export class PageUserDetailsComponent {
-  private readonly userApiClient: UserApiClient = inject(UserApiClient);
-  private readonly userDataClient: UserDataClient = inject(UserDataClient);
+  private readonly usersDataService = inject(UsersDataService);
   private readonly router: Router = inject(Router);
-  private readonly store$: Store = inject(Store);
+  private readonly actions$ = inject(Actions);
 
-  protected readonly form = updateUserForm;
+  protected readonly updateMailForm = updateMailForm;
+  protected readonly updatePasswordForm = updatePasswordForm;
+  // State Model Error
   protected error: string = '';
-  protected readonly isAdmin: Promise<boolean> = this.userApiClient.isAdmin();
   protected pictureUrl?: string;
+  protected showChangeMailForm: boolean = false;
+  protected showChangePasswordForm: boolean = false;
+
+  protected readonly user$: Observable<User | null> = this.usersDataService.currentUser$;
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
   protected readonly UiInputTypeEnum = UiInputTypeEnum;
+  protected readonly UserRoleEnum = UserRoleEnum;
 
-  @SingletonGetter()
-  public get user$(): Observable<User | null> {
-    return this.store$.select(userDetailsSelector);
-  }
-
-  public async onSubmit(): Promise<void> {
-    if (!this.form.valid) {
-      markAllFieldsAsTouched(this.form);
+  public async onChangePasswordSubmit(): Promise<void> {
+    if (!this.updatePasswordForm.valid) {
+      markAllFieldsAsTouched(this.updatePasswordForm);
       return;
     }
 
-    const response: UpdateResponse = await this.userApiClient.update(
-      this.form.value as UpdateRequestBody
+    this.usersDataService.changeUserData(
+      null,
+      null,
+      this.updatePasswordForm.value.password!,
+      null
     );
 
-    if (response.error) {
-      markAllFieldsAsTouched(this.form);
-      this.error = response.error;
-      return;
-    }
+    // if error markallfields as touched and set error
 
-    this.form.reset();
+    this.updatePasswordForm.reset();
 
     await this.router.navigate(['/user-details']);
   }
 
+  public async onChangeMailSubmit(): Promise<void> {
+    if (!this.updateMailForm.valid) {
+      markAllFieldsAsTouched(this.updateMailForm);
+      return;
+    }
+
+    // change Mail
+    // if error markallfields as touched and set error
+
+    this.updateMailForm.reset();
+
+    await this.router.navigate(['/user-details']);
+  }
+
+  public onChangeMail(): void {
+    this.showChangeMailForm = !this.showChangeMailForm;
+  }
+
+  public onChangePassword(): void {
+    this.showChangePasswordForm = !this.showChangePasswordForm;
+  }
+
+  public onCancelChangeMail(): void {
+    this.showChangeMailForm = false;
+  }
+
+  public onCancelChangePassword(): void {
+    this.showChangePasswordForm = false;
+  }
+
   public onDelete(): void {
-    this.userApiClient.delete();
+    this.usersDataService.deleteUser();
 
     this.router.navigate(['/']);
   }
@@ -92,6 +116,8 @@ export class PageUserDetailsComponent {
 
     const selectedFile: File = input.files[0];
 
-    this.pictureUrl = await this.userDataClient.updatePicture$(selectedFile);
+    this.usersDataService.updateUserPicture(selectedFile);
+
+    // Umgehen nach successfull Change
   }
 }

@@ -11,7 +11,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 
 import { appRoutes } from './app.routes';
-import { GetUserDetailsDataEffect } from '@frontend/user';
+import { ChangeUserDetailsEffect, ChangeUserRoleEffect, DeleteUserEffect, GetUserDetailsDataEffect, GetUserRoleEffect, LoginUserEffect, RegisterUserEffect, UpdateUserProfilePictureEffect } from '@frontend/user';
 import { JwtInterceptor } from '@frontend/user-data';
 import {
   CreateVideoEffects,
@@ -28,11 +28,15 @@ export const appConfig: ApplicationConfig = {
     provideStore(reducers, { metaReducers }),
     provideEffects([
       LoadPaginatedVideosEffects,
+      ChangeUserDetailsEffect,
+      ChangeUserRoleEffect,
+      DeleteUserEffect,
       GetUserDetailsDataEffect,
-    ]),
-    provideEffects([
-      LoadPaginatedVideosEffects,
-      CreateVideoEffects,
+      GetUserRoleEffect,
+      LoginUserEffect,
+      RegisterUserEffect,
+      UpdateUserProfilePictureEffect,
+      CreateVideoEffects
     ]),
     provideHttpClient(withInterceptorsFromDi()),
     {

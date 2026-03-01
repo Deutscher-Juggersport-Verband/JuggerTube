@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { UserRoleEnum } from '../enums/role-type.enum';
 import { User, UserShort } from '../models/user-data.model';
 import { convertFileToBase64Rule } from '@frontend/user';
+import { AuthResponse, LoginRequestBody, RegisterRequestBody, RegisterResponse, UpdateRequestBody, UpdateResponse } from '../models/user-api.model';
+import { SessionService } from '../services/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,7 @@ import { convertFileToBase64Rule } from '@frontend/user';
 export class UserDataClient {
   private readonly http: HttpClient = inject(HttpClient);
   private readonly destroyRef$: DestroyRef = inject(DestroyRef);
+  private readonly sessionService: SessionService = inject(SessionService);
 
   private readonly privilegedUserShortOverviewCache$ = new BehaviorSubject<
     UserShort[]
@@ -42,25 +45,46 @@ export class UserDataClient {
     this.privilegedUserShortOverviewCache$.next([]);
   }
 
-  public async updateUserRole$(
+  public updateUserRole$(
     userId: number,
     role: UserRoleEnum
-  ): Promise<void> {
-    return await firstValueFrom(
-      this.http.put<void>('/api/user-frontend/update-user-role', {
-        userId,
-        role,
-      })
-    );
+  ): Observable<void> {
+    return this.http.put<void>('/api/user-frontend/update-user-role', {
+      userId,
+      role,
+    });
   }
 
-  public async updatePicture$(file: File): Promise<string> {
-    const base64 = await convertFileToBase64Rule(file);
+  public updatePicture$(file: File): Observable<string> {
+    const base64 = convertFileToBase64Rule(file);
 
-    return await firstValueFrom(
-      this.http.put<string>('/api/user-frontend/update-user-picture', {
-        picture: base64,
-      })
-    );
+    return this.http.put<string>('/api/user-frontend/update-user-picture', {
+      picture: base64,
+    });
+  }
+
+  public loginUser$(body: LoginRequestBody): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>('/api/user-frontend/authenticate-user', body);
+  }
+
+  public registerUser$(body: RegisterRequestBody): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>('/api/user-frontend/create-user', body);
+  }
+
+  public updateUser(body: UpdateRequestBody): Observable<UpdateResponse> {
+    return this.http.put<UpdateResponse>('/api/user-frontend/update-user', body);
+  }
+
+  //ToDo: Objekt definieren, welches zurückgegeben wird
+  public deleteUser$(): Observable<Object> {
+    return this.http.delete('/api/user-frontend/delete-user');
+  }
+
+  public isAdmin$(): Observable<boolean> {
+    return this.http.get<boolean>('/api/user-frontend/is-admin');
+  }
+
+  public isPrivileged$(): Observable<boolean> {
+    return this.http.get<boolean>('/api/user-frontend/is-privileged');
   }
 }

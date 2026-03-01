@@ -10,12 +10,7 @@ import {
   UiInputTypeEnum,
 } from '../../ui-shared';
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
-import { loginForm } from '@frontend/user';
-import {
-  AuthResponse,
-  LoginRequestBody,
-  UserApiClient,
-} from '@frontend/user-data';
+import { loginForm, UsersDataService } from '@frontend/user';
 
 @Component({
   imports: [
@@ -30,9 +25,10 @@ import {
 })
 export class PageLoginComponent {
   private readonly router: Router = inject(Router);
-  private readonly authService: UserApiClient = inject(UserApiClient);
+  private readonly usersDataService = inject(UsersDataService);
 
   protected readonly form = loginForm;
+  // Users State Model Error
   protected error: string = '';
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
@@ -44,11 +40,12 @@ export class PageLoginComponent {
       return;
     }
 
-    const response: AuthResponse = await this.authService.login(
-      this.form.value as LoginRequestBody
+    this.usersDataService.loginUser(
+      this.form.value.email!,
+      this.form.value.password!
     );
 
-    if (response.lockedUntil && response.lockType) {
+    /* if (response.lockedUntil && response.lockType) {
       this.error = `Dieser Account ist ${
         response.lockType
       } gesperrt bis ${new Date(response.lockedUntil).toLocaleString()}`;
@@ -59,7 +56,7 @@ export class PageLoginComponent {
       markAllFieldsAsTouched(this.form);
       this.error = response.error;
       return;
-    }
+    } */
 
     this.form.reset();
 

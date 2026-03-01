@@ -13,7 +13,7 @@ export interface RegisterRequestBody {
 }
 
 export interface UpdateRequestBody {
-  email: string;
+  email: string | null;
   name: string | null;
   password: string | null;
   username: string | null;

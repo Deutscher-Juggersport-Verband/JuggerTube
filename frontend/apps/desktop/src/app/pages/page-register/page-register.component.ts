@@ -10,12 +10,7 @@ import {
   UiInputTypeEnum,
 } from '../../ui-shared';
 import { markAllFieldsAsTouched } from '../../utils/form-utils';
-import { registerForm } from '@frontend/user';
-import {
-  RegisterRequestBody,
-  RegisterResponse,
-  UserApiClient,
-} from '@frontend/user-data';
+import { registerForm, UsersDataService } from '@frontend/user';
 
 @Component({
   imports: [
@@ -30,9 +25,10 @@ import {
 })
 export class PageRegisterComponent {
   private readonly router: Router = inject(Router);
-  private readonly authService: UserApiClient = inject(UserApiClient);
+  private readonly usersDataService = inject(UsersDataService);
 
   protected readonly form = registerForm;
+  // Users State Model Error
   protected error: string = '';
 
   protected readonly UiButtonColorEnum = UiButtonColorEnum;
@@ -44,15 +40,12 @@ export class PageRegisterComponent {
       return;
     }
 
-    const response: RegisterResponse = await this.authService.register(
-      this.form.value as RegisterRequestBody
+    this.usersDataService.registerUser(
+      this.form.value.email!,
+      this.form.value.name!,
+      this.form.value.password!,
+      this.form.value.username!
     );
-
-    if (response.error) {
-      markAllFieldsAsTouched(this.form);
-      this.error = response.error;
-      return;
-    }
 
     this.form.reset();
 

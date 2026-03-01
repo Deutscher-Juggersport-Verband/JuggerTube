@@ -1,4 +1,3 @@
-export * from './lib/clients/user-api.client';
 export * from './lib/clients/user-data.client';
 
 export * from './lib/enums/lock-type.enum';

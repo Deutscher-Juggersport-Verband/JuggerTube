@@ -7,7 +7,14 @@ export * from './lib/rules/convert-file-to-base64.rule';
 
 export * from './lib/store/actions/user-details.action';
 
+export * from './lib/store/effects/change-user-details.effect';
+export * from './lib/store/effects/change-user-role.effect';
+export * from './lib/store/effects/delete-user.effect';
 export * from './lib/store/effects/get-user-details-data.effect';
+export * from './lib/store/effects/get-user-role-data.effect.ts';
+export * from './lib/store/effects/login-user.effect';
+export * from './lib/store/effects/register-user.effect';
+export * from './lib/store/effects/update-user-picture.effect';
 
 export * from './lib/store/models/user-state.model';
 
