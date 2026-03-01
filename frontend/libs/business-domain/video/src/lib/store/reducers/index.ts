@@ -21,7 +21,7 @@ export function localStorageSyncReducer(
   // eslint-disable-next-line
 ): ActionReducer<any> {
   return localStorageSync({
-    keys: ['userDetails', 'videoOverview'],
+    keys: ['videoOverview'],
     storage: localStorage,
     rehydrate: true,
   })(reducer);

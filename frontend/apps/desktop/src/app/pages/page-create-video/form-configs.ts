@@ -39,12 +39,6 @@ export const tournamentNewOptionConfig: NewOptionRawConfig = {
       formControlElement: 'tournamentEndDate',
       direction: UiInputDirectionEnum.ROW,
     },
-    {
-      labelText: 'Adresse:',
-      type: UiInputTypeEnum.TEXT,
-      formControlElement: 'tournamentAddress',
-      direction: UiInputDirectionEnum.ROW,
-    },
   ],
 };
 

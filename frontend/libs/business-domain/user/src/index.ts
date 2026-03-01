@@ -16,3 +16,6 @@ export * from './lib/store/reducers/user-details-data.reducer';
 export * from './lib/store/resolvers/user-details.resolver';
 
 export * from './lib/store/selectors/user-details.selector';
+
+export * from './lib/services/users.data-service'
+export * from './lib/services/user-context.service'

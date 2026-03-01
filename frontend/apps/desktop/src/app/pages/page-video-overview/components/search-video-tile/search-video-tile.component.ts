@@ -18,6 +18,19 @@ import {
 } from '../../../../ui-shared';
 import { VideoCategoriesEnum, VideoFilterOptions } from '@frontend/video-data';
 
+export enum CategoryDropdownEnum {
+  ALL_CATEGORIES = 'allCategories',
+  MATCH = 'match',
+  HIGHLIGHTS = 'highlights',
+  REPORTS = 'report',
+  PODCAST = 'podcast',
+  TRAINING = 'training',
+  AWARDS = 'awards',
+  SONG = 'song',
+  SPARBUILDING = 'sparbuilding',
+  OTHER = 'other',
+}
+
 @Component({
   selector: 'search-video-tile',
   imports: [
@@ -41,20 +54,20 @@ export class SearchVideoTileComponent {
 
   public isExpandedFiltersVisible = false;
 
-  private readonly STORAGE_KEY = 'jt.videoOverview.searchTile';
+  protected CategoryDropdownOptions = [
+    { value: CategoryDropdownEnum.ALL_CATEGORIES, name: 'Alle Kategorien' },
+    { value: CategoryDropdownEnum.MATCH, name: 'Match' },
+    { value: CategoryDropdownEnum.HIGHLIGHTS, name: 'Highlights' },
+    { value: CategoryDropdownEnum.REPORTS, name: 'Reports' },
+    { value: CategoryDropdownEnum.PODCAST, name: 'Podcast' },
+    { value: CategoryDropdownEnum.TRAINING, name: 'Training' },
+    { value: CategoryDropdownEnum.AWARDS, name: 'Awards' },
+    { value: CategoryDropdownEnum.SONG, name: 'Song' },
+    { value: CategoryDropdownEnum.SPARBUILDING, name: 'Sparbuilding' },
+    { value: CategoryDropdownEnum.OTHER, name: 'Andere' },
+  ]
 
-  public readonly categoryDropdownOptions: string[] = [
-    'Alle Kategorien',
-    'Match',
-    'Highlights',
-    'Reports',
-    'Podcast',
-    'Training',
-    'Awards',
-    'Song',
-    'Sparbuilding',
-    'Andere',
-  ];
+  private readonly STORAGE_KEY = 'jt.videoOverview.searchTile';
 
   public getCategoryValueFromLabel(label: string): VideoCategoriesEnum | '' {
     if (label === 'Alle Kategorien') return '';

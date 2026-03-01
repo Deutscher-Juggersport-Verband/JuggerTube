@@ -60,21 +60,21 @@ class CreateVideoInputFilter(InputFilter):
         )
 
         self.add(
-            'channel.id',
+            'channelId',
             required=False,
             filters=[ToIntegerFilter()],
             validators=[IsIntegerValidator()]
         )
 
         self.add(
-            'channel.channelName',
+            'channelChannelName',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
         self.add(
-            'channel.link',
+            'channelLink',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
@@ -130,28 +130,28 @@ class CreateVideoInputFilter(InputFilter):
 
         # Tournament object validation
         self.add(
-            'tournament.id',
+            'tournamentId',
             required=False,
             filters=[ToIntegerFilter()],
             validators=[IsIntegerValidator()]
         )
 
         self.add(
-            'tournament.name',
+            'tournamentName',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
         self.add(
-            'tournament.city',
+            'tournamentCity',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
         self.add(
-            'tournament.startDate',
+            'tournamentStartDate',
             required=False,
             filters=[
                 ToDateTimeFilter()
@@ -162,7 +162,7 @@ class CreateVideoInputFilter(InputFilter):
         )
 
         self.add(
-            'tournament.endDate',
+            'tournamentEndDate',
             required=False,
             filters=[
                 ToDateTimeFilter()
@@ -174,21 +174,21 @@ class CreateVideoInputFilter(InputFilter):
 
         # Team One object validation
         self.add(
-            'teamOne.id',
+            'teamOneId',
             required=False,
             filters=[ToIntegerFilter()],
             validators=[IsIntegerValidator()]
         )
 
         self.add(
-            'teamOne.teamName',
+            'teamOneTeamName',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
         self.add(
-            'teamOne.city',
+            'teamOneCity',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
@@ -196,21 +196,21 @@ class CreateVideoInputFilter(InputFilter):
 
         # Team Two object validation
         self.add(
-            'teamTwo.id',
+            'teamTwoId',
             required=False,
             filters=[ToIntegerFilter()],
             validators=[IsIntegerValidator()]
         )
 
         self.add(
-            'teamTwo.teamName',
+            'teamTwoTeamName',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
         )
 
         self.add(
-            'teamTwo.city',
+            'teamTwoCity',
             required=False,
             filters=[StringTrimFilter()],
             validators=[IsStringValidator()]
