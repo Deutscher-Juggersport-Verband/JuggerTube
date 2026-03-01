@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { createAction, props } from '@ngrx/store';
 
 import {
-  CreateVideoRequest,
+  CreateVideoRequestModel,
   VideoApiResponseModel,
   VideoFilterOptions
 } from '@frontend/video-data';
@@ -51,7 +51,7 @@ export const loadPaginatedVideosActionError = createAction(
 
 export const createVideo = createAction(
   VideosActionNamesEnum.CreateVideo,
-  props<{ videoData: CreateVideoRequest }>()
+  props<{ videoData: CreateVideoRequestModel }>()
 );
 
 export const createVideoSuccess = createAction(

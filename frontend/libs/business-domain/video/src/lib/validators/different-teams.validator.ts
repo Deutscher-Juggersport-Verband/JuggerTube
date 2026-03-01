@@ -5,14 +5,16 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 
+import { VideoFormModelFieldsEnum } from '@frontend/video-data';
+
 export function differentTeamsValidator(): ValidatorFn {
   return (formGroup: AbstractControl): ValidationErrors | null => {
     if (!(formGroup instanceof FormGroup)) {
       return null;
     }
 
-    const teamOneControl = formGroup.get('teamOneId');
-    const teamTwoControl = formGroup.get('teamTwoId');
+    const teamOneControl = formGroup.get(VideoFormModelFieldsEnum.TEAM_ONE_ID);
+    const teamTwoControl = formGroup.get(VideoFormModelFieldsEnum.TEAM_TWO_ID);
 
     if (!teamOneControl || !teamTwoControl) {
       return null;

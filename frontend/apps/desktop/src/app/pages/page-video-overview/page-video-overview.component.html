@@ -14,18 +14,20 @@
       [dropdownOptions]="sortDropdownOptions"
       class="sort-dropdown" />
   </div>
-  <div [routerLink]="['/create-video']" class="create">
-    neu
+  @if(showAddVideoButton$ | async) {
+    <div [routerLink]="['/create-video']" class="create">
+      neu
 
-    <svg width="20" height="20" fill="currentColor">
-      <use href="assets/icons/sprite.svg#icon-plus" />
-    </svg>
-  </div>
+      <svg width="20" height="20" fill="currentColor">
+        <use href="assets/icons/sprite.svg#icon-plus" />
+      </svg>
+    </div>
+  }
 </div>
 
 <div class="videos">
   @for (video of paginatedVideosSnapshot; track video.id) {
-  <video-tile [video]="video" [routerLink]="['/video-details', video.id]" />
+    <video-tile [video]="video" [routerLink]="['/video-details', video.id]" />
   }
 </div>
 <mat-paginator

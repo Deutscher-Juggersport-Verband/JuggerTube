@@ -40,12 +40,12 @@
       @if (video.channel) {
       <a href="{{ video.channel.link }}">{{ video.channel.name }}</a>
       }
-      <span>Upload: {{ video.uploadDate | date : 'dd.MM.YYYY' }}</span>
+      <span>Upload: {{ video.uploadDate | date : 'dd.MM.yyyy' }}</span>
       <span
         >Aufnahme:
         {{
           video.dateOfRecording
-            ? (video.dateOfRecording | date : 'dd.MM.YYYY')
+            ? (video.dateOfRecording | date : 'dd.MM.yyyy')
             : 'nicht angegeben'
         }}</span
       >
@@ -56,8 +56,8 @@
       <span>{{ video.tournament.name }}</span>
 
       <p>{{ video.tournament.city }}</p>
-      <p>Startdatum: {{ video.tournament.startDate | date : 'dd.MM.YYYY' }}</p>
-      <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.YYYY' }}</p>
+      <p>Startdatum: {{ video.tournament.startDate | date : 'dd.MM.yyyy' }}</p>
+      <p>Enddatum: {{ video.tournament.endDate | date : 'dd.MM.yyyy' }}</p>
       <a
         href="{{ video.tournament.jtrLink }}"
         target="_blank"

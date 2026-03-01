@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 
 import {
+  clearUserDetailsAction,
   loadUserDetailsDataAction,
   loadUserDetailsDataActionFailed,
   loadUserDetailsDataActionSuccess,
@@ -33,5 +34,10 @@ export const userDetailsDataReducer = createReducer(
       loadingState: RequestStateEnum.Error,
       error,
     })
-  )
+  ),
+  on(clearUserDetailsAction, (state) => ({
+    ...state,
+    userDetails: null,
+    error: null,
+  })),
 );

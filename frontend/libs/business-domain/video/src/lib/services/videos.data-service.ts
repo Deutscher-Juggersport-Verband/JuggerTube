@@ -18,7 +18,7 @@ import { videosRequestStateSelector } from '../store/selectors/videos-request-st
 import { RequestStateEnum } from '@frontend/api';
 import { SingletonGetter } from '@frontend/cache';
 import {
-  CreateVideoRequest,
+  CreateVideoRequestModel,
   VideoApiResponseModel,
   VideoFilterOptions,
 } from '@frontend/video-data';
@@ -54,8 +54,12 @@ export class VideosDataService {
     return this.paginatedVideos().find((video) => video.id === id);
   }
 
-  public create(videoData: CreateVideoRequest): void {
-    this.store$.dispatch(createVideo({ videoData }));
+  public create(videoData: CreateVideoRequestModel): void {
+    const strippedVideoData = Object.fromEntries(Object.entries(videoData).filter(([, value]) => value));
+
+    console.log('strippedVideoData', strippedVideoData);
+
+    this.store$.dispatch(createVideo({ videoData: strippedVideoData as CreateVideoRequestModel}));
   }
 
   public clearVideoCache(): void {
