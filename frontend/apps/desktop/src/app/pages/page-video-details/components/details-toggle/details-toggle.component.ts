@@ -11,6 +11,6 @@ export class DetailsToggleComponent {
   public readonly showDetails = signal<boolean>(false);
 
   public toggle(): void {
-    this.showDetails.update((current) => !current);
+    this.showDetails.update((currentValue) => !currentValue);
   }
 }
